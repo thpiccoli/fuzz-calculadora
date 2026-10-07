@@ -20,7 +20,8 @@ const FUZZ_DATA = {
       recommendedMethods: ["v60", "melitta", "moka", "french-press"],
       accentColor: "#d97706",
       badge: "Mais Vendido",
-      shopUrl: "https://www.fuzzcafes.com.br/cafe-caramelo-classico"
+      image: "assets/coffees/caramelo.jpg",
+      shopUrl: "https://www.fuzzcafes.com.br/cafesespeciais/caramelo-classico"
     },
     {
       id: "chocolate",
@@ -37,7 +38,8 @@ const FUZZ_DATA = {
       recommendedMethods: ["moka", "french-press", "espresso", "aeropress"],
       accentColor: "#78350f",
       badge: "Intenso",
-      shopUrl: "https://www.fuzzcafes.com.br/cafe-chocolate-classico"
+      image: "assets/coffees/chocolate.jpg",
+      shopUrl: "https://www.fuzzcafes.com.br/cafesespeciais/chocolate-classico"
     },
     {
       id: "frutado",
@@ -54,7 +56,8 @@ const FUZZ_DATA = {
       recommendedMethods: ["v60", "chemex", "aeropress", "clever"],
       accentColor: "#ea580c",
       badge: "Floral & Cítrico",
-      shopUrl: "https://www.fuzzcafes.com.br/cafe-frutado-classico"
+      image: "assets/coffees/frutado.jpg",
+      shopUrl: "https://www.fuzzcafes.com.br/cafesespeciais/frutado-classico"
     },
     {
       id: "amendoado",
@@ -71,7 +74,8 @@ const FUZZ_DATA = {
       recommendedMethods: ["melitta", "v60", "french-press", "clever"],
       accentColor: "#92400e",
       badge: "Equilibrado",
-      shopUrl: "https://www.fuzzcafes.com.br/cafe-amendoado-classico"
+      image: "assets/coffees/amendoado.jpg",
+      shopUrl: "https://www.fuzzcafes.com.br/cafesespeciais/amendoado-classico"
     },
     {
       id: "cocada",
@@ -88,7 +92,8 @@ const FUZZ_DATA = {
       recommendedMethods: ["aeropress", "moka", "french-press", "v60"],
       accentColor: "#b45309",
       badge: "Raro & Exótico",
-      shopUrl: "https://www.fuzzcafes.com.br/cafe-cocada-microlote-de-cafe-robusta-amazonico"
+      image: "assets/coffees/cocada.jpg",
+      shopUrl: "https://www.fuzzcafes.com.br/cafesespeciais/cocada-microlote"
     },
     {
       id: "doce-de-leite",
@@ -105,7 +110,8 @@ const FUZZ_DATA = {
       recommendedMethods: ["v60", "aeropress", "melitta", "cold-brew"],
       accentColor: "#ca8a04",
       badge: "Edição Especial",
-      shopUrl: "https://www.fuzzcafes.com.br/cafe-doce-de-leite-microlote-de-cafe-conilon"
+      image: "assets/coffees/docedeleite.jpg",
+      shopUrl: "https://www.fuzzcafes.com.br/cafesespeciais/docedeleite-microlote"
     },
     {
       id: "abacaxi-2026",
@@ -122,7 +128,8 @@ const FUZZ_DATA = {
       recommendedMethods: ["v60", "chemex", "aeropress", "cold-brew"],
       accentColor: "#eab308",
       badge: "Safra 2026",
-      shopUrl: "https://www.fuzzcafes.com.br/cafe-abacaxi-2026-microlote-de-cafe-arabica"
+      image: "assets/coffees/abacaxi.jpg",
+      shopUrl: "https://www.fuzzcafes.com.br/cafesespeciais/abacaxi2026-microlote"
     },
     {
       id: "melancia",
@@ -139,7 +146,8 @@ const FUZZ_DATA = {
       recommendedMethods: ["v60", "chemex", "aeropress"],
       accentColor: "#f43f5e",
       badge: "Microtorra Rara",
-      shopUrl: "https://www.fuzzcafes.com.br/cafe-melancia-microlote-de-cafe-arabica"
+      image: "assets/coffees/melancia.jpg",
+      shopUrl: "https://www.fuzzcafes.com.br/cafesespeciais/melancia2026-microlote"
     }
   ],
 

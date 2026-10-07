@@ -33,10 +33,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const coffeeStepPlusEl = document.getElementById("coffeeStepPlus");
 
   // Card de Resumo (Coluna Direita)
+  const summaryCoffeeImgEl = document.getElementById("summaryCoffeeImg");
   const summaryCoffeeNameEl = document.getElementById("summaryCoffeeName");
   const summaryCoffeeBadgeEl = document.getElementById("summaryCoffeeBadge");
   const summaryCoffeeNotesEl = document.getElementById("summaryCoffeeNotes");
   const summaryMethodNameEl = document.getElementById("summaryMethodName");
+  const summaryMethodIconEl = document.getElementById("summaryMethodIcon");
   const summaryWaterMlEl = document.getElementById("summaryWaterMl");
   const summaryCoffeeGramsEl = document.getElementById("summaryCoffeeGrams");
   const summaryBloomWaterEl = document.getElementById("summaryBloomWater");
@@ -84,6 +86,24 @@ document.addEventListener("DOMContentLoaded", () => {
   const mobileStickyBtnEl = document.getElementById("mobileStickyBtn");
   const mobileStickyInfoEl = document.getElementById("mobileStickyInfo");
 
+  // Controles do Carrossel e Navegação entre Passos
+  const coffeeScrollWrapperEl = document.getElementById("coffeeScrollWrapper");
+  const coffeePrevBtnEl = document.getElementById("coffeePrevBtn");
+  const coffeeNextBtnEl = document.getElementById("coffeeNextBtn");
+  const btnGotoSummaryEl = document.getElementById("btnGotoSummary");
+
+  // Função auxiliar para rolar suavemente até o próximo passo
+  function scrollToStep(elementId) {
+    const el = document.getElementById(elementId);
+    if (!el) return;
+    const headerHeight = 75;
+    const targetY = el.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+    window.scrollTo({
+      top: Math.max(0, targetY),
+      behavior: "smooth"
+    });
+  }
+
   // --------------------------------------------------------------------------
   // Renderizadores de Componentes
   // --------------------------------------------------------------------------
@@ -101,50 +121,63 @@ document.addEventListener("DOMContentLoaded", () => {
       
       return `
         <div class="coffee-card ${isSelected ? 'selected' : ''}" data-coffee-id="${c.id}">
-          <span class="coffee-card__badge">${c.badge || c.subtitle}</span>
-          <h3 class="coffee-card__title">${c.name}</h3>
-          <p class="coffee-card__subtitle">${c.species} &bull; Torra ${c.roast}</p>
-          <div class="coffee-card__notes">${notesHtml}</div>
-          <div class="coffee-card__meta">
-            <span>Doçura: ${'★'.repeat(c.sensory.sweetness)}${'☆'.repeat(5 - c.sensory.sweetness)}</span>
-            <span>Ratio: 1:${c.recommendedRatio}</span>
+          <div class="coffee-card__image-wrap">
+            <span class="coffee-card__badge">${c.badge || c.subtitle}</span>
+            <img src="${c.image}" alt="${c.name}" class="coffee-card__image" loading="lazy" />
+          </div>
+          <div class="coffee-card__content">
+            <h3 class="coffee-card__title">${c.name}</h3>
+            <p class="coffee-card__subtitle">${c.species} &bull; Torra ${c.roast}</p>
+            <div class="coffee-card__notes">${notesHtml}</div>
+            <div class="coffee-card__meta">
+              <span>Doçura: ${'★'.repeat(c.sensory.sweetness)}${'☆'.repeat(5 - c.sensory.sweetness)}</span>
+              <span>Ratio: 1:${c.recommendedRatio}</span>
+            </div>
           </div>
         </div>
       `;
     }).join("");
 
-    // Adiciona eventos de clique aos cards
+    // Adiciona eventos de clique aos cards com avanço automático
     coffeeGridEl.querySelectorAll(".coffee-card").forEach(card => {
       card.addEventListener("click", () => {
         const id = card.dataset.coffeeId;
         calc.selectCoffee(id);
         renderCoffees();
+        // Avança suavemente para o Passo 2 (Métodos)
+        setTimeout(() => scrollToStep("sectionMethods"), 200);
       });
     });
   }
 
-  // Mapeamento de ícones amigáveis para cada método
-  const methodIcons = {
-    v60: "☕",
-    "french-press": "🫖",
-    aeropress: "⚡",
-    moka: "🔥",
-    melitta: "💧",
-    clever: "⏳",
-    chemex: "🧪",
-    "cold-brew": "🧊",
-    espresso: "🎯"
-  };
+  // Mapeamento e obtenção de ícones vetoriais realistas para cada método
+  function getMethodIconSvg(methodId) {
+    if (typeof METHOD_ICONS !== "undefined" && METHOD_ICONS[methodId]) {
+      return METHOD_ICONS[methodId];
+    }
+    const fallback = {
+      v60: "☕",
+      "french-press": "🫖",
+      aeropress: "⚡",
+      moka: "🔥",
+      melitta: "💧",
+      clever: "⏳",
+      chemex: "🧪",
+      "cold-brew": "🧊",
+      espresso: "🎯"
+    };
+    return fallback[methodId] || "☕";
+  }
 
-  // Renderiza Métodos de Preparo
+  // Renderiza Métodos de Preparo com Ilustrações Realistas
   function renderMethods() {
     methodsGridEl.innerHTML = FUZZ_DATA.methods.map(m => {
       const isSelected = calc.selectedMethod.id === m.id;
-      const icon = methodIcons[m.id] || "☕";
+      const iconSvg = getMethodIconSvg(m.id);
 
       return `
-        <button type="button" class="method-btn ${isSelected ? 'selected' : ''}" data-method-id="${m.id}">
-          <span class="method-icon">${icon}</span>
+        <button type="button" class="method-btn ${isSelected ? 'selected' : ''}" data-method-id="${m.id}" title="${m.name} - ${m.shortDesc}">
+          <span class="method-icon">${iconSvg}</span>
           <span class="method-name">${m.name}</span>
           <span class="method-ratio-hint">1:${m.defaultRatio} &bull; ${m.grind.name}</span>
         </button>
@@ -156,6 +189,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const id = btn.dataset.methodId;
         calc.selectMethod(id);
         renderMethods();
+        // Avança suavemente para o Passo 3 (Quantidades)
+        setTimeout(() => scrollToStep("sectionInputs"), 200);
       });
     });
   }
@@ -176,6 +211,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const ml = Number(chip.dataset.ml);
         calc.applyPreset(ml);
         renderPresets();
+        // Avança suavemente para o Resultado (Ficha de Extração)
+        setTimeout(() => scrollToStep("sectionSummary"), 200);
       });
     });
   }
@@ -250,10 +287,17 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Atualiza Card de Resumo (Coluna Direita)
+    if (summaryCoffeeImgEl && state.coffee.image) {
+      summaryCoffeeImgEl.src = state.coffee.image;
+      summaryCoffeeImgEl.alt = state.coffee.name;
+    }
     summaryCoffeeNameEl.textContent = state.coffee.name;
     summaryCoffeeBadgeEl.textContent = state.coffee.subtitle;
     summaryCoffeeNotesEl.innerHTML = state.coffee.notes.map(n => `<span class="note-tag">${n}</span>`).join("");
     summaryMethodNameEl.textContent = state.method.name;
+    if (summaryMethodIconEl) {
+      summaryMethodIconEl.innerHTML = getMethodIconSvg(state.method.id);
+    }
 
     summaryWaterMlEl.textContent = `${state.waterMl} ml`;
     summaryCoffeeGramsEl.textContent = `${state.coffeeGrams} g`;
@@ -493,10 +537,27 @@ Calculado via Calculadora Fuzz Cafés (www.fuzzcafes.com.br)`;
 
   if (mobileStickyInfoEl) {
     mobileStickyInfoEl.addEventListener("click", () => {
-      const summaryEl = document.getElementById("sectionSummary");
-      if (summaryEl) {
-        summaryEl.scrollIntoView({ behavior: "smooth" });
-      }
+      scrollToStep("sectionSummary");
+    });
+  }
+
+  // Controles de rolagem por setas do Carrossel de Cafés
+  if (coffeePrevBtnEl && coffeeScrollWrapperEl) {
+    coffeePrevBtnEl.addEventListener("click", () => {
+      coffeeScrollWrapperEl.scrollBy({ left: -260, behavior: "smooth" });
+    });
+  }
+
+  if (coffeeNextBtnEl && coffeeScrollWrapperEl) {
+    coffeeNextBtnEl.addEventListener("click", () => {
+      coffeeScrollWrapperEl.scrollBy({ left: 260, behavior: "smooth" });
+    });
+  }
+
+  // Botão de avançar para o resumo a partir das quantidades
+  if (btnGotoSummaryEl) {
+    btnGotoSummaryEl.addEventListener("click", () => {
+      scrollToStep("sectionSummary");
     });
   }
 

@@ -75,6 +75,17 @@
     </div>
   </header>
 
+  <!-- Barra de Sub-Navegação de Categorias (Horizontal Scroll no Mobile, igual ao site oficial) -->
+  <nav class="fuzz-subnav" aria-label="Categorias da Loja">
+    <div class="fuzz-subnav__inner">
+      <a href="https://www.fuzzcafes.com.br/cafesespeciais" class="fuzz-subnav__link">Cafés Especiais</a>
+      <a href="https://www.fuzzcafes.com.br/edicoes-limitadas" class="fuzz-subnav__link">Edições Limitadas</a>
+      <a href="https://www.fuzzcafes.com.br/kits" class="fuzz-subnav__link">Kits e Presentes</a>
+      <a href="https://www.fuzzcafes.com.br/metodos-e-acessorios" class="fuzz-subnav__link">Métodos e Acessórios</a>
+      <a href="#" class="fuzz-subnav__link fuzz-subnav__link--active">Calculadora</a>
+    </div>
+  </nav>
+
   <!-- Gaveta do Menu Mobile -->
   <aside id="mobileNavDrawer" class="mobile-drawer-overlay">
     <div class="mobile-drawer-content">
@@ -124,7 +135,17 @@
             <button type="button" class="filter-btn" data-category="microlotes">Microlotes</button>
           </div>
         </div>
-        <div class="coffee-scroll-wrapper">
+
+        <!-- Controles de Navegação do Carrossel de Cafés -->
+        <div class="carousel-nav-header">
+          <span class="carousel-hint">👈 Deslize ou use as setas para ver os cafés 👉</span>
+          <div class="carousel-arrows">
+            <button type="button" class="carousel-arrow-btn" id="coffeePrevBtn" aria-label="Café anterior">‹</button>
+            <button type="button" class="carousel-arrow-btn" id="coffeeNextBtn" aria-label="Próximo café">›</button>
+          </div>
+        </div>
+
+        <div class="coffee-scroll-wrapper" id="coffeeScrollWrapper">
           <div class="coffee-grid" id="coffeeGrid">
             <!-- Cards de café injetados via JS -->
           </div>
@@ -214,6 +235,10 @@
 
           <input type="range" id="ratioSlider" class="ratio-slider" min="10" max="18" value="15" step="0.5" />
         </div>
+
+        <button type="button" class="btn-goto-summary" id="btnGotoSummary">
+          Ver Minha Receita & Ficha de Extração ↓
+        </button>
       </section>
 
       <!-- Ficha Técnica Resumo da Receita -->
@@ -224,11 +249,16 @@
               <h3 class="summary-card__title">
                 <span>📋</span> Ficha de Extração
               </h3>
-              <div class="summary-card__coffee-tag">
-                <span id="summaryCoffeeName">Café Caramelo</span>
-                &bull; <span id="summaryCoffeeBadge">Clássico</span>
+              <div class="summary-coffee-row">
+                <img id="summaryCoffeeImg" src="assets/coffees/caramelo.jpg" alt="Café Caramelo" class="summary-coffee-thumb" />
+                <div class="summary-coffee-info">
+                  <div class="summary-card__coffee-tag">
+                    <span id="summaryCoffeeName">Café Caramelo</span>
+                    &bull; <span id="summaryCoffeeBadge">Clássico</span>
+                  </div>
+                  <div id="summaryCoffeeNotes" style="display:flex; gap:4px; flex-wrap:wrap; margin-top:4px;"></div>
+                </div>
               </div>
-              <div id="summaryCoffeeNotes" style="display:flex; gap:4px; flex-wrap:wrap; margin-top:6px;"></div>
             </div>
 
             <!-- Métricas Principais -->
@@ -247,7 +277,10 @@
             <div class="technical-specs">
               <div class="spec-row">
                 <span>Método:</span>
-                <span id="summaryMethodName">Hario V60</span>
+                <span class="summary-method-wrapper">
+                  <span id="summaryMethodIcon" class="summary-method-icon"></span>
+                  <strong id="summaryMethodName">Hario V60</strong>
+                </span>
               </div>
               <div class="spec-row">
                 <span>Proporção:</span>
@@ -408,6 +441,7 @@
 
   <!-- Scripts -->
   <script src="js/data.js"></script>
+  <script src="js/method-icons.js"></script>
   <script src="js/calculator.js"></script>
   <script src="js/timer.js"></script>
   <script src="js/app.js"></script>
