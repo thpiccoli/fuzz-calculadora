@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculadora de Preparo | Fuzz Cafés - Proporção Ideal de Café Especial</title>
+  <meta name="description" content="Calcule a proporção perfeita entre pó e água para o seu café Fuzz. Encontre receitas personalizadas para Hario V60, Prensa Francesa, Aeropress, Moka e muito mais." />
+  
+  <meta name="theme-color" content="#1e201d" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Calculadora de Preparo | Fuzz Cafés" />
+  <meta property="og:description" content="Descubra a proporção perfeita entre pó e água para os cafés da Fuzz. Receitas personalizadas e cronômetro de extração." />
+  <meta property="og:image" content="assets/logo-fuzz.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <!-- Favicon oficial Fuzz -->
+  <link rel="icon" type="image/png" href="assets/logo-fuzz.png" />
+  <link rel="apple-touch-icon" href="assets/logo-fuzz.png" />
+
+  <!-- Estilos da Calculadora -->
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <!-- Barra de Notificação Superior -->
+  <div class="top-notice-bar">
+    <span>☕ FRETE GRÁTIS EM COMPRAS ACIMA DE R$ 200 &bull; TORRA FRESCA SEMANAL DIRETO DO RIO DE JANEIRO</span>
+  </div>
+
+  <!-- Cabeçalho Oficial Fuzz Cafés -->
+  <header class="fuzz-header">
+    <div class="fuzz-header__inner">
+      <!-- Botão Hambúrguer Mobile -->
+      <button class="header-action-btn mobile-menu-toggle" id="mobileMenuToggle" aria-label="Abrir menu">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+
+      <!-- Logo Oficial Fuzz Cafés -->
+      <a href="https://www.fuzzcafes.com.br/" class="fuzz-header__logo-link">
+        <img src="assets/logo-fuzz.png" alt="Fuzz Cafés" class="fuzz-header__logo-img" />
+      </a>
+
+      <!-- Menu Principal de Navegação -->
+      <nav class="fuzz-nav" aria-label="Navegação principal">
+        <ul class="fuzz-nav__list">
+          <li><a href="https://www.fuzzcafes.com.br/cafesespeciais" class="fuzz-nav__link">Cafés Especiais</a></li>
+          <li><a href="https://www.fuzzcafes.com.br/edicoes-limitadas" class="fuzz-nav__link">Edições Limitadas</a></li>
+          <li><a href="https://www.fuzzcafes.com.br/kits" class="fuzz-nav__link">Kits e Presentes</a></li>
+          <li><a href="https://www.fuzzcafes.com.br/metodos-e-acessorios" class="fuzz-nav__link">Métodos e Acessórios</a></li>
+          <!-- Nova Opção no Menu -->
+          <li><a href="#" class="fuzz-nav__link fuzz-nav__link--active">Calculadora de Preparo</a></li>
+        </ul>
+      </nav>
+
+      <!-- Ações do Header (Busca e Carrinho) -->
+      <div class="fuzz-header__actions">
+        <a href="https://www.fuzzcafes.com.br/" class="header-action-btn" title="Buscar no site">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </a>
+        <a href="https://www.fuzzcafes.com.br/carrinho" class="header-action-btn" title="Carrinho">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Gaveta do Menu Mobile -->
+  <aside id="mobileNavDrawer" class="mobile-drawer-overlay">
+    <div class="mobile-drawer-content">
+      <div class="mobile-drawer-header">
+        <img src="assets/logo-fuzz.png" alt="Fuzz Cafés" class="mobile-drawer-logo" />
+        <button id="mobileNavClose" class="mobile-drawer-close" aria-label="Fechar menu">&times;</button>
+      </div>
+      <nav class="mobile-drawer-nav">
+        <a href="https://www.fuzzcafes.com.br/cafesespeciais" class="mobile-drawer-link">Cafés Especiais</a>
+        <a href="https://www.fuzzcafes.com.br/edicoes-limitadas" class="mobile-drawer-link">Edições Limitadas</a>
+        <a href="https://www.fuzzcafes.com.br/kits" class="mobile-drawer-link">Kits e Presentes</a>
+        <a href="https://www.fuzzcafes.com.br/metodos-e-acessorios" class="mobile-drawer-link">Métodos e Acessórios</a>
+        <a href="#" class="mobile-drawer-link mobile-drawer-link--active">Calculadora de Preparo</a>
+      </nav>
+      <div class="mobile-drawer-footer">
+        <p>Rio de Janeiro - RJ</p>
+        <a href="https://api.whatsapp.com/send?phone=5524988487793" target="_blank" rel="noopener">Fale no WhatsApp ↗</a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Hero Banner da Calculadora -->
+  <section class="calculator-hero">
+    <div class="hero-badge">
+      <span>☕ Guia de Extração Oficial</span>
+    </div>
+    <h1>Calculadora de Preparo Fuzz</h1>
+    <p>
+      Descubra a proporção precisa entre água e pó para extrair o máximo de doçura, aroma e corpo dos cafés da torrefação.
+    </p>
+  </section>
+
+  <!-- Conteúdo Principal -->
+  <main class="main-wrapper">
+    <div class="calculator-grid">
+
+      <!-- Coluna Esquerda: Controles da Calculadora -->
+      <div class="controls-column">
+
+        <!-- Passo 1: Selecionar o Café -->
+        <section class="control-card">
+          <div class="section-header">
+            <h2 class="section-title">
+              <span class="step-number">1</span>
+              Escolha o Grão Fuzz
+            </h2>
+            <div class="category-filters" id="categoryFilters">
+              <button type="button" class="filter-btn active" data-category="todos">Todos</button>
+              <button type="button" class="filter-btn" data-category="classicos">Clássicos</button>
+              <button type="button" class="filter-btn" data-category="microlotes">Microlotes</button>
+            </div>
+          </div>
+          <div class="coffee-grid" id="coffeeGrid">
+            <!-- Cards de café injetados via JS -->
+          </div>
+        </section>
+
+        <!-- Passo 2: Selecionar o Método de Preparo -->
+        <section class="control-card">
+          <div class="section-header">
+            <h2 class="section-title">
+              <span class="step-number">2</span>
+              Escolha o Método de Preparo
+            </h2>
+          </div>
+          <div class="methods-grid" id="methodsGrid">
+            <!-- Botões de métodos injetados via JS -->
+          </div>
+        </section>
+
+        <!-- Passo 3: Ajuste de Quantidade e Proporção -->
+        <section class="control-card">
+          <div class="section-header">
+            <h2 class="section-title">
+              <span class="step-number">3</span>
+              Ajuste as Quantidades
+            </h2>
+          </div>
+
+          <!-- Doses Rápidas -->
+          <div class="presets-section">
+            <p class="presets-label">Porções Sugeridas:</p>
+            <div class="presets-list" id="presetsContainer">
+              <!-- Botões de doses injetados via JS -->
+            </div>
+          </div>
+
+          <!-- Campos Bidirecionais de Água e Café -->
+          <div class="calc-inputs-container">
+            <!-- Campo Volume de Água -->
+            <div class="input-box" id="waterBox">
+              <div class="input-box__header">
+                <span class="input-box__label">Água Desejada</span>
+                <span class="input-box__unit">ml</span>
+              </div>
+              <div class="input-box__control">
+                <input type="number" id="waterInput" class="calc-number-input" value="300" min="50" max="3000" step="10" />
+              </div>
+              <div class="input-box__stepper">
+                <button type="button" class="stepper-btn" id="waterStepMinus">-50 ml</button>
+                <button type="button" class="stepper-btn" id="waterStepPlus">+50 ml</button>
+              </div>
+            </div>
+
+            <!-- Divisor / Indicador Bidirecional -->
+            <div class="calc-exchange-divider" title="Cálculo bidirecional automático">
+              ⇄
+            </div>
+
+            <!-- Campo Peso de Café -->
+            <div class="input-box" id="coffeeBox">
+              <div class="input-box__header">
+                <span class="input-box__label">Pó de Café</span>
+                <span class="input-box__unit">gramas</span>
+              </div>
+              <div class="input-box__control">
+                <input type="number" id="coffeeInput" class="calc-number-input" value="20" min="5" max="250" step="0.5" />
+              </div>
+              <div class="input-box__stepper">
+                <button type="button" class="stepper-btn" id="coffeeStepMinus">-1 g</button>
+                <button type="button" class="stepper-btn" id="coffeeStepPlus">+1 g</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Controle Fino de Proporção & Intensidade -->
+          <div class="ratio-control-section">
+            <div class="ratio-header">
+              <span class="presets-label">Intensidade & Proporção (Ratio):</span>
+              <span class="ratio-value-display" id="ratioValueDisplay">1 : 15</span>
+            </div>
+
+            <div class="intensity-chips">
+              <button type="button" class="intensity-btn" data-intensity="suave">Mais Suave (1:17)</button>
+              <button type="button" class="intensity-btn active" data-intensity="equilibrado">Equilibrado (1:15)</button>
+              <button type="button" class="intensity-btn" data-intensity="encorpado">Mais Encorpado (1:13)</button>
+            </div>
+
+            <input type="range" id="ratioSlider" class="ratio-slider" min="10" max="18" value="15" step="0.5" />
+          </div>
+        </section>
+
+        <!-- Passo 4: Guia Passo a Passo do Preparo -->
+        <section class="control-card">
+          <div class="section-header">
+            <h2 class="section-title">
+              <span class="step-number">4</span>
+              Instruções de Extração
+            </h2>
+          </div>
+          <div class="steps-container" id="methodStepsContainer">
+            <!-- Passos dinâmicos do método injetados via JS -->
+          </div>
+        </section>
+
+      </div>
+
+      <!-- Coluna Direita: Ficha Técnica Resumo da Receita -->
+      <div class="summary-column">
+        <div class="summary-card-sticky">
+          <aside class="summary-card">
+            <div class="summary-card__header">
+              <h3 class="summary-card__title">
+                <span>📋</span> Ficha de Extração
+              </h3>
+              <div class="summary-card__coffee-tag">
+                <span id="summaryCoffeeName">Café Caramelo</span>
+                &bull; <span id="summaryCoffeeBadge">Clássico</span>
+              </div>
+              <div id="summaryCoffeeNotes" style="display:flex; gap:4px; flex-wrap:wrap; margin-top:6px;"></div>
+            </div>
+
+            <!-- Métricas Principais -->
+            <div class="extraction-metrics-grid">
+              <div class="metric-pill">
+                <div class="metric-pill__label">Água Total</div>
+                <div class="metric-pill__value" id="summaryWaterMl">300 ml</div>
+              </div>
+              <div class="metric-pill">
+                <div class="metric-pill__label">Café Moído</div>
+                <div class="metric-pill__value" id="summaryCoffeeGrams">20 g</div>
+              </div>
+            </div>
+
+            <!-- Especificações Técnicas -->
+            <div class="technical-specs">
+              <div class="spec-row">
+                <span>Método:</span>
+                <span id="summaryMethodName">Hario V60</span>
+              </div>
+              <div class="spec-row">
+                <span>Proporção:</span>
+                <span id="summaryRatioDisplay">1 : 15 (Equilibrado)</span>
+              </div>
+              <div class="spec-row">
+                <span>Bloom (Pré-infusão):</span>
+                <span id="summaryBloomWater">50 ml</span>
+              </div>
+              <div class="spec-row">
+                <span>Moagem Indicada:</span>
+                <span id="summaryGrindName">Média-Fina</span>
+              </div>
+              <div class="spec-row">
+                <span>Temperatura da Água:</span>
+                <span id="summaryTemp">92°C a 94°C</span>
+              </div>
+              <div class="spec-row">
+                <span>Tempo de Extração:</span>
+                <span id="summaryTime">2m45s a 3m15s</span>
+              </div>
+            </div>
+
+            <!-- Botões de Ação -->
+            <div class="summary-actions">
+              <button type="button" class="btn-start-timer" id="btnOpenTimer">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                Iniciar Cronômetro de Preparo
+              </button>
+
+              <button type="button" class="btn-copy-recipe" id="btnCopyRecipe">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                Copiar Receita
+              </button>
+
+              <a href="https://www.fuzzcafes.com.br/" target="_blank" rel="noopener noreferrer" class="btn-shop-coffee" id="summaryShopLink">
+                Comprar este café na Fuzz Cafés ↗
+              </a>
+            </div>
+          </aside>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Modal do Cronômetro Interativo (Brew Timer) -->
+  <div class="timer-modal-overlay" id="timerModalOverlay" role="dialog" aria-modal="true" aria-labelledby="timerStepTitle">
+    <div class="timer-modal-card">
+      <button type="button" class="timer-modal__close" id="btnCloseTimer" aria-label="Fechar cronômetro">&times;</button>
+      
+      <p class="timer-modal__method-tag" id="timerMethodTag">Hario V60 &bull; Café Caramelo</p>
+      
+      <!-- Barra de Progresso Geral da Extração -->
+      <div class="timer-progress-wrap" aria-label="Progresso da extração">
+        <div class="timer-progress-bar" id="timerProgressBar" style="width: 0%;"></div>
+      </div>
+
+      <div class="timer-display-huge" id="timerDisplay">00:00</div>
+
+      <div class="timer-step-box">
+        <div class="timer-step-box__header">
+          <span class="timer-step-badge" id="timerStepBadge">Etapa 1 de 6</span>
+          <span class="timer-step-remaining" id="timerStepRemaining">00:40 restante</span>
+        </div>
+        <h4 class="timer-step-box__title" id="timerStepTitle">Preparar Equipamentos</h4>
+        <p class="timer-step-box__desc" id="timerStepDesc">Posicione o filtro, pese o pó de café e escalde com água quente.</p>
+      </div>
+
+      <!-- Prévia da próxima etapa -->
+      <div class="timer-next-step" id="timerNextStep">Próximo: 1º Despejo Contínuo</div>
+
+      <div class="timer-controls-row">
+        <button type="button" class="btn-timer-secondary" id="btnTimerPrevStep" title="Etapa anterior">⏮</button>
+        <button type="button" class="btn-timer-primary" id="btnTimerStart">Iniciar</button>
+        <button type="button" class="btn-timer-secondary" id="btnTimerNextStepBtn" title="Próxima etapa">⏭</button>
+        <button type="button" class="btn-timer-secondary" id="btnTimerReset" title="Reiniciar cronômetro">↺</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast de Notificação -->
+  <div class="fuzz-toast" id="fuzzToast">
+    <span>✓</span>
+    <span class="toast-message">Receita copiada com sucesso!</span>
+  </div>
+
+  <!-- Rodapé Oficial Fuzz Cafés -->
+  <footer class="fuzz-footer">
+    <div class="fuzz-footer__inner">
+      <div class="fuzz-footer__brand">
+        <h3>FUZZ CAFÉS ESPECIAIS</h3>
+        <p>
+          Torrefação artesanal localizada no Rio de Janeiro. Selecionamos os melhores microlotes de Arábica e Canéfora do Brasil, valorizando produtores e compartilhando a cultura do café especial.
+        </p>
+      </div>
+      <div class="fuzz-footer__col">
+        <h4>Navegação</h4>
+        <ul>
+          <li><a href="https://www.fuzzcafes.com.br/cafesespeciais">Cafés Especiais</a></li>
+          <li><a href="https://www.fuzzcafes.com.br/edicoes-limitadas">Edições Limitadas</a></li>
+          <li><a href="https://www.fuzzcafes.com.br/kits">Kits e Presentes</a></li>
+          <li><a href="https://www.fuzzcafes.com.br/metodos-e-acessorios">Métodos e Acessórios</a></li>
+          <li><a href="#" style="color:var(--color-brand-accent);">Calculadora de Café</a></li>
+        </ul>
+      </div>
+      <div class="fuzz-footer__col">
+        <h4>Contato</h4>
+        <ul>
+          <li>Rua Sacadura Cabral, 149 - Saúde, Rio de Janeiro - RJ</li>
+          <li>WhatsApp: (24) 98848-7793</li>
+          <li>Segunda à Sexta: 9h às 17h</li>
+          <li><a href="https://www.instagram.com/fuzzcafes" target="_blank" rel="noopener">@fuzzcafes</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="fuzz-footer__bottom">
+      <p>&copy; 2026 Fuzz Cafés - Todos os direitos reservados.</p>
+      <p>Desenvolvido para amantes de cafés especiais</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/calculator.js"></script>
+  <script src="js/timer.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
