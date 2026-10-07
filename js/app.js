@@ -75,6 +75,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const mobileNavDrawerEl = document.getElementById("mobileNavDrawer");
   const mobileNavCloseEl = document.getElementById("mobileNavClose");
 
+  // Barra Flutuante Mobile
+  const mobileStickyBarEl = document.getElementById("mobileStickyBar");
+  const mobileStickyWaterEl = document.getElementById("mobileStickyWater");
+  const mobileStickyCoffeeEl = document.getElementById("mobileStickyCoffee");
+  const mobileStickyMethodEl = document.getElementById("mobileStickyMethod");
+  const mobileStickyRatioEl = document.getElementById("mobileStickyRatio");
+  const mobileStickyBtnEl = document.getElementById("mobileStickyBtn");
+  const mobileStickyInfoEl = document.getElementById("mobileStickyInfo");
+
   // --------------------------------------------------------------------------
   // Renderizadores de Componentes
   // --------------------------------------------------------------------------
@@ -257,6 +266,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     summaryShopLinkEl.href = state.coffee.shopUrl || "https://www.fuzzcafes.com.br/";
     summaryShopLinkEl.textContent = `Comprar ${state.coffee.name} na Fuzz Cafés ↗`;
+
+    // Atualiza Barra Flutuante Mobile
+    if (mobileStickyWaterEl) mobileStickyWaterEl.textContent = `${state.waterMl}ml`;
+    if (mobileStickyCoffeeEl) mobileStickyCoffeeEl.textContent = `${state.coffeeGrams}g`;
+    if (mobileStickyMethodEl) mobileStickyMethodEl.textContent = state.method.name;
+    if (mobileStickyRatioEl) mobileStickyRatioEl.textContent = `1:${state.ratio}`;
 
     // Atualiza passos adaptados
     renderMethodSteps(state);
@@ -464,6 +479,24 @@ Calculado via Calculadora Fuzz Cafés (www.fuzzcafes.com.br)`;
 
     mobileNavDrawerEl.querySelectorAll(".mobile-drawer-link").forEach(link => {
       link.addEventListener("click", closeMobileDrawer);
+    });
+  }
+
+  // --------------------------------------------------------------------------
+  // Barra Flutuante Mobile - Eventos de Ação Rápida
+  // --------------------------------------------------------------------------
+  if (mobileStickyBtnEl) {
+    mobileStickyBtnEl.addEventListener("click", () => {
+      btnOpenTimerEl.click();
+    });
+  }
+
+  if (mobileStickyInfoEl) {
+    mobileStickyInfoEl.addEventListener("click", () => {
+      const summaryEl = document.getElementById("sectionSummary");
+      if (summaryEl) {
+        summaryEl.scrollIntoView({ behavior: "smooth" });
+      }
     });
   }
 

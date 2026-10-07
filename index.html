@@ -111,129 +111,113 @@
   <main class="main-wrapper">
     <div class="calculator-grid">
 
-      <!-- Coluna Esquerda: Controles da Calculadora -->
-      <div class="controls-column">
-
-        <!-- Passo 1: Selecionar o Café -->
-        <section class="control-card">
-          <div class="section-header">
-            <h2 class="section-title">
-              <span class="step-number">1</span>
-              Escolha o Grão Fuzz
-            </h2>
-            <div class="category-filters" id="categoryFilters">
-              <button type="button" class="filter-btn active" data-category="todos">Todos</button>
-              <button type="button" class="filter-btn" data-category="classicos">Clássicos</button>
-              <button type="button" class="filter-btn" data-category="microlotes">Microlotes</button>
-            </div>
+      <!-- Passo 1: Selecionar o Café -->
+      <section class="control-card" id="sectionGrains">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span class="step-number">1</span>
+            Escolha o Grão Fuzz
+          </h2>
+          <div class="category-filters" id="categoryFilters">
+            <button type="button" class="filter-btn active" data-category="todos">Todos</button>
+            <button type="button" class="filter-btn" data-category="classicos">Clássicos</button>
+            <button type="button" class="filter-btn" data-category="microlotes">Microlotes</button>
           </div>
+        </div>
+        <div class="coffee-scroll-wrapper">
           <div class="coffee-grid" id="coffeeGrid">
             <!-- Cards de café injetados via JS -->
           </div>
-        </section>
+        </div>
+      </section>
 
-        <!-- Passo 2: Selecionar o Método de Preparo -->
-        <section class="control-card">
-          <div class="section-header">
-            <h2 class="section-title">
-              <span class="step-number">2</span>
-              Escolha o Método de Preparo
-            </h2>
-          </div>
-          <div class="methods-grid" id="methodsGrid">
-            <!-- Botões de métodos injetados via JS -->
-          </div>
-        </section>
+      <!-- Passo 2: Selecionar o Método de Preparo -->
+      <section class="control-card" id="sectionMethods">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span class="step-number">2</span>
+            Escolha o Método de Preparo
+          </h2>
+        </div>
+        <div class="methods-grid" id="methodsGrid">
+          <!-- Botões de métodos injetados via JS -->
+        </div>
+      </section>
 
-        <!-- Passo 3: Ajuste de Quantidade e Proporção -->
-        <section class="control-card">
-          <div class="section-header">
-            <h2 class="section-title">
-              <span class="step-number">3</span>
-              Ajuste as Quantidades
-            </h2>
-          </div>
+      <!-- Passo 3: Ajuste de Quantidade e Proporção -->
+      <section class="control-card" id="sectionInputs">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span class="step-number">3</span>
+            Ajuste as Quantidades
+          </h2>
+        </div>
 
-          <!-- Doses Rápidas -->
-          <div class="presets-section">
-            <p class="presets-label">Porções Sugeridas:</p>
-            <div class="presets-list" id="presetsContainer">
-              <!-- Botões de doses injetados via JS -->
+        <!-- Doses Rápidas -->
+        <div class="presets-section">
+          <p class="presets-label">Porções Sugeridas:</p>
+          <div class="presets-list" id="presetsContainer">
+            <!-- Botões de doses injetados via JS -->
+          </div>
+        </div>
+
+        <!-- Campos Bidirecionais de Água e Café -->
+        <div class="calc-inputs-container">
+          <!-- Campo Volume de Água -->
+          <div class="input-box" id="waterBox">
+            <div class="input-box__header">
+              <span class="input-box__label">Água Desejada</span>
+              <span class="input-box__unit">ml</span>
+            </div>
+            <div class="input-box__control">
+              <input type="number" id="waterInput" class="calc-number-input" value="300" min="50" max="3000" step="10" inputmode="numeric" />
+            </div>
+            <div class="input-box__stepper">
+              <button type="button" class="stepper-btn" id="waterStepMinus">-50 ml</button>
+              <button type="button" class="stepper-btn" id="waterStepPlus">+50 ml</button>
             </div>
           </div>
 
-          <!-- Campos Bidirecionais de Água e Café -->
-          <div class="calc-inputs-container">
-            <!-- Campo Volume de Água -->
-            <div class="input-box" id="waterBox">
-              <div class="input-box__header">
-                <span class="input-box__label">Água Desejada</span>
-                <span class="input-box__unit">ml</span>
-              </div>
-              <div class="input-box__control">
-                <input type="number" id="waterInput" class="calc-number-input" value="300" min="50" max="3000" step="10" />
-              </div>
-              <div class="input-box__stepper">
-                <button type="button" class="stepper-btn" id="waterStepMinus">-50 ml</button>
-                <button type="button" class="stepper-btn" id="waterStepPlus">+50 ml</button>
-              </div>
-            </div>
-
-            <!-- Divisor / Indicador Bidirecional -->
-            <div class="calc-exchange-divider" title="Cálculo bidirecional automático">
-              ⇄
-            </div>
-
-            <!-- Campo Peso de Café -->
-            <div class="input-box" id="coffeeBox">
-              <div class="input-box__header">
-                <span class="input-box__label">Pó de Café</span>
-                <span class="input-box__unit">gramas</span>
-              </div>
-              <div class="input-box__control">
-                <input type="number" id="coffeeInput" class="calc-number-input" value="20" min="5" max="250" step="0.5" />
-              </div>
-              <div class="input-box__stepper">
-                <button type="button" class="stepper-btn" id="coffeeStepMinus">-1 g</button>
-                <button type="button" class="stepper-btn" id="coffeeStepPlus">+1 g</button>
-              </div>
-            </div>
+          <!-- Divisor / Indicador Bidirecional -->
+          <div class="calc-exchange-divider" title="Cálculo bidirecional automático">
+            ⇄
           </div>
 
-          <!-- Controle Fino de Proporção & Intensidade -->
-          <div class="ratio-control-section">
-            <div class="ratio-header">
-              <span class="presets-label">Intensidade & Proporção (Ratio):</span>
-              <span class="ratio-value-display" id="ratioValueDisplay">1 : 15</span>
+          <!-- Campo Peso de Café -->
+          <div class="input-box" id="coffeeBox">
+            <div class="input-box__header">
+              <span class="input-box__label">Pó de Café</span>
+              <span class="input-box__unit">gramas</span>
             </div>
-
-            <div class="intensity-chips">
-              <button type="button" class="intensity-btn" data-intensity="suave">Mais Suave (1:17)</button>
-              <button type="button" class="intensity-btn active" data-intensity="equilibrado">Equilibrado (1:15)</button>
-              <button type="button" class="intensity-btn" data-intensity="encorpado">Mais Encorpado (1:13)</button>
+            <div class="input-box__control">
+              <input type="number" id="coffeeInput" class="calc-number-input" value="20" min="5" max="250" step="0.5" inputmode="decimal" />
             </div>
-
-            <input type="range" id="ratioSlider" class="ratio-slider" min="10" max="18" value="15" step="0.5" />
+            <div class="input-box__stepper">
+              <button type="button" class="stepper-btn" id="coffeeStepMinus">-1 g</button>
+              <button type="button" class="stepper-btn" id="coffeeStepPlus">+1 g</button>
+            </div>
           </div>
-        </section>
+        </div>
 
-        <!-- Passo 4: Guia Passo a Passo do Preparo -->
-        <section class="control-card">
-          <div class="section-header">
-            <h2 class="section-title">
-              <span class="step-number">4</span>
-              Instruções de Extração
-            </h2>
+        <!-- Controle Fino de Proporção & Intensidade -->
+        <div class="ratio-control-section">
+          <div class="ratio-header">
+            <span class="presets-label">Intensidade & Proporção (Ratio):</span>
+            <span class="ratio-value-display" id="ratioValueDisplay">1 : 15</span>
           </div>
-          <div class="steps-container" id="methodStepsContainer">
-            <!-- Passos dinâmicos do método injetados via JS -->
+
+          <div class="intensity-chips">
+            <button type="button" class="intensity-btn" data-intensity="suave">Suave (1:17)</button>
+            <button type="button" class="intensity-btn active" data-intensity="equilibrado">Equilibrado (1:15)</button>
+            <button type="button" class="intensity-btn" data-intensity="encorpado">Intenso (1:13)</button>
           </div>
-        </section>
 
-      </div>
+          <input type="range" id="ratioSlider" class="ratio-slider" min="10" max="18" value="15" step="0.5" />
+        </div>
+      </section>
 
-      <!-- Coluna Direita: Ficha Técnica Resumo da Receita -->
-      <div class="summary-column">
+      <!-- Ficha Técnica Resumo da Receita -->
+      <div class="summary-column" id="sectionSummary">
         <div class="summary-card-sticky">
           <aside class="summary-card">
             <div class="summary-card__header">
@@ -313,6 +297,19 @@
         </div>
       </div>
 
+      <!-- Passo 4: Guia Passo a Passo do Preparo -->
+      <section class="control-card" id="sectionSteps">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span class="step-number">4</span>
+            Instruções de Extração
+          </h2>
+        </div>
+        <div class="steps-container" id="methodStepsContainer">
+          <!-- Passos dinâmicos do método injetados via JS -->
+        </div>
+      </section>
+
     </div>
   </main>
 
@@ -391,6 +388,23 @@
       <p>Desenvolvido para amantes de cafés especiais</p>
     </div>
   </footer>
+
+  <!-- Barra Flutuante Mobile com Ação Rápida (Exibida apenas em telas mobile) -->
+  <aside class="mobile-sticky-bottom-bar" id="mobileStickyBar" aria-label="Ação rápida de preparo">
+    <div class="mobile-sticky-info" id="mobileStickyInfo">
+      <div class="mobile-sticky-primary">
+        <span>💧 <strong id="mobileStickyWater">300ml</strong></span>
+        <span class="mobile-sticky-bullet">&bull;</span>
+        <span>☕ <strong id="mobileStickyCoffee">20g</strong></span>
+      </div>
+      <div class="mobile-sticky-secondary">
+        <span id="mobileStickyMethod">V60</span> &bull; <span id="mobileStickyRatio">1:15</span>
+      </div>
+    </div>
+    <button type="button" class="mobile-sticky-btn" id="mobileStickyBtn">
+      ⏱ Iniciar Preparo
+    </button>
+  </aside>
 
   <!-- Scripts -->
   <script src="js/data.js"></script>
