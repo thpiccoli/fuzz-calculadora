@@ -17,6 +17,11 @@
   <link rel="icon" type="image/png" href="assets/logo-fuzz.png" />
   <link rel="apple-touch-icon" href="assets/logo-fuzz.png" />
 
+  <!-- Fontes Oficiais Fuzz & Estilo Cartoon Ilha dos Sabores -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700;800;900&family=Lilita+One&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+
   <!-- Estilos da Calculadora -->
   <link rel="stylesheet" href="css/styles.css" />
 </head>
@@ -107,15 +112,42 @@
     </div>
   </aside>
 
-  <!-- Hero Banner da Calculadora -->
+  <!-- Hero Banner da Calculadora com o Mascote Nico -->
   <section class="calculator-hero">
-    <div class="hero-badge">
-      <span>☕ Guia de Extração Oficial</span>
+    <div class="hero-container">
+      <div class="hero-mascot-card">
+        <img src="assets/mascot/nico-badge-round.png" alt="Nico na Ilha dos Sabores" class="hero-mascot-img" />
+        <div class="hero-speech-bubble">
+          <span class="speech-author">Nico Explorador:</span>
+          <p>Olá, explorador! Prepare sua balança e vamos descobrir a extração perfeita para o seu café!</p>
+        </div>
+      </div>
+      <div class="hero-text-content">
+        <div class="hero-badge">
+          <span>🏝️ Aventurinhas da Fuzz • Ilha dos Sabores</span>
+        </div>
+        <h1>Calculadora de Preparo Fuzz</h1>
+        <p>
+          Descubra a proporção precisa entre água e pó para extrair o máximo de doçura, aroma e corpo dos cafés da torrefação.
+        </p>
+        <div class="hero-cta-actions">
+          <button type="button" class="btn-hero-start" id="btnHeroStart">
+            <span>Começar a Preparar</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <polyline points="19 12 12 19 5 12"></polyline>
+            </svg>
+          </button>
+          <button type="button" class="btn-hero-timer" id="btnHeroTimer">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <span>Cronômetro Direto</span>
+          </button>
+        </div>
+      </div>
     </div>
-    <h1>Calculadora de Preparo Fuzz</h1>
-    <p>
-      Descubra a proporção precisa entre água e pó para extrair o máximo de doçura, aroma e corpo dos cafés da torrefação.
-    </p>
   </section>
 
   <!-- Conteúdo Principal -->
@@ -160,6 +192,16 @@
             Escolha o Método de Preparo
           </h2>
         </div>
+
+        <!-- Dica Interativa do Nico para o Método Escolhido -->
+        <div class="nico-tip-box" id="nicoMethodTipBox">
+          <img src="assets/mascot/nico-barista-badge.png" alt="Nico Barista" class="nico-tip-avatar" />
+          <div class="nico-tip-content">
+            <span class="nico-tip-tag" id="nicoTipTag">Dica do Barista Nico (Hario V60):</span>
+            <p id="nicoTipText">O Hario V60 destaca acidez brilhante e notas florais limpas com clareza máxima!</p>
+          </div>
+        </div>
+
         <div class="methods-grid" id="methodsGrid">
           <!-- Botões de métodos injetados via JS -->
         </div>
@@ -234,6 +276,11 @@
           </div>
 
           <input type="range" id="ratioSlider" class="ratio-slider" min="10" max="18" value="15" step="0.5" />
+
+          <!-- Reação do Nico à Proporção -->
+          <div class="nico-ratio-speech" id="nicoRatioSpeech">
+            <span>🐵</span> <span id="nicoRatioSpeechText">Equilíbrio padrão ouro da Fuzz! Extração balanceada e doce.</span>
+          </div>
         </div>
 
         <button type="button" class="btn-goto-summary" id="btnGotoSummary">
@@ -322,6 +369,14 @@
                 Copiar Receita
               </button>
 
+              <button type="button" class="btn-restart-recipe" id="btnRestartRecipe">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                  <path d="M3 3v5h5"></path>
+                </svg>
+                Recomeçar / Trocar Grão ⇡
+              </button>
+
               <a href="https://www.fuzzcafes.com.br/" target="_blank" rel="noopener noreferrer" class="btn-shop-coffee" id="summaryShopLink">
                 Comprar este café na Fuzz Cafés ↗
               </a>
@@ -341,17 +396,42 @@
         <div class="steps-container" id="methodStepsContainer">
           <!-- Passos dinâmicos do método injetados via JS -->
         </div>
+
+        <!-- Ações ao final do passo a passo -->
+        <div class="step-finish-actions">
+          <button type="button" class="btn-step-timer" id="btnStepTimer">
+            ⏱ Iniciar Cronômetro com Estes Passos
+          </button>
+          <button type="button" class="btn-step-restart" id="btnStepRestart">
+            ⇡ Voltar ao Passo 1 (Escolher Grão)
+          </button>
+        </div>
       </section>
 
     </div>
   </main>
+
+  <!-- Botão Flutuante Desktop: Voltar ao Início -->
+  <button type="button" class="desktop-scroll-top-btn" id="desktopScrollTopBtn" aria-label="Voltar ao início">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <line x1="12" y1="19" x2="12" y2="5"></line>
+      <polyline points="5 12 12 5 19 12"></polyline>
+    </svg>
+    <span>Início</span>
+  </button>
 
   <!-- Modal do Cronômetro Interativo (Brew Timer) -->
   <div class="timer-modal-overlay" id="timerModalOverlay" role="dialog" aria-modal="true" aria-labelledby="timerStepTitle">
     <div class="timer-modal-card">
       <button type="button" class="timer-modal__close" id="btnCloseTimer" aria-label="Fechar cronômetro">&times;</button>
       
-      <p class="timer-modal__method-tag" id="timerMethodTag">Hario V60 &bull; Café Caramelo</p>
+      <p class="timer-modal__method-tag" id="timerMethodTag">Hario V60 • Café Caramelo</p>
+      
+      <!-- Mascote Nico no Cronômetro -->
+      <div class="timer-mascot-strip" id="timerMascotStrip">
+        <img src="assets/mascot/nico-binoculars-badge.png" id="timerMascotImg" alt="Nico Aventureiro" class="timer-mascot-img" />
+        <p class="timer-mascot-text" id="timerMascotText">Acompanhando cada segundo da sua extração!</p>
+      </div>
       
       <!-- Barra de Progresso Geral da Extração -->
       <div class="timer-progress-wrap" aria-label="Progresso da extração">

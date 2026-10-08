@@ -92,16 +92,45 @@ document.addEventListener("DOMContentLoaded", () => {
   const coffeeNextBtnEl = document.getElementById("coffeeNextBtn");
   const btnGotoSummaryEl = document.getElementById("btnGotoSummary");
 
-  // Função auxiliar para rolar suavemente até o próximo passo
+  // Animação de rolagem com aceleração e desaceleração suave (easeInOutCubic)
+  function smoothScrollTo(targetY, duration = 800) {
+    const startY = window.pageYOffset;
+    const diff = targetY - startY;
+    if (Math.abs(diff) < 2) return;
+    let startTime = null;
+
+    function easeInOutCubic(t) {
+      return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    }
+
+    function step(timestamp) {
+      if (!startTime) startTime = timestamp;
+      const elapsed = timestamp - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const ease = easeInOutCubic(progress);
+      window.scrollTo(0, startY + diff * ease);
+
+      if (progress < 1) {
+        requestAnimationFrame(step);
+      }
+    }
+
+    requestAnimationFrame(step);
+  }
+
+  // Função auxiliar para rolar suavemente até o próximo passo com feedback visual
   function scrollToStep(elementId) {
     const el = document.getElementById(elementId);
     if (!el) return;
-    const headerHeight = 75;
-    const targetY = el.getBoundingClientRect().top + window.pageYOffset - headerHeight;
-    window.scrollTo({
-      top: Math.max(0, targetY),
-      behavior: "smooth"
-    });
+    const headerHeight = 85;
+    const targetY = Math.max(0, el.getBoundingClientRect().top + window.pageYOffset - headerHeight);
+    
+    smoothScrollTo(targetY, 800);
+
+    // Destaque luminoso sutil ao chegar na etapa de destino
+    el.classList.remove("step-arrival-glow");
+    void el.offsetWidth; // Força reflow para reiniciar animação
+    el.classList.add("step-arrival-glow");
   }
 
   // --------------------------------------------------------------------------
@@ -117,7 +146,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     coffeeGridEl.innerHTML = coffees.map(c => {
       const isSelected = calc.selectedCoffee.id === c.id;
-      const notesHtml = c.notes.map(n => `<span class="note-tag">${n}</span>`).join("");
+      const notesHtml = c.notes.map(n => `<span class="flavor-stamp">● ${n}</span>`).join("");
+      const islandHtml = c.islandRegion ? `<span class="coffee-card__island-tag">🏝️ ${c.islandRegion}</span>` : '';
       
       return `
         <div class="coffee-card ${isSelected ? 'selected' : ''}" data-coffee-id="${c.id}">
@@ -127,6 +157,7 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
           <div class="coffee-card__content">
             <h3 class="coffee-card__title">${c.name}</h3>
+            ${islandHtml}
             <p class="coffee-card__subtitle">${c.species} &bull; Torra ${c.roast}</p>
             <div class="coffee-card__notes">${notesHtml}</div>
             <div class="coffee-card__meta">
@@ -138,35 +169,56 @@ document.addEventListener("DOMContentLoaded", () => {
       `;
     }).join("");
 
-    // Adiciona eventos de clique aos cards com avanço automático
+    // Adiciona eventos de clique aos cards com avanço suave automático
     coffeeGridEl.querySelectorAll(".coffee-card").forEach(card => {
       card.addEventListener("click", () => {
         const id = card.dataset.coffeeId;
         calc.selectCoffee(id);
         renderCoffees();
-        // Avança suavemente para o Passo 2 (Métodos)
-        setTimeout(() => scrollToStep("sectionMethods"), 200);
+        // Avança suavemente para o Passo 2 (Métodos) com tempo para ver a seleção
+        setTimeout(() => scrollToStep("sectionMethods"), 450);
       });
     });
   }
 
-  // Mapeamento e obtenção de ícones vetoriais realistas para cada método
+  // Mapeamento e obtenção dos ícones ilustrados para cada método
   function getMethodIconSvg(methodId) {
     if (typeof METHOD_ICONS !== "undefined" && METHOD_ICONS[methodId]) {
       return METHOD_ICONS[methodId];
     }
-    const fallback = {
-      v60: "☕",
-      "french-press": "🫖",
-      aeropress: "⚡",
-      moka: "🔥",
-      melitta: "💧",
-      clever: "⏳",
-      chemex: "🧪",
-      "cold-brew": "🧊",
-      espresso: "🎯"
-    };
-    return fallback[methodId] || "☕";
+    return `<img src="assets/methods/${methodId}.png" alt="${methodId}" class="method-img" loading="lazy" />`;
+  }
+
+  // Dicas do Mascote Nico para cada Método
+  const nicoMethodTips = {
+    v60: "O Hario V60 destaca acidez brilhante e notas florais limpas com clareza máxima!",
+    "french-press": "Na Prensa Francesa, os óleos naturais trazem corpo denso e textura aveludada irresistível!",
+    aeropress: "A AeroPress combina imersão e pressão para um café super versátil, rápido e limpo!",
+    moka: "A Cafeteira Italiana entrega um café bem encorpado, forte e marcante, lembrando um espresso!",
+    melitta: "O filtro Melitta tradicional traz conforto equilibrado e extração uniforme para o dia a dia!",
+    clever: "O Clever junta o melhor da imersão com a clareza do filtro de papel. Muito fácil de acertar!",
+    chemex: "O filtro espesso da Chemex retém óleos pesados para uma bebida cristalina e super elegante!",
+    "cold-brew": "Extração lenta a frio: zero amargor agressivo e muita doçura natural com gelo!",
+    espresso: "Pressão máxima para criar aquela crema dourada espessa e sabor ultra concentrado!"
+  };
+
+  function updateNicoMethodTip(methodId) {
+    const tipEl = document.getElementById("nicoTipText");
+    const tagEl = document.getElementById("nicoTipTag");
+    const boxEl = document.getElementById("nicoMethodTipBox");
+    const methodObj = FUZZ_DATA.methods.find(m => m.id === methodId);
+
+    if (tipEl && nicoMethodTips[methodId]) {
+      tipEl.textContent = nicoMethodTips[methodId];
+    }
+    if (tagEl && methodObj) {
+      tagEl.textContent = `Dica do Barista Nico (${methodObj.name}):`;
+    }
+    if (boxEl) {
+      boxEl.classList.remove("nico-tip-pulse");
+      void boxEl.offsetWidth; // trigger reflow
+      boxEl.classList.add("nico-tip-pulse");
+    }
   }
 
   // Renderiza Métodos de Preparo com Ilustrações Realistas
@@ -184,13 +236,16 @@ document.addEventListener("DOMContentLoaded", () => {
       `;
     }).join("");
 
+    updateNicoMethodTip(calc.selectedMethod.id);
+
     methodsGridEl.querySelectorAll(".method-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         const id = btn.dataset.methodId;
         calc.selectMethod(id);
         renderMethods();
-        // Avança suavemente para o Passo 3 (Quantidades)
-        setTimeout(() => scrollToStep("sectionInputs"), 200);
+        updateNicoMethodTip(id);
+        // Dá tempo para o usuário ler a dica do Nico antes de rolar suavemente
+        setTimeout(() => scrollToStep("sectionInputs"), 950);
       });
     });
   }
@@ -212,7 +267,7 @@ document.addEventListener("DOMContentLoaded", () => {
         calc.applyPreset(ml);
         renderPresets();
         // Avança suavemente para o Resultado (Ficha de Extração)
-        setTimeout(() => scrollToStep("sectionSummary"), 200);
+        setTimeout(() => scrollToStep("sectionSummary"), 400);
       });
     });
   }
@@ -222,7 +277,18 @@ document.addEventListener("DOMContentLoaded", () => {
     const steps = state.method.steps;
     timer.setSteps(steps);
 
-    methodStepsContainerEl.innerHTML = steps.map((s, idx) => {
+    const tip = nicoMethodTips[state.method.id];
+    const tipBanner = tip ? `
+      <div class="step-nico-banner">
+        <img src="assets/mascot/nico-barista-badge.png" alt="Nico Barista" class="step-nico-avatar" />
+        <div class="step-nico-text">
+          <span class="step-nico-tag">Segredo de Extração no ${state.method.name}:</span>
+          <p>${tip}</p>
+        </div>
+      </div>
+    ` : "";
+
+    const stepsHtml = steps.map((s, idx) => {
       let dynamicDesc = s.desc;
       if (s.bloom) {
         dynamicDesc = `Despeje exatamente ${state.bloomWater}ml de água quente em espiral sobre o pó. Aguarde 40 segundos para liberar os aromas e dióxido de carbono.`;
@@ -242,6 +308,8 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
       `;
     }).join("");
+
+    methodStepsContainerEl.innerHTML = tipBanner + stepsHtml;
   }
 
   // --------------------------------------------------------------------------
@@ -293,10 +361,23 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     summaryCoffeeNameEl.textContent = state.coffee.name;
     summaryCoffeeBadgeEl.textContent = state.coffee.subtitle;
-    summaryCoffeeNotesEl.innerHTML = state.coffee.notes.map(n => `<span class="note-tag">${n}</span>`).join("");
+    summaryCoffeeNotesEl.innerHTML = state.coffee.notes.map(n => `<span class="flavor-stamp">● ${n}</span>`).join("");
     summaryMethodNameEl.textContent = state.method.name;
     if (summaryMethodIconEl) {
       summaryMethodIconEl.innerHTML = getMethodIconSvg(state.method.id);
+    }
+
+    // Atualiza fala do Nico sobre a proporção
+    const nicoSpeechEl = document.getElementById("nicoRatioSpeechText");
+    if (nicoSpeechEl) {
+      const r = Number(state.ratio);
+      if (r >= 16.5) {
+        nicoSpeechEl.textContent = "Delicado, leve e aromático como a brisa fresca da Ilha! 🍃";
+      } else if (r <= 13.5) {
+        nicoSpeechEl.textContent = "Poderoso, denso e encorpado para dar energia à expedição! ⚡";
+      } else {
+        nicoSpeechEl.textContent = "Equilíbrio padrão ouro da Fuzz! Doçura e corpo em harmonia perfeita. ☕✨";
+      }
     }
 
     summaryWaterMlEl.textContent = `${state.waterMl} ml`;
@@ -385,7 +466,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // --------------------------------------------------------------------------
   btnOpenTimerEl.addEventListener("click", () => {
     const state = calc.getState();
-    timerMethodTagEl.textContent = `${state.method.name} &bull; ${state.coffee.name}`;
+    timerMethodTagEl.textContent = `${state.method.name} • ${state.coffee.name}`;
     timerModalOverlayEl.classList.add("open");
     document.body.style.overflow = "hidden";
   });
@@ -401,6 +482,13 @@ document.addEventListener("DOMContentLoaded", () => {
   // Fecha clicando fora do card
   timerModalOverlayEl.addEventListener("click", (e) => {
     if (e.target === timerModalOverlayEl) {
+      closeTimerModal();
+    }
+  });
+
+  // Fecha o cronômetro ao pressionar a tecla ESC
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && timerModalOverlayEl.classList.contains("open")) {
       closeTimerModal();
     }
   });
@@ -441,6 +529,22 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     if (timerStepRemainingEl) {
       timerStepRemainingEl.textContent = tState.isFinished ? "Concluído" : `${tState.formattedStepRemaining} restante`;
+    }
+
+    // Atualiza mascote Nico no Cronômetro
+    const timerMascotImgEl = document.getElementById("timerMascotImg");
+    const timerMascotTextEl = document.getElementById("timerMascotText");
+    if (timerMascotImgEl && timerMascotTextEl) {
+      if (tState.isFinished) {
+        timerMascotImgEl.src = "assets/mascot/nico-drinking-badge.png";
+        timerMascotTextEl.textContent = "Café pronto! Extração perfeita concluída. Agora é só servir e saborear! ☕🎉";
+      } else if (tState.isRunning) {
+        timerMascotImgEl.src = "assets/mascot/nico-binoculars-badge.png";
+        timerMascotTextEl.textContent = "Nico com binóculos: acompanhando cada segundo da sua extração!";
+      } else {
+        timerMascotImgEl.src = "assets/mascot/nico-barista-badge.png";
+        timerMascotTextEl.textContent = "Tudo pronto! Aperte Iniciar para começar a sua aventura sensorial.";
+      }
     }
 
     if (tState.currentStep) {
@@ -559,6 +663,66 @@ Calculado via Calculadora Fuzz Cafés (www.fuzzcafes.com.br)`;
     btnGotoSummaryEl.addEventListener("click", () => {
       scrollToStep("sectionSummary");
     });
+  }
+
+  // --------------------------------------------------------------------------
+  // Ações de Navegação Desktop & Atalhos Rápidos
+  // --------------------------------------------------------------------------
+  const btnHeroStartEl = document.getElementById("btnHeroStart");
+  const btnHeroTimerEl = document.getElementById("btnHeroTimer");
+  const btnRestartRecipeEl = document.getElementById("btnRestartRecipe");
+  const btnStepTimerEl = document.getElementById("btnStepTimer");
+  const btnStepRestartEl = document.getElementById("btnStepRestart");
+  const desktopScrollTopBtnEl = document.getElementById("desktopScrollTopBtn");
+
+  // Botão do Hero: Começar a Preparar (leva direto ao Passo 1)
+  if (btnHeroStartEl) {
+    btnHeroStartEl.addEventListener("click", () => {
+      scrollToStep("sectionGrains");
+    });
+  }
+
+  // Botão do Hero: Abrir Cronômetro Direto
+  if (btnHeroTimerEl) {
+    btnHeroTimerEl.addEventListener("click", () => {
+      btnOpenTimerEl.click();
+    });
+  }
+
+  // Botão da Ficha de Extração: Recomeçar / Trocar Grão
+  if (btnRestartRecipeEl) {
+    btnRestartRecipeEl.addEventListener("click", () => {
+      scrollToStep("sectionGrains");
+    });
+  }
+
+  // Botão ao final das Instruções (Passo 4): Iniciar Cronômetro
+  if (btnStepTimerEl) {
+    btnStepTimerEl.addEventListener("click", () => {
+      btnOpenTimerEl.click();
+    });
+  }
+
+  // Botão ao final das Instruções (Passo 4): Voltar ao Passo 1
+  if (btnStepRestartEl) {
+    btnStepRestartEl.addEventListener("click", () => {
+      scrollToStep("sectionGrains");
+    });
+  }
+
+  // Botão Flutuante Desktop: Voltar ao Topo
+  if (desktopScrollTopBtnEl) {
+    desktopScrollTopBtnEl.addEventListener("click", () => {
+      smoothScrollTo(0, 850);
+    });
+
+    window.addEventListener("scroll", () => {
+      if (window.pageYOffset > 380) {
+        desktopScrollTopBtnEl.classList.add("visible");
+      } else {
+        desktopScrollTopBtnEl.classList.remove("visible");
+      }
+    }, { passive: true });
   }
 
   // Inicialização inicial dos blocos

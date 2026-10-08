@@ -5,10 +5,20 @@
  */
 
 const METHOD_ICONS = {
-  // 1. Hario V60 (Cone cônico laranja Fuzz com espirais sobre jarra de vidro com café quente e vapor)
+  v60: `<img src="assets/methods/v60.png" alt="Hario V60" class="method-img" loading="lazy" />`,
+  "french-press": `<img src="assets/methods/french-press.png" alt="Prensa Francesa" class="method-img" loading="lazy" />`,
+  aeropress: `<img src="assets/methods/aeropress.png" alt="AeroPress" class="method-img" loading="lazy" />`,
+  moka: `<img src="assets/methods/moka.png" alt="Cafeteira Italiana" class="method-img" loading="lazy" />`,
+  melitta: `<img src="assets/methods/melitta.png" alt="Filtro Tradicional" class="method-img" loading="lazy" />`,
+  clever: `<img src="assets/methods/clever.png" alt="Clever Dripper" class="method-img" loading="lazy" />`,
+  chemex: `<img src="assets/methods/chemex.png" alt="Chemex" class="method-img" loading="lazy" />`,
+  "cold-brew": `<img src="assets/methods/cold-brew.png" alt="Cold Brew" class="method-img" loading="lazy" />`,
+  espresso: `<img src="assets/methods/espresso.png" alt="Espresso" class="method-img" loading="lazy" />`,
+};
+
+const METHOD_SVG_FALLBACKS = {
   v60: `
     <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" class="method-svg" aria-label="Hario V60">
-      <!-- Vapor cartoon animado -->
       <path d="M25 8 C23 5 26 3 25 1" stroke="#ff7e00" stroke-width="2" stroke-linecap="round"/>
       <path d="M33 7 C31 4 34 2 33 0" stroke="#ffaa00" stroke-width="2" stroke-linecap="round"/>
       <path d="M41 8 C39 5 42 3 41 1" stroke="#ff7e00" stroke-width="2" stroke-linecap="round"/>

@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700;800;900&family=Lilita+One&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
+
 /* ==========================================================================
    Fuzz Cafés - Calculadora de Preparo de Café
    Design System & Estilização Inspirada em fuzzcafes.com.br
@@ -31,7 +33,13 @@
   --radius-lg: 16px;
   --radius-full: 9999px;
 
-  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-display: 'Lilita One', 'Fredoka', 'Titan One', 'Arial Rounded MT Bold', cursive, sans-serif;
+  --font-cartoon: 'Fredoka', 'Plus Jakarta Sans', sans-serif;
+  --font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 * {
@@ -281,56 +289,224 @@ body {
    Hero Banner da Calculadora
    -------------------------------------------------------------------------- */
 .calculator-hero {
-  background: radial-gradient(ellipse 80% 60% at 50% 0%, #2f2c27 0%, #1c1d1a 65%, #131413 100%);
+  background: 
+    radial-gradient(circle at 86% 20%, rgba(255, 215, 0, 0.42) 0%, rgba(255, 215, 0, 0) 38%),
+    radial-gradient(circle at 12% 85%, rgba(255, 126, 0, 0.28) 0%, rgba(255, 126, 0, 0) 42%),
+    linear-gradient(145deg, #189db0 0%, #29bece 40%, #35cbdb 70%, #4ae0ec 100%);
   color: #ffffff;
-  padding: 56px 20px 48px;
-  text-align: center;
-  border-bottom: 1px solid #333631;
+  padding: 50px 20px 46px;
+  border-bottom: 3.5px solid #1e201d;
   position: relative;
   overflow: hidden;
 }
 
-.calculator-hero::before {
+.hero-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 36px;
+  text-align: left;
+}
+
+.hero-mascot-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.hero-mascot-img {
+  width: 142px;
+  height: 142px;
+  border-radius: 50%;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25), 0 0 0 4px #ffc700, 4px 4px 0 #1e201d;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  background-color: #f59e0b;
+}
+
+.hero-mascot-img:hover {
+  transform: scale(1.06) rotate(3deg);
+}
+
+.hero-speech-bubble {
+  position: relative;
+  background-color: #ffffff;
+  color: #1e201d;
+  border: 2.5px solid #1e201d;
+  border-radius: 18px;
+  padding: 12px 18px;
+  max-width: 290px;
+  box-shadow: 4px 4px 0px #1e201d;
+  margin-top: 12px;
+  font-size: 0.92rem;
+  line-height: 1.4;
+  text-align: center;
+  font-family: var(--font-cartoon);
+}
+
+.hero-speech-bubble::before {
   content: "";
   position: absolute;
-  top: 0;
+  top: -11px;
   left: 50%;
   transform: translateX(-50%);
-  width: min(800px, 100%);
-  height: 200px;
-  background: radial-gradient(ellipse at 50% 0%, rgba(255, 126, 0, 0.16), transparent 70%);
-  pointer-events: none;
+  border-width: 0 10px 11px 10px;
+  border-style: solid;
+  border-color: transparent transparent #1e201d transparent;
+}
+
+.hero-speech-bubble::after {
+  content: "";
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 0 8px 8px 8px;
+  border-style: solid;
+  border-color: transparent transparent #ffffff transparent;
+}
+
+.hero-speech-bubble p {
+  color: #1e201d !important;
+  font-size: 0.9rem !important;
+  font-weight: 700 !important;
+  line-height: 1.4 !important;
+  margin: 0 !important;
+}
+
+.speech-author {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: #ea580c;
+  letter-spacing: 0.06em;
+  margin-bottom: 4px;
+}
+
+.hero-text-content {
+  flex: 1;
+  max-width: 650px;
 }
 
 .hero-badge {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background-color: rgba(255, 126, 0, 0.15);
-  border: 1px solid rgba(255, 126, 0, 0.35);
-  color: var(--color-brand-accent);
-  font-size: 0.78rem;
-  font-weight: 600;
+  background-color: #ffc700;
+  border: 2px solid #1e201d;
+  color: #1e201d;
+  font-family: var(--font-cartoon);
+  font-size: 0.85rem;
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  padding: 6px 14px;
+  letter-spacing: 0.04em;
+  padding: 6px 16px;
   border-radius: var(--radius-full);
-  margin-bottom: 18px;
+  box-shadow: 2.5px 2.5px 0px #1e201d;
+  margin-bottom: 14px;
+  transform: rotate(-1deg);
+  transition: transform 0.2s ease;
+}
+
+.hero-badge:hover {
+  transform: rotate(1deg) scale(1.03);
 }
 
 .calculator-hero h1 {
-  font-size: clamp(2rem, 4vw, 2.85rem);
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  margin-bottom: 14px;
-  line-height: 1.15;
+  font-family: var(--font-display);
+  font-size: clamp(2.3rem, 4.6vw, 3.4rem);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  margin-bottom: 12px;
+  line-height: 1.12;
+  color: #ffffff;
+  -webkit-text-stroke: 2.5px #1e201d;
+  paint-order: stroke fill;
+  text-shadow: 
+    0 4px 0 #1e201d,
+    3px 4px 0 #1e201d,
+    -2px -2px 0 #1e201d,
+    2px -2px 0 #1e201d,
+    -2px 2px 0 #1e201d,
+    3px 6px 14px rgba(0, 0, 0, 0.35);
 }
 
 .calculator-hero p {
-  color: #c4c4c0;
+  color: #ffffff;
   font-size: 1.05rem;
-  max-width: 650px;
-  margin: 0 auto;
+  line-height: 1.55;
+  margin: 0;
+  font-weight: 500;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* Ações de Início no Hero Banner (Desktop & Mobile) */
+.hero-cta-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 22px;
+  flex-wrap: wrap;
+}
+
+.btn-hero-start {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background-color: var(--color-brand-accent);
+  color: #ffffff;
+  border: 2.5px solid #1e201d;
+  border-radius: var(--radius-full);
+  padding: 12px 26px;
+  font-family: var(--font-cartoon);
+  font-size: 1rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 3.5px 3.5px 0px #1e201d;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-hero-start:hover {
+  background-color: #ff9100;
+  transform: translateY(-2px);
+  box-shadow: 4.5px 4.5px 0px #1e201d;
+}
+
+.btn-hero-start:active {
+  transform: translateY(1px);
+  box-shadow: 1.5px 1.5px 0px #1e201d;
+}
+
+.btn-hero-timer {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #ffffff;
+  color: #1e201d;
+  border: 2.5px solid #1e201d;
+  border-radius: var(--radius-full);
+  padding: 12px 22px;
+  font-family: var(--font-cartoon);
+  font-size: 0.98rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 3.5px 3.5px 0px #1e201d;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-hero-timer:hover {
+  background-color: #ffc700;
+  transform: translateY(-2px);
+  box-shadow: 4.5px 4.5px 0px #1e201d;
+}
+
+.btn-hero-timer:active {
+  transform: translateY(1px);
+  box-shadow: 1.5px 1.5px 0px #1e201d;
 }
 
 /* --------------------------------------------------------------------------
@@ -362,6 +538,36 @@ body {
 #sectionSummary { grid-area: summary; }
 #sectionSteps { grid-area: steps; }
 
+/* Transições ultra suaves e realce ao chegar na etapa */
+.control-card,
+#sectionGrains,
+#sectionMethods,
+#sectionInputs,
+#sectionSummary,
+#sectionSteps {
+  scroll-margin-top: 95px;
+  transition: box-shadow 0.4s ease, border-color 0.4s ease;
+}
+
+@keyframes stepArrivalGlow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 126, 0, 0);
+    border-color: var(--color-border);
+  }
+  35% {
+    box-shadow: 0 0 0 4px rgba(255, 126, 0, 0.3), 0 10px 25px -3px rgba(0, 0, 0, 0.1);
+    border-color: #ff7e00;
+  }
+  100% {
+    box-shadow: var(--shadow-md);
+    border-color: var(--color-border);
+  }
+}
+
+.step-arrival-glow {
+  animation: stepArrivalGlow 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 /* --------------------------------------------------------------------------
    Painel de Controles (Coluna Esquerda)
    -------------------------------------------------------------------------- */
@@ -389,23 +595,30 @@ body {
 .section-title {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 1.15rem;
-  font-weight: 700;
+  gap: 12px;
+  font-family: var(--font-cartoon);
+  font-size: 1.32rem;
+  font-weight: 800;
   color: var(--color-brand-dark);
+  letter-spacing: -0.01em;
 }
 
 .step-number {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 26px;
-  height: 26px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  background-color: var(--color-brand-dark);
-  color: #fff;
-  font-size: 0.8rem;
-  font-weight: 700;
+  background-color: #ffc700;
+  color: #1e201d;
+  border: 2px solid #1e201d;
+  box-shadow: 2px 2px 0px #1e201d;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 400;
+  line-height: 1;
+  flex-shrink: 0;
 }
 
 /* Filtros de Categoria de Café */
@@ -537,20 +750,55 @@ body {
 .coffee-card__subtitle {
   font-size: 0.78rem;
   color: var(--color-text-muted);
-  margin-bottom: 10px;
+  margin-bottom: 4px;
+}
+
+.coffee-card__island-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #0369a1;
+  background-color: #f0f9ff;
+  border: 1px solid #bae6fd;
+  border-radius: var(--radius-full);
+  padding: 2px 8px;
+  margin-bottom: 8px;
+  width: fit-content;
 }
 
 .coffee-card__notes {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px;
+  gap: 5px;
   margin-bottom: 12px;
+}
+
+.flavor-stamp {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #1e201d;
+  background-color: #fff9f0;
+  border: 1.5px solid #1e201d;
+  border-radius: 6px;
+  padding: 2px 7px;
+  box-shadow: 1.5px 1.5px 0px rgba(30, 32, 29, 0.15);
+  transition: transform 0.15s ease;
+  white-space: nowrap;
+}
+
+.flavor-stamp:hover {
+  transform: translateY(-1px) scale(1.05);
+  background-color: #ffffff;
 }
 
 .note-tag {
   font-size: 0.72rem;
-  background-color: #f3f2ee;
-  color: #444;
+  background-color: #fff9f0;
+  color: #1e201d;
+  border: 1px solid #1e201d;
+  font-weight: 600;
   padding: 2px 7px;
   border-radius: 4px;
 }
@@ -568,88 +816,247 @@ body {
 /* Grade de Métodos de Preparo */
 .methods-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(132px, 1fr));
   gap: 12px;
 }
 
 .method-btn {
   background-color: var(--color-bg-card);
-  border: 1.5px solid var(--color-border);
-  border-radius: var(--radius-md);
-  padding: 14px 10px;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 12px 10px 14px;
   text-align: center;
   cursor: pointer;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   position: relative;
+  box-shadow: 2px 2px 0px rgba(30, 32, 29, 0.08);
 }
 
 .method-btn:hover {
   border-color: #ff7e00;
-  transform: translateY(-3px);
-  box-shadow: 0 4px 12px rgba(255, 126, 0, 0.12);
+  transform: translateY(-4px);
+  box-shadow: 3px 5px 0px #1e201d;
 }
 
 .method-btn.selected {
-  border-color: #ff7e00;
-  background-color: #1e201d;
-  color: #ffffff;
-  box-shadow: 0 0 0 2px #ff7e00, var(--shadow-sm);
+  border-color: #1e201d;
+  background-color: #fff9f0;
+  color: #1e201d;
+  box-shadow: 3px 4px 0px #ff7e00, inset 0 0 0 2px #ff7e00;
 }
 
 .method-icon {
-  width: 52px;
-  height: 52px;
+  width: 72px;
+  height: 72px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #fff9f0;
-  border: 1.5px solid #1e201d;
-  border-radius: 50%;
-  padding: 5px;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
   margin-bottom: 2px;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   flex-shrink: 0;
-  box-shadow: 2px 2px 0px rgba(30, 32, 29, 0.15);
+  box-shadow: none;
 }
 
-.method-icon .method-svg {
+.method-img {
   width: 100%;
   height: 100%;
-  max-width: 42px;
-  max-height: 42px;
+  object-fit: contain;
   display: block;
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.12));
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), filter 0.25s ease;
 }
 
-.method-btn:hover .method-icon {
-  background-color: #ffffff;
-  transform: scale(1.08) rotate(-2deg);
-  box-shadow: 3px 3px 0px rgba(30, 32, 29, 0.25);
+.method-btn:hover .method-img {
+  transform: scale(1.1) rotate(-2deg);
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.2));
 }
 
-.method-btn.selected .method-icon {
-  background-color: #fffdfa;
-  border-color: #ff7e00;
-  box-shadow: 2px 2px 0px rgba(255, 126, 0, 0.4);
-  transform: scale(1.05);
+.method-btn.selected .method-img {
+  transform: scale(1.12);
+  filter: drop-shadow(0 6px 12px rgba(255, 126, 0, 0.35));
 }
 
 .method-name {
-  font-size: 0.85rem;
-  font-weight: 600;
+  font-family: var(--font-cartoon);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-brand-dark);
 }
 
 .method-ratio-hint {
-  font-size: 0.72rem;
-  opacity: 0.75;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.method-btn.selected .method-name {
+  color: #1e201d;
+  font-weight: 800;
 }
 
 .method-btn.selected .method-ratio-hint {
-  color: #ffaa4d;
+  color: #c2410c;
+  font-weight: 700;
+}
+
+/* Caixa de Dica do Mascote Nico no Passo 2 */
+.nico-tip-box {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+  background: linear-gradient(135deg, #fffbf0 0%, #fef3c7 100%);
+  border: 2px solid #1e201d;
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  box-shadow: 3px 3px 0px rgba(30, 32, 29, 0.25);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+@keyframes nicoTipPulse {
+  0% { transform: scale(0.98); }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+
+.nico-tip-pulse {
+  animation: nicoTipPulse 0.35s ease-out;
+}
+
+.nico-tip-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  border: 2px solid #1e201d;
+  box-shadow: 2px 2px 0px #1e201d;
+  background-color: #ffedd5;
+  object-fit: cover;
+}
+
+.nico-tip-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.nico-tip-tag {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #ea580c;
+  margin-bottom: 2px;
+}
+
+.nico-tip-content p {
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: #1e201d;
+  line-height: 1.35;
+  margin: 0;
+}
+
+/* Banner de Dica do Nico no Passo 4 (Instruções) */
+.step-nico-banner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+  background: linear-gradient(135deg, #fffaf5 0%, #ffedd5 100%);
+  border: 2px solid #ff7e00;
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  box-shadow: 2px 2px 0px rgba(255, 126, 0, 0.3);
+}
+
+.step-nico-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid #1e201d;
+  box-shadow: 2px 2px 0px #1e201d;
+  background-color: #fef3c7;
+  flex-shrink: 0;
+  object-fit: cover;
+}
+
+.step-nico-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.step-nico-tag {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #ea580c;
+  letter-spacing: 0.05em;
+  margin-bottom: 2px;
+}
+
+.step-nico-text p {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #1e201d;
+  margin: 0;
+  line-height: 1.35;
+}
+
+/* Reação do Nico no Controle de Proporção (Passo 3) */
+.nico-ratio-speech {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #fff9f0;
+  border: 1.5px dashed #ff7e00;
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #78350f;
+  margin-top: 10px;
+}
+
+/* Faixa do Mascote Nico no Cronômetro */
+.timer-mascot-strip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background-color: #fff9f0;
+  border: 2px solid #1e201d;
+  border-radius: var(--radius-md);
+  padding: 8px 14px;
+  margin-bottom: 14px;
+  box-shadow: 2px 2px 0px rgba(30, 32, 29, 0.2);
+}
+
+.timer-mascot-img {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: 1.5px 1.5px 0px #1e201d;
+  background-color: #ffedd5;
+}
+
+.timer-mascot-text {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #1e201d;
+  line-height: 1.25;
+  margin: 0;
+  text-align: left;
 }
 
 /* Resumo da Receita - Miniatura do Método */
@@ -660,23 +1067,24 @@ body {
 }
 
 .summary-method-icon {
-  width: 30px;
-  height: 30px;
+  width: 36px;
+  height: 36px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background-color: #fff9f0;
-  border: 1.5px solid #1e201d;
-  border-radius: 50%;
-  padding: 3px;
+  background: transparent;
+  border: none;
+  padding: 0;
   flex-shrink: 0;
-  box-shadow: 1px 1px 0px rgba(30, 32, 29, 0.2);
 }
 
+.summary-method-icon .method-img,
 .summary-method-icon .method-svg {
   width: 100%;
   height: 100%;
+  object-fit: contain;
   display: block;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
 }
 
 /* Bloco da Calculadora Bidirecional */
@@ -1069,6 +1477,131 @@ body {
 
 .btn-shop-coffee:hover {
   text-decoration: underline;
+}
+
+.btn-restart-recipe {
+  background-color: transparent;
+  color: var(--color-text-muted);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.btn-restart-recipe:hover {
+  background-color: #fff9f0;
+  color: #ea580c;
+  border-color: #ff7e00;
+  border-style: solid;
+}
+
+/* Ações ao final do Passo 4 */
+.step-finish-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px dashed var(--color-border);
+  flex-wrap: wrap;
+}
+
+.btn-step-timer {
+  flex: 1;
+  min-width: 220px;
+  background-color: var(--color-brand-accent);
+  color: #ffffff;
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 12px 18px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(255, 126, 0, 0.3);
+  transition: all 0.2s ease;
+}
+
+.btn-step-timer:hover {
+  background-color: var(--color-brand-accent-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(255, 126, 0, 0.4);
+}
+
+.btn-step-restart {
+  background-color: var(--color-bg-card-subtle);
+  color: var(--color-brand-dark);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 12px 18px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-step-restart:hover {
+  background-color: #eae9e3;
+  border-color: #bbb;
+}
+
+/* Botão Flutuante Voltar ao Início (Desktop & Mobile) */
+.desktop-scroll-top-btn {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 60;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #ffffff;
+  color: #1e201d;
+  border: 2px solid #1e201d;
+  border-radius: var(--radius-full);
+  padding: 10px 18px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 3px 3px 0px #1e201d, 0 8px 20px rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(16px);
+  transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s;
+}
+
+.desktop-scroll-top-btn.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.desktop-scroll-top-btn:hover {
+  background-color: #ff7e00;
+  color: #ffffff;
+  transform: translateY(-3px);
+  box-shadow: 4px 4px 0px #1e201d, 0 10px 24px rgba(0, 0, 0, 0.2);
+}
+
+.desktop-scroll-top-btn:active {
+  transform: translateY(1px);
+  box-shadow: 1px 1px 0px #1e201d;
+}
+
+@media (max-width: 768px) {
+  .desktop-scroll-top-btn {
+    bottom: 84px;
+    right: 16px;
+    padding: 8px 14px;
+  }
 }
 
 /* --------------------------------------------------------------------------
@@ -1640,16 +2173,33 @@ body {
   }
 
   .calculator-hero {
-    padding: 36px 16px 28px;
+    padding: 32px 16px 24px;
+  }
+
+  .hero-container {
+    flex-direction: column;
+    text-align: center;
+    gap: 16px;
+  }
+
+  .hero-mascot-img {
+    width: 105px;
+    height: 105px;
+  }
+
+  .hero-speech-bubble {
+    max-width: 92%;
+    margin-top: 8px;
+    font-size: 0.8rem;
   }
 
   .calculator-hero h1 {
-    font-size: 1.75rem;
+    font-size: 1.65rem;
     line-height: 1.2;
   }
 
   .calculator-hero p {
-    font-size: 0.9rem;
+    font-size: 0.88rem;
   }
 
   .section-header {

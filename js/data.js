@@ -20,6 +20,7 @@ const FUZZ_DATA = {
       recommendedMethods: ["v60", "melitta", "moka", "french-press"],
       accentColor: "#d97706",
       badge: "Mais Vendido",
+      islandRegion: "Caverna de Caramelo",
       image: "assets/coffees/caramelo.jpg",
       shopUrl: "https://www.fuzzcafes.com.br/cafesespeciais/caramelo-classico"
     },
@@ -38,6 +39,7 @@ const FUZZ_DATA = {
       recommendedMethods: ["moka", "french-press", "espresso", "aeropress"],
       accentColor: "#78350f",
       badge: "Intenso",
+      islandRegion: "Cascata de Chocolate",
       image: "assets/coffees/chocolate.jpg",
       shopUrl: "https://www.fuzzcafes.com.br/cafesespeciais/chocolate-classico"
     },
@@ -56,6 +58,7 @@ const FUZZ_DATA = {
       recommendedMethods: ["v60", "chemex", "aeropress", "clever"],
       accentColor: "#ea580c",
       badge: "Floral & Cítrico",
+      islandRegion: "Pomar Gigante",
       image: "assets/coffees/frutado.jpg",
       shopUrl: "https://www.fuzzcafes.com.br/cafesespeciais/frutado-classico"
     },
@@ -74,6 +77,7 @@ const FUZZ_DATA = {
       recommendedMethods: ["melitta", "v60", "french-press", "clever"],
       accentColor: "#92400e",
       badge: "Equilibrado",
+      islandRegion: "Alpes de Amêndoas",
       image: "assets/coffees/amendoado.jpg",
       shopUrl: "https://www.fuzzcafes.com.br/cafesespeciais/amendoado-classico"
     },
@@ -92,6 +96,7 @@ const FUZZ_DATA = {
       recommendedMethods: ["aeropress", "moka", "french-press", "v60"],
       accentColor: "#b45309",
       badge: "Raro & Exótico",
+      islandRegion: "Pico Amazônico",
       image: "assets/coffees/cocada.jpg",
       shopUrl: "https://www.fuzzcafes.com.br/cafesespeciais/cocada-microlote"
     },
@@ -110,6 +115,7 @@ const FUZZ_DATA = {
       recommendedMethods: ["v60", "aeropress", "melitta", "cold-brew"],
       accentColor: "#ca8a04",
       badge: "Edição Especial",
+      islandRegion: "Bosque dos Conilons",
       image: "assets/coffees/docedeleite.jpg",
       shopUrl: "https://www.fuzzcafes.com.br/cafesespeciais/docedeleite-microlote"
     },
@@ -128,6 +134,7 @@ const FUZZ_DATA = {
       recommendedMethods: ["v60", "chemex", "aeropress", "cold-brew"],
       accentColor: "#eab308",
       badge: "Safra 2026",
+      islandRegion: "Pomar Tropical",
       image: "assets/coffees/abacaxi.jpg",
       shopUrl: "https://www.fuzzcafes.com.br/cafesespeciais/abacaxi2026-microlote"
     },
@@ -146,6 +153,7 @@ const FUZZ_DATA = {
       recommendedMethods: ["v60", "chemex", "aeropress"],
       accentColor: "#f43f5e",
       badge: "Microtorra Rara",
+      islandRegion: "Oásis Refrescante",
       image: "assets/coffees/melancia.jpg",
       shopUrl: "https://www.fuzzcafes.com.br/cafesespeciais/melancia2026-microlote"
     }
@@ -229,7 +237,7 @@ const FUZZ_DATA = {
     },
     {
       id: "moka",
-      name: "Cafeteira Italiana (Moka)",
+      name: "Cafeteira Italiana",
       type: "Pressão de Vapor",
       shortDesc: "Café encorpado, forte e marcante, lembrando um espresso.",
       icon: "flame",
@@ -252,7 +260,7 @@ const FUZZ_DATA = {
     },
     {
       id: "melitta",
-      name: "Filtro Tradicional (Melitta)",
+      name: "Filtro Tradicional",
       type: "Filtro Trapezoidal",
       shortDesc: "O clássico do dia a dia brasileiro: equilibrado e acolhedor.",
       icon: "droplet",
@@ -322,7 +330,7 @@ const FUZZ_DATA = {
     },
     {
       id: "cold-brew",
-      name: "Cold Brew (Extração a Frio)",
+      name: "Cold Brew",
       type: "Infusão Longa a Frio",
       shortDesc: "Bebida suave, naturalmente doce e com baixíssima acidez.",
       icon: "snowflake",
