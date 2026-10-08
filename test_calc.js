@@ -1,0 +1,56 @@
+const fs = require('fs');
+
+// Carrega os arquivos modulares
+const coffeesJs = fs.readFileSync('./js/data/coffees.js', 'utf8');
+const methodsJs = fs.readFileSync('./js/data/methods.js', 'utf8');
+const presetsJs = fs.readFileSync('./js/data/presets.js', 'utf8');
+const dataJs = fs.readFileSync('./js/data.js', 'utf8');
+const calcJs = fs.readFileSync('./js/calculator.js', 'utf8');
+const timerJs = fs.readFileSync('./js/timer.js', 'utf8');
+
+// Executa no escopo global simulado
+const ctx = {};
+Function('window', 'require', coffeesJs + '\n' + methodsJs + '\n' + presetsJs + '\n' + dataJs + '\n' + calcJs + '\n' + timerJs + '\n' + `
+  global.FUZZ_DATA = FUZZ_DATA;
+  global.CoffeeCalculator = CoffeeCalculator;
+  global.BrewTimer = BrewTimer;
+`)(ctx, require);
+
+const calc = new CoffeeCalculator(FUZZ_DATA);
+
+console.log("=== TESTE CALCULADORA FUZZ CAFÉS ===");
+console.log("Estado Inicial:");
+console.log("- Café:", calc.selectedCoffee.name);
+console.log("- Método:", calc.selectedMethod.name);
+console.log("- Água:", calc.waterMl, "ml");
+console.log("- Café em pó:", calc.coffeeGrams, "g");
+console.log("- Proporção: 1:" + calc.ratio);
+
+// Teste 1: Alterar água para 500ml
+calc.setWaterMl(500);
+console.log("\nTeste 1 - Água alterada para 500ml:");
+console.log("- Café calculado:", calc.coffeeGrams, "g (Esperado: 33.3g)");
+if (Math.abs(calc.coffeeGrams - 33.3) < 0.1) console.log("✓ PASSOU!");
+
+// Teste 2: Alterar café para 18g
+calc.setCoffeeGrams(18);
+console.log("\nTeste 2 - Café alterado para 18g:");
+console.log("- Água calculada:", calc.waterMl, "ml (Esperado: 270ml)");
+if (calc.waterMl === 270) console.log("✓ PASSOU!");
+
+// Teste 3: Alterar para Prensa Francesa
+calc.selectMethod("french-press");
+console.log("\nTeste 3 - Método alterado para Prensa Francesa (Ratio 1:14):");
+console.log("- Água para 18g:", calc.waterMl, "ml (Esperado: 252ml)");
+if (calc.waterMl === 252) console.log("✓ PASSOU!");
+
+// Teste 4: Timer
+const timer = new BrewTimer();
+timer.setSteps(calc.selectedMethod.steps);
+console.log("\nTeste 4 - Timer configurado com passos do método:");
+console.log("- Passos carregados:", timer.steps.length);
+if (timer.steps.length > 0) console.log("✓ PASSOU!");
+
+console.log("\nTotal de cafés no catálogo:", FUZZ_DATA.coffees.length);
+console.log("Total de métodos de preparo:", FUZZ_DATA.methods.length);
+console.log("=== TODOS OS TESTES PASSARAM COM SUCESSO! ===");

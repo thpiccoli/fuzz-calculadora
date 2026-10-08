@@ -1,0 +1,20 @@
+{
+  "name": "fuzz-cafes-calculadora",
+  "version": "1.0.0",
+  "description": "Calculadora de proporções, receitas de preparo e catálogo oficial da Fuzz Cafés",
+  "main": "index.html",
+  "scripts": {
+    "test": "node test_data.js && node test_calc.js",
+    "test:data": "node test_data.js",
+    "test:calc": "node test_calc.js",
+    "start": "npx serve ."
+  },
+  "keywords": [
+    "coffee",
+    "fuzz-cafes",
+    "specialty-coffee",
+    "brew-calculator"
+  ],
+  "author": "Fuzz Cafés",
+  "license": "MIT"
+}

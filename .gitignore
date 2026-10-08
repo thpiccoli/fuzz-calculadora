@@ -1,6 +1,5 @@
 # Ambientes e arquivos temporários
 .DS_Store
 Thumbs.db
-test_calc.js
 scratch/
 *.log
