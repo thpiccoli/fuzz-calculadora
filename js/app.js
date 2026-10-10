@@ -55,12 +55,21 @@ document.addEventListener("DOMContentLoaded", () => {
   const summaryMethodIconEl = document.getElementById("summaryMethodIcon");
   const summaryWaterMlEl = document.getElementById("summaryWaterMl");
   const summaryCoffeeGramsEl = document.getElementById("summaryCoffeeGrams");
+  const summaryYieldMlEl = document.getElementById("summaryYieldMl");
   const summaryBloomWaterEl = document.getElementById("summaryBloomWater");
   const summaryRatioDisplayEl = document.getElementById("summaryRatioDisplay");
   const summaryGrindNameEl = document.getElementById("summaryGrindName");
   const summaryTempEl = document.getElementById("summaryTemp");
+  const summaryTempTipEl = document.getElementById("summaryTempTip");
   const summaryTimeEl = document.getElementById("summaryTime");
   const summaryShopLinkEl = document.getElementById("summaryShopLink");
+
+  // Guia de Moedores Modal
+  const grinderModalOverlayEl = document.getElementById("grinderModalOverlay");
+  const btnOpenGrinderGuideEl = document.getElementById("btnOpenGrinderGuide");
+  const btnCloseGrinderModalEl = document.getElementById("btnCloseGrinderModal");
+  const grinderModalMethodEl = document.getElementById("grinderModalMethod");
+  const grinderModalGrindEl = document.getElementById("grinderModalGrind");
 
   // Passos de Preparo
   const methodStepsContainerEl = document.getElementById("methodStepsContainer");
@@ -76,14 +85,22 @@ document.addEventListener("DOMContentLoaded", () => {
   const timerStepRemainingEl = document.getElementById("timerStepRemaining");
   const timerStepTitleEl = document.getElementById("timerStepTitle");
   const timerStepDescEl = document.getElementById("timerStepDesc");
+  const timerStepBoxEl = document.getElementById("timerStepBox");
   const timerNextStepEl = document.getElementById("timerNextStep");
   const btnTimerStartEl = document.getElementById("btnTimerStart");
   const btnTimerResetEl = document.getElementById("btnTimerReset");
   const btnTimerPrevStepEl = document.getElementById("btnTimerPrevStep");
   const btnTimerNextStepBtnEl = document.getElementById("btnTimerNextStepBtn");
+  const btnToggleMuteEl = document.getElementById("btnToggleMute");
 
-  // Toast e Cópia
+  // Toast, Cópia, Compartilhamento, Impressão e Favoritos
   const btnCopyRecipeEl = document.getElementById("btnCopyRecipe");
+  const btnShareWhatsAppEl = document.getElementById("btnShareWhatsApp");
+  const btnSaveFavoriteEl = document.getElementById("btnSaveFavorite");
+  const btnCopyShareLinkEl = document.getElementById("btnCopyShareLink");
+  const btnPrintRecipeEl = document.getElementById("btnPrintRecipe");
+  const saveFavoriteIconEl = document.getElementById("saveFavoriteIcon");
+  const saveFavoriteTextEl = document.getElementById("saveFavoriteText");
   const fuzzToastEl = document.getElementById("fuzzToast");
 
   // Menu Mobile Drawer
@@ -180,7 +197,7 @@ document.addEventListener("DOMContentLoaded", () => {
           <div class="coffee-card__content">
             <h3 class="coffee-card__title">${c.name}</h3>
             ${islandHtml}
-            <p class="coffee-card__subtitle">${c.species} &bull; Torra ${c.roast}</p>
+            <p class="coffee-card__subtitle">${c.species}<!-- &bull; Torra ${c.roast} (removido conforme filosofia Fuzz) --></p>
             <div class="coffee-card__notes">${notesHtml}</div>
             <div class="coffee-card__meta">
               <span>Doçura: ${'★'.repeat(c.sensory.sweetness)}${'☆'.repeat(5 - c.sensory.sweetness)}</span>
@@ -297,8 +314,15 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderMethodSteps(state) {
     if (!methodStepsContainerEl) return;
 
-    const steps = state.method.steps;
-    timer.setSteps(steps);
+    const steps = state.steps || state.method.steps;
+    
+    // Atualiza os passos no cronômetro com os valores calculados
+    if (!timer.isRunning) {
+      timer.setSteps(steps);
+    } else {
+      timer.steps = steps;
+      timer.notify();
+    }
 
     const tip = nicoMethodTips[state.method.id];
     const tipBanner = tip ? `
@@ -312,21 +336,12 @@ document.addEventListener("DOMContentLoaded", () => {
     ` : "";
 
     const stepsHtml = steps.map((s, idx) => {
-      let dynamicDesc = s.desc;
-      if (s.bloom) {
-        dynamicDesc = `Despeje exatamente ${state.bloomWater}ml de água quente em espiral sobre o pó. Aguarde 40 segundos para liberar os aromas e dióxido de carbono.`;
-      } else if (s.title.includes("1º Despejo")) {
-        dynamicDesc = `Despeje em círculos suaves até a balança marcar cerca de ${state.firstPour}ml.`;
-      } else if (s.title.includes("2º Despejo") || s.title.includes("Final")) {
-        dynamicDesc = `Complete calmamente até alcançar o volume total de ${state.finalPour}ml.`;
-      }
-
       return `
         <div class="step-item">
           <div class="step-item__icon">${idx + 1}</div>
           <div class="step-item__content">
             <h4>${s.title}</h4>
-            <p>${dynamicDesc}</p>
+            <p>${s.desc}</p>
           </div>
         </div>
       `;
@@ -414,11 +429,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (summaryWaterMlEl) summaryWaterMlEl.textContent = `${state.waterMl} ml`;
     if (summaryCoffeeGramsEl) summaryCoffeeGramsEl.textContent = `${state.coffeeGrams} g`;
+    if (summaryYieldMlEl) summaryYieldMlEl.textContent = `~${state.yieldMl} ml`;
     if (summaryBloomWaterEl) summaryBloomWaterEl.textContent = `${state.bloomWater} ml`;
     if (summaryRatioDisplayEl) summaryRatioDisplayEl.textContent = `1 : ${state.ratio} (${state.intensity})`;
 
     if (summaryGrindNameEl) summaryGrindNameEl.textContent = `${state.grind.name} (${state.grind.description})`;
     if (summaryTempEl) summaryTempEl.textContent = state.temp;
+    if (summaryTempTipEl) summaryTempTipEl.textContent = state.tempTip || state.coffee.roast;
     if (summaryTimeEl) summaryTimeEl.textContent = state.totalTime;
 
     if (summaryShopLinkEl) {
@@ -435,6 +452,10 @@ document.addEventListener("DOMContentLoaded", () => {
     // Atualiza passos adaptados e presets ativos
     renderMethodSteps(state);
     renderPresets();
+
+    // Sincronização de URL (Deep Linking) e status de favorito
+    syncUrlParams(state);
+    checkFavoriteStatus(state);
   });
 
   // ==========================================================================
@@ -506,14 +527,74 @@ document.addEventListener("DOMContentLoaded", () => {
   // 8. MÓDULO DO CRONÔMETRO INTERATIVO (BREW TIMER MODAL)
   // ==========================================================================
 
+  // Screen Wake Lock API (mantém a tela acesa durante o preparo)
+  let wakeLockSentinel = null;
+
+  async function requestWakeLock() {
+    try {
+      if ("wakeLock" in navigator && !wakeLockSentinel) {
+        wakeLockSentinel = await navigator.wakeLock.request("screen");
+        wakeLockSentinel.addEventListener("release", () => {
+          wakeLockSentinel = null;
+        });
+      }
+    } catch (e) {
+      // Ignora silenciosamente se o dispositivo não permitir ou não tiver bateria
+    }
+  }
+
+  async function releaseWakeLock() {
+    if (wakeLockSentinel) {
+      try {
+        await wakeLockSentinel.release();
+      } catch (e) {}
+      wakeLockSentinel = null;
+    }
+  }
+
+  document.addEventListener("visibilitychange", async () => {
+    if (document.visibilityState === "visible" && timerModalOverlayEl && timerModalOverlayEl.classList.contains("open")) {
+      await requestWakeLock();
+    }
+  });
+
+  // Controle de Áudio / Mudo
+  const isMutedSaved = localStorage.getItem("fuzz_timer_muted") === "true";
+  timer.setMuted(isMutedSaved);
+
+  function updateMuteButtonUI(isMuted) {
+    if (!btnToggleMuteEl) return;
+    btnToggleMuteEl.textContent = isMuted ? "🔇" : "🔊";
+    btnToggleMuteEl.classList.toggle("muted", isMuted);
+    btnToggleMuteEl.title = isMuted ? "Desmutar som (M)" : "Silenciar som (M)";
+    btnToggleMuteEl.setAttribute("aria-label", isMuted ? "Desmutar som do cronômetro" : "Silenciar som do cronômetro");
+  }
+
+  function toggleTimerMute() {
+    const newMuted = timer.toggleMute();
+    localStorage.setItem("fuzz_timer_muted", String(newMuted));
+    updateMuteButtonUI(newMuted);
+  }
+
+  if (btnToggleMuteEl) {
+    btnToggleMuteEl.addEventListener("click", toggleTimerMute);
+    updateMuteButtonUI(timer.isMuted);
+  }
+
   function openTimerModal() {
     if (!timerModalOverlayEl) return;
     const state = calc.getState();
+    const steps = state.steps || state.method.steps;
+    if (!timer.isRunning && timer.seconds === 0) {
+      timer.setSteps(steps);
+    }
     if (timerMethodTagEl) {
       timerMethodTagEl.textContent = `${state.method.name} • ${state.coffee.name}`;
     }
+    updateMuteButtonUI(timer.isMuted);
     timerModalOverlayEl.classList.add("open");
     document.body.style.overflow = "hidden";
+    requestWakeLock();
   }
 
   function closeTimerModal() {
@@ -521,6 +602,7 @@ document.addEventListener("DOMContentLoaded", () => {
     timer.pause();
     timerModalOverlayEl.classList.remove("open");
     document.body.style.overflow = "";
+    releaseWakeLock();
   }
 
   if (btnOpenTimerEl) btnOpenTimerEl.addEventListener("click", openTimerModal);
@@ -532,9 +614,34 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // Atalhos de Teclado no Desktop para o Cronômetro
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && timerModalOverlayEl && timerModalOverlayEl.classList.contains("open")) {
+    if (!timerModalOverlayEl || !timerModalOverlayEl.classList.contains("open")) return;
+
+    if (e.key === "Escape") {
       closeTimerModal();
+    } else if (e.code === "Space") {
+      e.preventDefault();
+      if (timer.isRunning) {
+        timer.pause();
+      } else {
+        timer.start();
+      }
+    } else if (e.key === "ArrowRight") {
+      e.preventDefault();
+      timer.skipNext();
+    } else if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      timer.skipPrev();
+    } else if (e.key === "r" || e.key === "R") {
+      e.preventDefault();
+      const state = calc.getState();
+      const steps = state.steps || state.method.steps;
+      lastActiveStepIndex = 0;
+      timer.setSteps(steps);
+    } else if (e.key === "m" || e.key === "M") {
+      e.preventDefault();
+      toggleTimerMute();
     }
   });
 
@@ -548,9 +655,18 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  if (btnTimerResetEl) btnTimerResetEl.addEventListener("click", () => timer.reset());
+  if (btnTimerResetEl) {
+    btnTimerResetEl.addEventListener("click", () => {
+      const state = calc.getState();
+      const steps = state.steps || state.method.steps;
+      lastActiveStepIndex = 0;
+      timer.setSteps(steps);
+    });
+  }
   if (btnTimerPrevStepEl) btnTimerPrevStepEl.addEventListener("click", () => timer.skipPrev());
   if (btnTimerNextStepBtnEl) btnTimerNextStepBtnEl.addEventListener("click", () => timer.skipNext());
+
+  let lastActiveStepIndex = -1;
 
   // Inscrição reativa do cronômetro
   timer.subscribe(tState => {
@@ -568,6 +684,19 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     if (timerStepRemainingEl) {
       timerStepRemainingEl.textContent = tState.isFinished ? "Concluído" : `${tState.formattedStepRemaining} restante`;
+    }
+
+    // Destaque visual e animação vibrante ao avançar/mudar de etapa no cronômetro
+    if (lastActiveStepIndex !== tState.currentStepIndex) {
+      if (lastActiveStepIndex !== -1 && timerStepBoxEl) {
+        timerStepBoxEl.classList.remove("step-change-pulse");
+        void timerStepBoxEl.offsetWidth; // Força reflow para reiniciar animação
+        timerStepBoxEl.classList.add("step-change-pulse");
+        setTimeout(() => {
+          if (timerStepBoxEl) timerStepBoxEl.classList.remove("step-change-pulse");
+        }, 700);
+      }
+      lastActiveStepIndex = tState.currentStepIndex;
     }
 
     // Atualiza ilustração e fala do mascote Nico no cronômetro
@@ -589,10 +718,10 @@ document.addEventListener("DOMContentLoaded", () => {
     if (timerStepTitleEl && timerStepDescEl) {
       if (tState.currentStep) {
         timerStepTitleEl.textContent = tState.currentStep.title;
-        timerStepDescEl.textContent = tState.currentStep.desc;
+        timerStepDescEl.innerHTML = tState.currentStep.desc;
       } else if (tState.isFinished) {
         timerStepTitleEl.textContent = "Extração Concluída! 🎉";
-        timerStepDescEl.textContent = "Seu café Fuzz está pronto para ser degustado. Bom proveito!";
+        timerStepDescEl.innerHTML = "Seu café Fuzz está pronto para ser degustado. Bom proveito!";
       }
     }
 
@@ -631,6 +760,7 @@ Grão: ${state.coffee.name} (${state.coffee.subtitle})
 Método: ${state.method.name}
 Volume de Água: ${state.waterMl} ml
 Pó de Café: ${state.coffeeGrams} g (Proporção 1:${state.ratio})
+Bebida Estimada na Xícara: ~${state.yieldMl} ml
 Pré-infusão (Bloom): ${state.bloomWater} ml por 40 seg
 Moagem: ${state.grind.name}
 Temperatura da Água: ${state.temp}
@@ -645,6 +775,204 @@ Calculado via Calculadora Fuzz Cafés (www.fuzzcafes.com.br)`;
       });
     });
   }
+
+  // ==========================================================================
+  // COMPARTILHAMENTO, LINK DIRETO & FAVORITOS (FASE 3)
+  // ==========================================================================
+
+  const FAVORITE_STORAGE_KEY = "fuzz_favorite_recipe";
+
+  /**
+   * Constrói a URL canônica para compartilhamento com os parâmetros atuais
+   */
+  function buildRecipeUrl(state) {
+    const url = new URL(window.location.origin + window.location.pathname);
+    url.searchParams.set("cafe", state.coffee.id);
+    url.searchParams.set("metodo", state.method.id);
+    url.searchParams.set("agua", state.waterMl);
+    url.searchParams.set("ratio", state.ratio);
+    return url.toString();
+  }
+
+  /**
+   * Atualiza a barra de endereço silenciosamente sem recarregar a página
+   */
+  function syncUrlParams(state) {
+    try {
+      const url = new URL(window.location.href);
+      url.searchParams.set("cafe", state.coffee.id);
+      url.searchParams.set("metodo", state.method.id);
+      url.searchParams.set("agua", state.waterMl);
+      url.searchParams.set("ratio", state.ratio);
+      window.history.replaceState({}, "", url.toString());
+    } catch (e) {
+      // Falha silenciosa em navegadores com restrições de sandbox
+    }
+  }
+
+  /**
+   * Verifica se a configuração atual é idêntica à salva como favorita
+   */
+  function checkFavoriteStatus(state) {
+    if (!btnSaveFavoriteEl || !saveFavoriteIconEl || !saveFavoriteTextEl) return;
+    try {
+      const savedRaw = localStorage.getItem(FAVORITE_STORAGE_KEY);
+      if (!savedRaw) {
+        btnSaveFavoriteEl.classList.remove("is-favorite");
+        saveFavoriteIconEl.textContent = "⭐";
+        saveFavoriteTextEl.textContent = "Salvar Padrão";
+        return;
+      }
+      const saved = JSON.parse(savedRaw);
+      const isMatch = saved.coffeeId === state.coffee.id &&
+                      saved.methodId === state.method.id &&
+                      Number(saved.waterMl) === Number(state.waterMl) &&
+                      Number(saved.ratio) === Number(state.ratio);
+
+      if (isMatch) {
+        btnSaveFavoriteEl.classList.add("is-favorite");
+        saveFavoriteIconEl.textContent = "★";
+        saveFavoriteTextEl.textContent = "Receita Padrão";
+      } else {
+        btnSaveFavoriteEl.classList.remove("is-favorite");
+        saveFavoriteIconEl.textContent = "⭐";
+        saveFavoriteTextEl.textContent = "Salvar Padrão";
+      }
+    } catch (e) {
+      btnSaveFavoriteEl.classList.remove("is-favorite");
+    }
+  }
+
+  /**
+   * Salva a receita atual no localStorage como favorita/padrão
+   */
+  function toggleSaveFavorite() {
+    const state = calc.getState();
+    try {
+      const savedRaw = localStorage.getItem(FAVORITE_STORAGE_KEY);
+      let isAlreadyFavorite = false;
+      if (savedRaw) {
+        const saved = JSON.parse(savedRaw);
+        isAlreadyFavorite = saved.coffeeId === state.coffee.id &&
+                            saved.methodId === state.method.id &&
+                            Number(saved.waterMl) === Number(state.waterMl) &&
+                            Number(saved.ratio) === Number(state.ratio);
+      }
+
+      if (isAlreadyFavorite) {
+        localStorage.removeItem(FAVORITE_STORAGE_KEY);
+        checkFavoriteStatus(state);
+        showToast("Receita padrão removida!");
+      } else {
+        const payload = {
+          coffeeId: state.coffee.id,
+          methodId: state.method.id,
+          waterMl: state.waterMl,
+          ratio: state.ratio,
+          savedAt: new Date().toISOString()
+        };
+        localStorage.setItem(FAVORITE_STORAGE_KEY, JSON.stringify(payload));
+        checkFavoriteStatus(state);
+        showToast(`⭐ Receita salva como padrão para suas próximas visitas!`);
+      }
+    } catch (e) {
+      showToast("Não foi possível salvar a receita favorita no navegador.");
+    }
+  }
+
+  // Compartilhamento via WhatsApp
+  if (btnShareWhatsAppEl) {
+    btnShareWhatsAppEl.addEventListener("click", () => {
+      const state = calc.getState();
+      const shareUrl = buildRecipeUrl(state);
+      const text = `☕ *Minha Receita Fuzz Cafés:*
+Grão: ${state.coffee.name} (${state.coffee.subtitle})
+Método: ${state.method.name}
+Volume: ${state.waterMl}ml | Café: ${state.coffeeGrams}g (1:${state.ratio})
+Rendimento na Xícara: ~${state.yieldMl}ml
+Temperatura: ${state.temp}
+Moagem: ${state.grind.name}
+
+Abra a receita interativa com cronômetro aqui:
+${shareUrl}`;
+
+      const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
+      window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+    });
+  }
+
+  // Copiar Link Direto para a Receita
+  if (btnCopyShareLinkEl) {
+    btnCopyShareLinkEl.addEventListener("click", () => {
+      const state = calc.getState();
+      const shareUrl = buildRecipeUrl(state);
+      navigator.clipboard.writeText(shareUrl).then(() => {
+        showToast("🔗 Link direto da receita copiado!");
+      }).catch(() => {
+        showToast("Erro ao copiar o link da receita.");
+      });
+    });
+  }
+
+  // Imprimir Ficha de Bancada Minimalista
+  if (btnPrintRecipeEl) {
+    btnPrintRecipeEl.addEventListener("click", () => {
+      window.print();
+    });
+  }
+
+  // Salvar Receita Favorita
+  if (btnSaveFavoriteEl) {
+    btnSaveFavoriteEl.addEventListener("click", toggleSaveFavorite);
+  }
+
+  // Modal do Guia de Moedores
+  function openGrinderGuide() {
+    if (!grinderModalOverlayEl) return;
+    const state = calc.getState();
+    if (grinderModalMethodEl) grinderModalMethodEl.textContent = state.method.name;
+    if (grinderModalGrindEl) {
+      grinderModalGrindEl.textContent = `${state.grind.name} (Nível ${state.grind.level})`;
+    }
+
+    // Destaque visual da coluna correspondente ao nível de moagem do método atual
+    const table = grinderModalOverlayEl.querySelector(".grinder-table");
+    if (table) {
+      const currentLevel = String(state.grind.level);
+      table.querySelectorAll("th, td").forEach(cell => {
+        const level = cell.dataset.level;
+        if (level && level === currentLevel) {
+          cell.classList.add("col-active");
+        } else {
+          cell.classList.remove("col-active");
+        }
+      });
+    }
+
+    grinderModalOverlayEl.classList.add("open");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeGrinderGuide() {
+    if (!grinderModalOverlayEl) return;
+    grinderModalOverlayEl.classList.remove("open");
+    document.body.style.overflow = "";
+  }
+
+  if (btnOpenGrinderGuideEl) btnOpenGrinderGuideEl.addEventListener("click", openGrinderGuide);
+  if (btnCloseGrinderModalEl) btnCloseGrinderModalEl.addEventListener("click", closeGrinderGuide);
+
+  if (grinderModalOverlayEl) {
+    grinderModalOverlayEl.addEventListener("click", (e) => {
+      if (e.target === grinderModalOverlayEl) closeGrinderGuide();
+    });
+  }
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && grinderModalOverlayEl && grinderModalOverlayEl.classList.contains("open")) {
+      closeGrinderGuide();
+    }
+  });
 
   // Menu Mobile Drawer
   if (mobileMenuToggleEl && mobileNavDrawerEl) {
@@ -734,8 +1062,62 @@ Calculado via Calculadora Fuzz Cafés (www.fuzzcafes.com.br)`;
     }, { passive: true });
   }
 
+  /**
+   * Carrega estado inicial a partir de URL Query Params (Deep Link) ou Receita Favorita do localStorage
+   */
+  function loadInitialStateFromUrlOrFavorite() {
+    let loadedFromSource = false;
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const urlCoffee = params.get("cafe") || params.get("grao");
+      const urlMethod = params.get("metodo");
+      const urlWater = params.get("agua");
+      const urlRatio = params.get("ratio");
+      const urlCoffeeGrams = params.get("po") || params.get("cafe_g");
+
+      // 1. Prioridade: Parâmetros na URL
+      if (urlCoffee || urlMethod || urlWater || urlRatio || urlCoffeeGrams) {
+        if (urlCoffee) calc.selectCoffee(urlCoffee);
+        if (urlMethod) calc.selectMethod(urlMethod);
+        if (urlRatio) calc.setRatio(parseFloat(urlRatio));
+        if (urlWater) calc.setWaterMl(parseFloat(urlWater));
+        if (urlCoffeeGrams) calc.setCoffeeGrams(parseFloat(urlCoffeeGrams));
+        loadedFromSource = true;
+      }
+      // 2. Segunda prioridade: Receita favorita salva pelo usuário
+      else {
+        const savedRaw = localStorage.getItem(FAVORITE_STORAGE_KEY);
+        if (savedRaw) {
+          const saved = JSON.parse(savedRaw);
+          if (saved.coffeeId) calc.selectCoffee(saved.coffeeId);
+          if (saved.methodId) calc.selectMethod(saved.methodId);
+          if (saved.ratio) calc.setRatio(parseFloat(saved.ratio));
+          if (saved.waterMl) calc.setWaterMl(parseFloat(saved.waterMl));
+          loadedFromSource = true;
+        }
+      }
+    } catch (e) {
+      console.warn("Aviso ao carregar estado inicial da receita:", e);
+    }
+    return loadedFromSource;
+  }
+
+  // Carrega estado inicial personalizado se existir
+  loadInitialStateFromUrlOrFavorite();
+
   // Inicialização dos Blocos Visuais
   renderCoffees();
   renderMethods();
   renderPresets();
+
+  // Registro do Service Worker (PWA Offline)
+  if ("serviceWorker" in navigator && window.location.protocol.startsWith("http")) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("./sw.js").then(reg => {
+        console.log("Fuzz Cafés: PWA Service Worker registrado com sucesso:", reg.scope);
+      }).catch(err => {
+        console.warn("Fuzz Cafés: Registro do Service Worker indisponível:", err);
+      });
+    });
+  }
 });

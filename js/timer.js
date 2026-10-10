@@ -12,6 +12,18 @@ class BrewTimer {
     this.steps = [];
     this.listeners = [];
     this.audioCtx = null;
+    this.isMuted = false;
+    this.hasPlayedFinishedFanfare = false;
+  }
+
+  setMuted(muted) {
+    this.isMuted = !!muted;
+    this.notify();
+  }
+
+  toggleMute() {
+    this.setMuted(!this.isMuted);
+    return this.isMuted;
   }
 
   setSteps(steps) {
@@ -34,6 +46,7 @@ class BrewTimer {
 
     const state = {
       isRunning: this.isRunning,
+      isMuted: this.isMuted,
       seconds: this.seconds,
       formattedTime: this.formatTime(this.seconds),
       currentStepIndex: this.currentStepIndex,
@@ -75,6 +88,7 @@ class BrewTimer {
     this.isRunning = true;
     this.timerInterval = setInterval(() => {
       this.seconds++;
+      this.checkCountdownBeep();
       this.updateStepIndex();
       this.notify();
     }, 1000);
@@ -93,6 +107,7 @@ class BrewTimer {
     this.isRunning = false;
     this.seconds = 0;
     this.currentStepIndex = 0;
+    this.hasPlayedFinishedFanfare = false;
     this.notify();
   }
 
@@ -106,6 +121,15 @@ class BrewTimer {
       this.seconds = accumulated;
       this.currentStepIndex++;
       this.playChime();
+      this.triggerVibration([60, 40, 60]);
+      this.notify();
+    } else if (this.currentStepIndex === this.steps.length - 1 && !this.isFinished()) {
+      this.seconds = this.getTotalDuration();
+      if (!this.hasPlayedFinishedFanfare) {
+        this.hasPlayedFinishedFanfare = true;
+        this.playFinishedFanfare();
+        this.triggerVibration([100, 50, 100, 50, 250]);
+      }
       this.notify();
     }
   }
@@ -148,6 +172,26 @@ class BrewTimer {
     if (newIndex !== this.currentStepIndex) {
       this.currentStepIndex = newIndex;
       this.playChime();
+      this.triggerVibration([60, 40, 60]);
+    }
+
+    if (this.isFinished() && !this.hasPlayedFinishedFanfare) {
+      this.hasPlayedFinishedFanfare = true;
+      this.playFinishedFanfare();
+      this.triggerVibration([100, 50, 100, 50, 250]);
+    }
+  }
+
+  checkCountdownBeep() {
+    if (this.isMuted || !this.steps || this.steps.length === 0) return;
+    const remaining = this.getStepRemainingSeconds();
+    const currentStep = this.steps[this.currentStepIndex];
+    const duration = currentStep ? (currentStep.duration || 0) : 0;
+    
+    // Toca bip suave preventivo aos 3s, 2s e 1s (apenas se a etapa tiver mais de 4s de duração)
+    if (duration > 4 && (remaining === 3 || remaining === 2 || remaining === 1)) {
+      this.playCountdownBeep(remaining);
+      this.triggerVibration(35);
     }
   }
 
@@ -166,8 +210,33 @@ class BrewTimer {
     }
   }
 
-  playChime() {
+  playCountdownBeep(remaining) {
+    if (this.isMuted) return;
     try {
+      this.initAudio();
+      if (!this.audioCtx) return;
+      if (this.audioCtx.state === 'suspended') {
+        this.audioCtx.resume();
+      }
+      const osc = this.audioCtx.createOscillator();
+      const gain = this.audioCtx.createGain();
+      osc.type = 'sine';
+      // Tom suave ascendente (520Hz, 580Hz, 640Hz)
+      const freq = remaining === 1 ? 640 : (remaining === 2 ? 580 : 520);
+      osc.frequency.setValueAtTime(freq, this.audioCtx.currentTime);
+      gain.gain.setValueAtTime(0.08, this.audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, this.audioCtx.currentTime + 0.12);
+      osc.connect(gain);
+      gain.connect(this.audioCtx.destination);
+      osc.start();
+      osc.stop(this.audioCtx.currentTime + 0.12);
+    } catch (e) {}
+  }
+
+  playChime() {
+    if (this.isMuted) return;
+    try {
+      this.initAudio();
       if (!this.audioCtx) return;
       if (this.audioCtx.state === 'suspended') {
         this.audioCtx.resume();
@@ -186,5 +255,50 @@ class BrewTimer {
     } catch (e) {
       // Navegador com áudio bloqueado
     }
+  }
+
+  triggerVibration(pattern) {
+    try {
+      if (typeof navigator !== "undefined" && navigator.vibrate) {
+        navigator.vibrate(pattern);
+      }
+    } catch (e) {}
+  }
+
+  playFinishedFanfare() {
+    if (this.isMuted) return;
+    try {
+      this.initAudio();
+      if (!this.audioCtx) return;
+      if (this.audioCtx.state === 'suspended') {
+        this.audioCtx.resume();
+      }
+
+      // Fanfarra comemorativa de Café Pronto: arpejo triunfal C5 -> E5 -> G5 -> C6
+      const notes = [
+        { freq: 523.25, time: 0.00, dur: 0.22 }, // C5 (Dó)
+        { freq: 659.25, time: 0.16, dur: 0.22 }, // E5 (Mi)
+        { freq: 783.99, time: 0.32, dur: 0.28 }, // G5 (Sol)
+        { freq: 1046.50, time: 0.50, dur: 0.85 } // C6 (Dó agudo com sustentação prolongada)
+      ];
+
+      const now = this.audioCtx.currentTime;
+
+      notes.forEach(note => {
+        const osc = this.audioCtx.createOscillator();
+        const gain = this.audioCtx.createGain();
+        osc.type = 'triangle'; // Timbre doce de sino
+        osc.frequency.setValueAtTime(note.freq, now + note.time);
+
+        gain.gain.setValueAtTime(0.001, now + note.time);
+        gain.gain.linearRampToValueAtTime(0.24, now + note.time + 0.03);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + note.time + note.dur);
+
+        osc.connect(gain);
+        gain.connect(this.audioCtx.destination);
+        osc.start(now + note.time);
+        osc.stop(now + note.time + note.dur);
+      });
+    } catch (e) {}
   }
 }

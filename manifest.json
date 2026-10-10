@@ -1,0 +1,26 @@
+{
+  "name": "Fuzz Cafés - Calculadora de Preparo",
+  "short_name": "Fuzz Cafés",
+  "description": "Calculadora e cronômetro inteligente para extração de cafés especiais da Fuzz Cafés",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#1e201d",
+  "theme_color": "#1e201d",
+  "categories": ["food", "lifestyle", "utilities"],
+  "icons": [
+    {
+      "src": "assets/logo-fuzz.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/logo-fuzz.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
