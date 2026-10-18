@@ -2,7 +2,7 @@
  * Service Worker para funcionamento Offline (PWA) - Fuzz Cafés
  */
 
-const CACHE_NAME = 'fuzz-cafes-v1';
+const CACHE_NAME = 'fuzz-cafes-v2';
 
 const ASSETS_TO_CACHE = [
   './',
@@ -13,8 +13,10 @@ const ASSETS_TO_CACHE = [
   './js/data/methods.js',
   './js/data/presets.js',
   './js/data.js',
+  './js/method-icons.js',
   './js/calculator.js',
   './js/timer.js',
+  './js/diary.js',
   './js/app.js',
   './assets/logo-fuzz.png',
   './assets/mascot/nico-binoculars-badge.png',

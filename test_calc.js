@@ -81,6 +81,45 @@ if (
   process.exit(1);
 }
 
+// Teste 6: Modo Japanese Iced Coffee (300ml -> 120g gelo + 180ml água quente)
+calc.setIcedMode(true);
+const stateIced = calc.getState();
+console.log("\nTeste 6 - Modo Japanese Iced (300ml total):");
+console.log("- Gelo calculado:", stateIced.iceGrams, "g (Esperado: 120g)");
+console.log("- Água quente calculada:", stateIced.hotWaterMl, "ml (Esperado: 180ml)");
+console.log("- Moagem adaptada:", stateIced.grind.name);
+
+const icedStepIce = stateIced.steps.find(s => s.desc.includes("gelo"));
+const icedStepFinal = stateIced.steps.find(s => s.title.includes("2º Despejo"));
+
+if (
+  stateIced.isIcedActive === true &&
+  stateIced.iceGrams === 120 &&
+  stateIced.hotWaterMl === 180 &&
+  stateIced.grind.name.includes("ajuste fino") &&
+  icedStepIce && icedStepIce.desc.includes("120g") &&
+  icedStepFinal && icedStepFinal.desc.includes("180ml")
+) {
+  console.log("✓ PASSOU! Japanese Iced divide com perfeição 40% gelo e 60% água quente!");
+} else {
+  console.log("✗ FALHOU no teste do Modo Japanese Iced.");
+  process.exit(1);
+}
+
+// Teste 7: BrewTimer Áudio e Mute
+console.log("\nTeste 7 - Recursos do Cronômetro (Bips Sonoros e Mute):");
+console.log("- Mudo inicial:", timer.isMuted ? "Silenciado" : "Som Ativo");
+timer.toggleMute();
+console.log("- Mudo após toggle:", timer.isMuted ? "Silenciado" : "Som Ativo");
+if (timer.isMuted) {
+  timer.toggleMute();
+  console.log("✓ PASSOU! Controle de áudio/mute do cronômetro verificado com sucesso.");
+} else {
+  console.log("✗ FALHOU no toggle de mute.");
+  process.exit(1);
+}
+
 console.log("\nTotal de cafés no catálogo:", FUZZ_DATA.coffees.length);
 console.log("Total de métodos de preparo:", FUZZ_DATA.methods.length);
 console.log("=== TODOS OS TESTES PASSARAM COM SUCESSO! ===");
+

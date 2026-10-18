@@ -13,7 +13,23 @@ class CoffeeCalculator {
     this.waterMl = 300; // 300ml padrão
     this.coffeeGrams = this.round(this.waterMl / this.ratio, 1); // 20g
     this.activeInputMode = 'water'; // 'water' ou 'coffee'
+    this.isIcedMode = false; // Modo Café Gelado (Japanese Iced Coffee)
     this.listeners = [];
+  }
+
+  setIcedMode(enabled) {
+    this.isIcedMode = !!enabled;
+    this.notify();
+  }
+
+  toggleIcedMode() {
+    this.setIcedMode(!this.isIcedMode);
+    return this.isIcedMode;
+  }
+
+  isIcedCompatible() {
+    const compatible = ["v60", "chemex", "melitta", "clever", "aeropress"];
+    return this.selectedMethod && compatible.includes(this.selectedMethod.id);
   }
 
   // Registra ouvintes para atualizar a UI
@@ -28,9 +44,21 @@ class CoffeeCalculator {
   }
 
   getState() {
+    const isIced = this.isIcedMode && this.isIcedCompatible();
+    const iceGrams = isIced ? Math.round(this.waterMl * 0.40) : 0;
+    const hotWaterMl = isIced ? Math.round(this.waterMl * 0.60) : Math.round(this.waterMl);
     const bloomWater = Math.round(this.coffeeGrams * 2.5);
-    const firstPour = Math.round((this.waterMl - bloomWater) * 0.5 + bloomWater);
-    const finalPour = Math.round(this.waterMl);
+    const firstPour = Math.round((hotWaterMl - bloomWater) * 0.5 + bloomWater);
+    const finalPour = Math.round(hotWaterMl);
+
+    let grindObj = this.selectedMethod.grind;
+    if (isIced && this.selectedMethod.grind) {
+      grindObj = {
+        ...this.selectedMethod.grind,
+        name: `${this.selectedMethod.grind.name} (ajuste fino)`,
+        description: "Ligeiramente mais fino para compensar o menor volume de água quente no gelo"
+      };
+    }
 
     return {
       coffee: this.selectedCoffee,
@@ -38,6 +66,11 @@ class CoffeeCalculator {
       ratio: this.ratio,
       waterMl: Math.round(this.waterMl),
       coffeeGrams: this.round(this.coffeeGrams, 1),
+      isIcedMode: this.isIcedMode,
+      isIcedActive: isIced,
+      isIcedCompatible: this.isIcedCompatible(),
+      iceGrams,
+      hotWaterMl,
       yieldMl: this.getYieldMl(),
       activeInputMode: this.activeInputMode,
       bloomWater,
@@ -45,8 +78,8 @@ class CoffeeCalculator {
       finalPour,
       steps: this.getCalculatedSteps(),
       intensity: this.getIntensityLabel(),
-      grind: this.selectedMethod.grind,
-      temp: this.getRecommendedTemp(),
+      grind: grindObj,
+      temp: isIced ? "93°C a 95°C (Água bem quente)" : this.getRecommendedTemp(),
       tempTip: this.getRoastTempTip(),
       totalTime: this.selectedMethod.totalTime
     };
@@ -111,11 +144,14 @@ class CoffeeCalculator {
       return [];
     }
 
+    const isIced = this.isIcedMode && this.isIcedCompatible();
+    const iceGrams = isIced ? Math.round(this.waterMl * 0.40) : 0;
+    const hotWaterMl = isIced ? Math.round(this.waterMl * 0.60) : Math.round(this.waterMl);
     const bloomWater = Math.round(this.coffeeGrams * 2.5);
-    const firstPour = Math.round((this.waterMl - bloomWater) * 0.5 + bloomWater);
-    const finalPour = Math.round(this.waterMl);
+    const firstPour = Math.round((hotWaterMl - bloomWater) * 0.5 + bloomWater);
+    const finalPour = Math.round(hotWaterMl);
     const coffeeGrams = this.round(this.coffeeGrams, 1);
-    const waterMl = Math.round(this.waterMl);
+    const waterMl = hotWaterMl;
     const methodId = this.selectedMethod.id;
 
     return this.selectedMethod.steps.map(step => {
@@ -123,14 +159,46 @@ class CoffeeCalculator {
 
       // Hario V60
       if (methodId === "v60") {
-        if (step.title.includes("Adicionar o Pó")) {
-          desc = `Coloque exatamente <strong class="step-value-highlight">${coffeeGrams}g</strong> de café moído no filtro, dê leves batidinhas na lateral para nivelar a cama de café e tare a balança.`;
+        if (step.title.includes("Escaldar") && isIced) {
+          desc = `Escalde o filtro com água quente e descarte a água da jarra. Em seguida, adicione exatamente <strong class="step-value-highlight">${iceGrams}g</strong> de cubos de gelo limpo dentro da jarra.`;
+        } else if (step.title.includes("Adicionar o Pó")) {
+          desc = isIced
+            ? `Coloque exatamente <strong class="step-value-highlight">${coffeeGrams}g</strong> de café moído no cone sobre a jarra com os <strong class="step-value-highlight">${iceGrams}g</strong> de gelo e tare a balança.`
+            : `Coloque exatamente <strong class="step-value-highlight">${coffeeGrams}g</strong> de café moído no filtro, dê leves batidinhas na lateral para nivelar a cama de café e tare a balança.`;
         } else if (step.bloom || step.title.includes("Bloom") || step.title.includes("Pré-infusão")) {
           desc = `Despeje exatamente <strong class="step-value-highlight">${bloomWater}ml</strong> de água quente em espiral sobre o pó. Aguarde 40 segundos para liberar os aromas e dióxido de carbono.`;
         } else if (step.title.includes("1º Despejo")) {
-          desc = `Despeje em círculos suaves até a balança marcar cerca de <strong class="step-value-highlight">${firstPour}ml</strong>.`;
+          desc = `Despeje em círculos suaves até a balança marcar cerca de <strong class="step-value-highlight">${firstPour}ml</strong> de água quente.`;
         } else if (step.title.includes("2º Despejo") || step.title.includes("Final")) {
-          desc = `Complete calmamente até alcançar o volume total de <strong class="step-value-highlight">${finalPour}ml</strong>.`;
+          desc = isIced
+            ? `Complete calmamente até alcançar o volume total de água quente de <strong class="step-value-highlight">${finalPour}ml</strong> (totalizando ${Math.round(this.waterMl)}ml de bebida gelada com o gelo derretido).`
+            : `Complete calmamente até alcançar o volume total de <strong class="step-value-highlight">${finalPour}ml</strong>.`;
+        }
+      }
+      // Chemex
+      else if (methodId === "chemex") {
+        if (step.title.includes("Escaldar") && isIced) {
+          desc = `Escalde o filtro espesso e descarte a água. Adicione <strong class="step-value-highlight">${iceGrams}g</strong> de cubos de gelo na base da Chemex.`;
+        } else if (step.title.includes("Pó e Bloom")) {
+          desc = isIced
+            ? `Adicione <strong class="step-value-highlight">${coffeeGrams}g</strong> de café, zere a balança (com os ${iceGrams}g de gelo na jarra) e faça a pré-infusão com <strong class="step-value-highlight">${bloomWater}ml</strong> de água por 45s.`
+            : `Adicione os <strong class="step-value-highlight">${coffeeGrams}g</strong> de café, zere a balança e faça a pré-infusão com exatamente <strong class="step-value-highlight">${bloomWater}ml</strong> de água por 45 segundos.`;
+        } else if (step.title.includes("Despejos em Espiral")) {
+          desc = `Despeje a água em círculos sem encostar nas laterais do cone até alcançar <strong class="step-value-highlight">${finalPour}ml</strong> de água quente.`;
+        }
+      }
+      // Filtro Tradicional (Melitta)
+      else if (methodId === "melitta") {
+        if (step.title.includes("Adicionar o Pó")) {
+          desc = isIced
+            ? `Coloque os <strong class="step-value-highlight">${coffeeGrams}g</strong> de pó no cone sobre a jarra com <strong class="step-value-highlight">${iceGrams}g</strong> de gelo e zere a balança.`
+            : `Coloque os <strong class="step-value-highlight">${coffeeGrams}g</strong> de café moído médio, espalhe uniformemente e zere a balança.`;
+        } else if (step.bloom || step.title.includes("Pré-infusão")) {
+          desc = `Molhe todo o pó com exatamente <strong class="step-value-highlight">${bloomWater}ml</strong> de água e aguarde 40 segundos.`;
+        } else if (step.title.includes("Despejos Contínuos")) {
+          desc = isIced
+            ? `Verta a água com calma em movimentos circulares até alcançar o total de <strong class="step-value-highlight">${finalPour}ml</strong> de água quente.`
+            : `Verta a água com calma em movimentos circulares até alcançar o total de <strong class="step-value-highlight">${waterMl}ml</strong>, mantendo um nível constante no filtro.`;
         }
       }
       // Prensa Francesa

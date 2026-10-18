@@ -1,0 +1,2475 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cafés Especiais | Fuzz Cafés - Café é um Espetáculo!</title>
+  <meta name="description" content="Explore o catálogo sensorial de cafés especiais da Fuzz Cafés. Torra fresca artesanal no Rio de Janeiro e kits colecionáveis inspirados na arte pop e no café especial." />
+
+  <meta name="theme-color" content="#5a9e96" />
+  <link rel="icon" type="image/png" href="assets/logo-fuzz.png" />
+
+  <!-- Fontes Oficiais Fuzz & Estilo Retrô Espetáculo -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700;800&family=Lilita+One&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Shrikhand&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      /* Paleta Principal Inspirada nos Kits Fuzz */
+      --color-fuzz-teal: #68b2aa;
+      --color-fuzz-teal-dark: #4b948c;
+      --color-fuzz-teal-light: #e5f4f2;
+      --color-fuzz-coral: #ff5722;
+      --color-fuzz-coral-hover: #e64512;
+      --color-fuzz-pink: #e5287e;
+      --color-fuzz-pink-light: #fce7f1;
+      --color-fuzz-lime: #8ee24e;
+      --color-fuzz-yellow: #fcd116;
+      --color-fuzz-cream: #fbf7ee;
+
+      /* Neutros & Estrutura */
+      --color-brand-dark: #1e201d;
+      --color-brand-darker: #131413;
+      --color-bg-main: #fbf9f4;
+      --color-bg-card: #ffffff;
+      --color-bg-card-subtle: #f6f3eb;
+      --color-border: #e7e2d6;
+      --color-border-subtle: #eeeae0;
+
+      --color-text-main: #1f201d;
+      --color-text-muted: #62605b;
+      --color-text-light: #8e8b82;
+
+      /* Sombras & Raios */
+      --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 6px 18px rgba(0, 0, 0, 0.07);
+      --shadow-lg: 0 14px 32px rgba(0, 0, 0, 0.09);
+      --shadow-hover: 0 20px 42px rgba(0, 0, 0, 0.13);
+      --shadow-retro: 4px 4px 0px #1e201d;
+      --shadow-retro-sm: 2px 2px 0px #1e201d;
+
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-xl: 28px;
+      --radius-full: 9999px;
+
+      --font-display: 'Lilita One', 'Fredoka', cursive, sans-serif;
+      --font-retro: 'Shrikhand', 'Lilita One', cursive, sans-serif;
+      --font-cartoon: 'Fredoka', 'Plus Jakarta Sans', sans-serif;
+      --font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background-color: var(--color-bg-main);
+      color: var(--color-text-main);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Top Bar */
+    .top-notice-bar {
+      background-color: #191a18;
+      color: #dedcd7;
+      font-size: 0.82rem;
+      letter-spacing: 0.03em;
+      text-align: center;
+      padding: 8px 16px;
+      font-weight: 600;
+      border-bottom: 2px solid #282a27;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .top-notice-bar b {
+      color: var(--color-fuzz-yellow);
+    }
+
+    /* Header Oficial */
+    .fuzz-header {
+      background-color: var(--color-brand-dark);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      border-bottom: 1px solid #2e302b;
+    }
+
+    .fuzz-header__inner {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .fuzz-header__logo-img {
+      height: 38px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .fuzz-nav__list {
+      display: flex;
+      list-style: none;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .fuzz-nav__link {
+      color: #e6e5e0;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 6px 2px;
+      position: relative;
+      transition: color 0.2s ease;
+    }
+
+    .fuzz-nav__link:hover {
+      color: #ffffff;
+    }
+
+    .fuzz-nav__link--active {
+      color: var(--color-fuzz-teal) !important;
+      font-weight: 700;
+    }
+
+    .fuzz-nav__link--active::after {
+      content: "";
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background-color: var(--color-fuzz-teal);
+      border-radius: 2px;
+    }
+
+    .fuzz-nav__badge {
+      background: var(--color-fuzz-coral);
+      color: #ffffff;
+      font-size: 0.65rem;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 99px;
+      margin-left: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .calc-pill-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #fbf7ee;
+      color: #1e201d;
+      padding: 6px 14px;
+      border-radius: var(--radius-full);
+      font-weight: 700;
+      font-size: 0.82rem;
+      text-decoration: none;
+      border: 2px solid var(--color-fuzz-yellow);
+      box-shadow: 2px 2px 0px var(--color-fuzz-coral);
+      transition: all 0.2s;
+    }
+
+    .calc-pill-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 3px 3px 0px var(--color-fuzz-coral);
+    }
+
+    .header-btn {
+      background: transparent;
+      border: none;
+      color: #e5e5e5;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+      text-decoration: none;
+      position: relative;
+    }
+
+    .cart-badge {
+      background: var(--color-fuzz-coral);
+      color: white;
+      font-size: 0.72rem;
+      font-weight: 800;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #ffffff;
+    }
+
+    /* Subnav / Breadcrumbs */
+    .fuzz-subnav {
+      background: #ffffff;
+      border-bottom: 1px solid var(--color-border);
+      padding: 9px 20px;
+    }
+
+    .fuzz-subnav__inner {
+      max-width: 1240px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+    }
+
+    .breadcrumbs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .breadcrumbs a {
+      color: var(--color-text-muted);
+      text-decoration: none;
+    }
+
+    .breadcrumbs a:hover {
+      color: var(--color-text-main);
+    }
+
+    /* ==========================================================================
+       HERO BANNER - INSPIRADO NA CAIXA TEAL "CAFÉ É UM ESPETÁCULO!"
+       ========================================================================== */
+    .category-hero {
+      background-color: var(--color-fuzz-teal);
+      background-image: 
+        radial-gradient(circle at 75% 30%, rgba(255, 255, 255, 0.25) 0%, transparent 55%),
+        repeating-conic-gradient(from 0deg at 50% 120%, rgba(255, 255, 255, 0.08) 0deg 15deg, transparent 15deg 30deg);
+      color: #1e201d;
+      padding: 56px 20px 52px;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 4px solid var(--color-brand-dark);
+      transition: background-color 0.4s ease;
+    }
+
+    /* Modo Vibe Pink Alternativo */
+    .category-hero.vibe-pink {
+      background-color: var(--color-fuzz-pink);
+      background-image: 
+        radial-gradient(circle at 75% 30%, rgba(255, 255, 255, 0.28) 0%, transparent 55%),
+        repeating-conic-gradient(from 0deg at 50% 120%, rgba(252, 209, 22, 0.15) 0deg 15deg, transparent 15deg 30deg);
+    }
+
+    .hero-container {
+      max-width: 1240px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.25fr 0.95fr;
+      gap: 40px;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-tag-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .hero-badge-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #ffffff;
+      border: 2px solid var(--color-brand-dark);
+      color: #1e201d;
+      font-size: 0.8rem;
+      font-weight: 800;
+      padding: 5px 14px;
+      border-radius: var(--radius-full);
+      box-shadow: var(--shadow-retro-sm);
+      letter-spacing: 0.02em;
+    }
+
+    .vibe-toggle-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid rgba(0, 0, 0, 0.15);
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      font-size: 0.74rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .vibe-toggle-pill:hover {
+      background: #ffffff;
+      transform: scale(1.03);
+    }
+
+    /* Slogan Retrô da Embalagem */
+    .hero-slogan-title {
+      font-family: var(--font-retro);
+      font-size: 3.4rem;
+      line-height: 1.05;
+      letter-spacing: 0.02em;
+      margin-bottom: 14px;
+      color: var(--color-fuzz-coral);
+      -webkit-text-stroke: 2px #1e201d;
+      text-shadow: 4px 4px 0px #1e201d;
+    }
+
+    .vibe-pink .hero-slogan-title {
+      color: var(--color-fuzz-lime);
+      -webkit-text-stroke: 2px #1e201d;
+      text-shadow: 4px 4px 0px #1e201d;
+    }
+
+    .hero-subtitle {
+      font-family: var(--font-cartoon);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #ffffff;
+      text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.35);
+      margin-bottom: 12px;
+    }
+
+    .hero-desc {
+      font-size: 1.02rem;
+      color: #1e201d;
+      background: rgba(255, 255, 255, 0.92);
+      border: 2px solid var(--color-brand-dark);
+      border-radius: var(--radius-md);
+      padding: 14px 18px;
+      box-shadow: var(--shadow-retro-sm);
+      line-height: 1.5;
+      margin-bottom: 22px;
+      max-width: 580px;
+    }
+
+    .hero-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .hero-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #ffffff;
+      border: 1.5px solid var(--color-brand-dark);
+      padding: 6px 13px;
+      border-radius: var(--radius-full);
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #1e201d;
+      box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Lado Direito do Hero: Vitrine das Caixas e Mascote */
+    .hero-showcase {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+
+    .hero-box-card {
+      background: #ffffff;
+      border: 3px solid var(--color-brand-dark);
+      border-radius: var(--radius-xl);
+      padding: 20px;
+      box-shadow: 8px 8px 0px #1e201d;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      max-width: 440px;
+      position: relative;
+      transform: rotate(-1.5deg);
+      transition: transform 0.3s ease;
+    }
+
+    .hero-box-card:hover {
+      transform: rotate(0deg) scale(1.02);
+    }
+
+    .hero-box-img {
+      width: 140px;
+      height: 140px;
+      object-fit: contain;
+      border-radius: var(--radius-md);
+      background: #fbf7ee;
+      padding: 6px;
+      border: 2px solid var(--color-brand-dark);
+      flex-shrink: 0;
+    }
+
+    .hero-box-info h3 {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      color: var(--color-fuzz-coral);
+      margin-bottom: 4px;
+      line-height: 1.2;
+    }
+
+    .hero-box-info p {
+      font-size: 0.82rem;
+      color: var(--color-text-muted);
+      line-height: 1.35;
+      margin-bottom: 10px;
+    }
+
+    .hero-box-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--color-brand-dark);
+      color: #ffffff;
+      padding: 6px 12px;
+      border-radius: var(--radius-full);
+      font-size: 0.76rem;
+      font-weight: 800;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    .hero-box-cta:hover {
+      background: var(--color-fuzz-coral);
+    }
+
+    /* Faixa Checkerboard Retrô (Marca Registrada da Caixa Fuzz) */
+    .checkerboard-strip {
+      height: 14px;
+      background-image: 
+        linear-gradient(45deg, #1e201d 25%, transparent 25%), 
+        linear-gradient(-45deg, #1e201d 25%, transparent 25%), 
+        linear-gradient(45deg, transparent 75%, #1e201d 75%), 
+        linear-gradient(-45deg, transparent 75%, #1e201d 75%);
+      background-size: 14px 14px;
+      background-position: 0 0, 0 7px, 7px -7px, -7px 0px;
+      background-color: #ffffff;
+      border-bottom: 2px solid var(--color-brand-dark);
+    }
+
+    /* ==========================================================================
+       BARRA DE FILTROS SENSORIAIS (STICKY)
+       ========================================================================== */
+    .discovery-section {
+      background: #ffffff;
+      border-bottom: 2px solid var(--color-border);
+      position: sticky;
+      top: 67px;
+      z-index: 40;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+    }
+
+    .discovery-inner {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    .filter-tabs {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+      scrollbar-width: none;
+    }
+    .filter-tabs::-webkit-scrollbar { display: none; }
+
+    .filter-tab {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 16px;
+      border-radius: var(--radius-full);
+      background: var(--color-bg-card-subtle);
+      border: 2px solid var(--color-border);
+      color: var(--color-text-main);
+      font-size: 0.86rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+
+    .filter-tab:hover {
+      background: #eeeae0;
+      border-color: #d1ccbf;
+      transform: translateY(-1px);
+    }
+
+    .filter-tab.active {
+      background: var(--color-brand-dark);
+      color: #ffffff;
+      border-color: var(--color-brand-dark);
+      box-shadow: var(--shadow-retro-sm);
+    }
+
+    .filter-tab.active .tab-count {
+      background: var(--color-fuzz-coral);
+      color: #ffffff;
+    }
+
+    .tab-count {
+      background: rgba(0, 0, 0, 0.08);
+      color: var(--color-text-muted);
+      font-size: 0.72rem;
+      padding: 1px 7px;
+      border-radius: 99px;
+      font-weight: 800;
+    }
+
+    .discovery-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .select-sort {
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      border: 2px solid var(--color-border);
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--color-text-main);
+      background: #ffffff;
+      font-family: inherit;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .select-sort:focus {
+      border-color: var(--color-brand-dark);
+    }
+
+    /* ==========================================================================
+       VITRINE DE CAFÉS (CATÁLOGO SENSORIAL)
+       ========================================================================== */
+    .catalog-wrapper {
+      max-width: 1240px;
+      margin: 36px auto 50px;
+      padding: 0 20px;
+    }
+
+    .coffee-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 28px;
+    }
+
+    /* Card Sensorial */
+    .coffee-card {
+      background: var(--color-bg-card);
+      border-radius: var(--radius-lg);
+      border: 2px solid var(--color-border);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+      position: relative;
+    }
+
+    .coffee-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 6px 6px 0px var(--color-brand-dark);
+      border-color: var(--color-brand-dark);
+    }
+
+    .card-top {
+      position: relative;
+      background: #fbf9f4;
+      padding: 24px 20px 16px;
+      text-align: center;
+      border-bottom: 2px solid var(--color-border-subtle);
+      overflow: hidden;
+    }
+
+    .card-top::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: var(--card-accent, var(--color-fuzz-coral));
+    }
+
+    .card-badge {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      background: var(--card-accent, var(--color-fuzz-coral));
+      color: #ffffff;
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      border: 1.5px solid var(--color-brand-dark);
+      box-shadow: 2px 2px 0px var(--color-brand-dark);
+      z-index: 2;
+    }
+
+    .card-category-tag {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: #ffffff;
+      color: var(--color-text-main);
+      border: 1.5px solid var(--color-brand-dark);
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: var(--radius-full);
+      z-index: 2;
+    }
+
+    .card-image-wrap {
+      width: 170px;
+      height: 200px;
+      margin: 8px auto 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .card-image {
+      max-height: 100%;
+      max-width: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.12));
+      transition: transform 0.3s ease;
+    }
+
+    .coffee-card:hover .card-image {
+      transform: scale(1.06) rotate(-1.5deg);
+    }
+
+    .card-body {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .card-origin {
+      font-size: 0.74rem;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 4px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .card-title {
+      font-family: var(--font-display);
+      font-size: 1.48rem;
+      font-weight: 400;
+      letter-spacing: 0.01em;
+      color: var(--color-text-main);
+      margin-bottom: 2px;
+      line-height: 1.2;
+    }
+
+    .card-producer {
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      margin-bottom: 12px;
+    }
+
+    /* Flavor Notes */
+    .flavor-notes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    .flavor-tag {
+      background: #fff8eb;
+      border: 1.5px solid #ecd5b8;
+      color: #92400e;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: var(--radius-sm);
+    }
+
+    /* Sensory Mini Radar / Bars */
+    .sensory-bars {
+      background: var(--color-bg-card-subtle);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      margin-bottom: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      border: 1px solid var(--color-border);
+    }
+
+    .sensory-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.75rem;
+    }
+
+    .sensory-label {
+      color: var(--color-text-muted);
+      font-weight: 700;
+      width: 55px;
+    }
+
+    .sensory-dots {
+      display: flex;
+      gap: 4px;
+    }
+
+    .sensory-dot {
+      width: 14px;
+      height: 6px;
+      border-radius: 3px;
+      background: #dedcd5;
+    }
+
+    .sensory-dot.filled {
+      background: var(--card-accent, var(--color-fuzz-coral));
+    }
+
+    .card-methods {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      margin-bottom: 18px;
+      padding-top: 6px;
+      border-top: 1px dashed var(--color-border);
+      font-weight: 600;
+    }
+
+    .method-icon-mini {
+      width: 20px;
+      height: 20px;
+      object-fit: contain;
+      opacity: 0.85;
+    }
+
+    /* Pricing & Action */
+    .card-footer {
+      margin-top: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .price-box {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+    }
+
+    .price-main {
+      font-family: var(--font-cartoon);
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: var(--color-text-main);
+    }
+
+    .price-old {
+      font-size: 0.85rem;
+      color: var(--color-text-light);
+      text-decoration: line-through;
+      margin-left: 6px;
+      font-weight: 500;
+    }
+
+    .price-installment {
+      font-size: 0.72rem;
+      color: var(--color-text-muted);
+      font-weight: 600;
+    }
+
+    /* Format selector */
+    .format-pills {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      background: #f1efea;
+      padding: 3px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--color-border);
+    }
+
+    .format-btn {
+      border: none;
+      background: transparent;
+      padding: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--color-text-muted);
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.15s;
+      text-align: center;
+    }
+
+    .format-btn.active {
+      background: #ffffff;
+      color: var(--color-text-main);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+      border: 1px solid var(--color-border);
+    }
+
+    .btn-buy {
+      background: var(--color-fuzz-coral);
+      color: #ffffff;
+      border: 2px solid var(--color-brand-dark);
+      border-radius: var(--radius-md);
+      padding: 12px;
+      font-weight: 800;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: var(--shadow-retro-sm);
+      transition: background 0.2s, transform 0.1s;
+      text-decoration: none;
+    }
+
+    .btn-buy:hover {
+      background: var(--color-fuzz-coral-hover);
+      transform: translateY(-2px);
+      box-shadow: 3px 3px 0px var(--color-brand-dark);
+    }
+
+    .btn-recipe-calc {
+      background: var(--color-fuzz-teal-light);
+      border: 1.5px solid var(--color-fuzz-teal);
+      border-radius: var(--radius-md);
+      padding: 8px 12px;
+      color: var(--color-fuzz-teal-dark);
+      font-size: 0.78rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .btn-recipe-calc:hover {
+      background: #d2ebe7;
+      color: #2e6c64;
+    }
+
+    /* ==========================================================================
+       SEÇÃO ESPECIAL: KITS DE CAFÉ "CAFÉ É UM ESPETÁCULO!"
+       ========================================================================== */
+    .kits-showcase-section {
+      background: var(--color-fuzz-cream);
+      border-top: 3px solid var(--color-brand-dark);
+      border-bottom: 3px solid var(--color-brand-dark);
+      padding: 60px 20px;
+      position: relative;
+    }
+
+    .kits-inner {
+      max-width: 1240px;
+      margin: 0 auto;
+    }
+
+    .kits-header {
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto 40px;
+    }
+
+    .kits-tag {
+      display: inline-block;
+      background: var(--color-fuzz-yellow);
+      border: 2px solid var(--color-brand-dark);
+      padding: 4px 14px;
+      border-radius: var(--radius-full);
+      font-weight: 800;
+      font-size: 0.8rem;
+      box-shadow: var(--shadow-retro-sm);
+      margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+
+    .kits-title {
+      font-family: var(--font-retro);
+      font-size: 2.6rem;
+      color: var(--color-fuzz-coral);
+      -webkit-text-stroke: 1.5px #1e201d;
+      text-shadow: 3px 3px 0px #1e201d;
+      margin-bottom: 10px;
+    }
+
+    .kits-desc {
+      font-size: 1rem;
+      color: var(--color-text-muted);
+    }
+
+    .kits-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    .kit-card-box {
+      border: 3px solid var(--color-brand-dark);
+      border-radius: var(--radius-xl);
+      padding: 32px;
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 24px;
+      align-items: center;
+      box-shadow: 8px 8px 0px var(--color-brand-dark);
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s;
+    }
+
+    .kit-card-box:hover {
+      transform: translateY(-4px);
+    }
+
+    /* Kit Teal */
+    .kit-teal {
+      background: var(--color-fuzz-teal);
+    }
+
+    /* Kit Pink */
+    .kit-pink {
+      background: var(--color-fuzz-pink);
+    }
+
+    .kit-card-img {
+      width: 100%;
+      height: 220px;
+      object-fit: contain;
+      border-radius: var(--radius-md);
+      background: #ffffff;
+      padding: 10px;
+      border: 2px solid var(--color-brand-dark);
+      box-shadow: 4px 4px 0px var(--color-brand-dark);
+    }
+
+    .kit-card-content h4 {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      color: #ffffff;
+      text-shadow: 2px 2px 0px #1e201d;
+      margin-bottom: 8px;
+      line-height: 1.2;
+    }
+
+    .kit-card-content p {
+      font-size: 0.9rem;
+      color: #1e201d;
+      background: rgba(255, 255, 255, 0.92);
+      border: 2px solid var(--color-brand-dark);
+      border-radius: var(--radius-md);
+      padding: 12px;
+      line-height: 1.45;
+      margin-bottom: 16px;
+      font-weight: 500;
+    }
+
+    .kit-price-btn-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .kit-price-tag {
+      font-family: var(--font-cartoon);
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #ffffff;
+      text-shadow: 1.5px 1.5px 0px #1e201d;
+    }
+
+    .btn-kit-action {
+      background: #ffffff;
+      color: var(--color-brand-dark);
+      border: 2px solid var(--color-brand-dark);
+      padding: 10px 18px;
+      border-radius: var(--radius-full);
+      font-weight: 800;
+      font-size: 0.88rem;
+      text-decoration: none;
+      box-shadow: var(--shadow-retro-sm);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-kit-action:hover {
+      background: var(--color-fuzz-yellow);
+      transform: translateY(-2px);
+    }
+
+    /* ==========================================================================
+       SEÇÃO NICO ADVISOR & CONFIANÇA
+       ========================================================================== */
+    .nico-advisor-section {
+      background: #ffffff;
+      border: 3px solid var(--color-brand-dark);
+      border-radius: var(--radius-xl);
+      padding: 36px 32px;
+      margin: 48px auto 60px;
+      max-width: 1240px;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 32px;
+      align-items: center;
+      box-shadow: 6px 6px 0px var(--color-brand-dark);
+    }
+
+    .advisor-mascot-img {
+      width: 130px;
+      height: 130px;
+      object-fit: contain;
+    }
+
+    .advisor-content h3 {
+      font-family: var(--font-display);
+      font-size: 1.85rem;
+      font-weight: 400;
+      margin-bottom: 6px;
+      color: var(--color-text-main);
+    }
+
+    .advisor-content p {
+      color: var(--color-text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 20px;
+    }
+
+    .advisor-quiz-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 12px;
+    }
+
+    .quiz-option-btn {
+      background: var(--color-bg-card-subtle);
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .quiz-option-btn:hover {
+      background: #ffffff;
+      border-color: var(--color-brand-dark);
+      box-shadow: var(--shadow-retro-sm);
+      transform: translateY(-2px);
+    }
+
+    .quiz-option-title {
+      font-weight: 800;
+      font-size: 0.9rem;
+      color: var(--color-text-main);
+    }
+
+    .quiz-option-desc {
+      font-size: 0.76rem;
+      color: var(--color-text-muted);
+    }
+
+    /* Faixa de Confiança */
+    .trust-section {
+      background: #f4f2ec;
+      border-top: 2px solid var(--color-border);
+      padding: 44px 20px;
+    }
+
+    .trust-grid {
+      max-width: 1240px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 24px;
+    }
+
+    .trust-card {
+      background: #ffffff;
+      padding: 22px;
+      border-radius: var(--radius-md);
+      border: 2px solid var(--color-brand-dark);
+      box-shadow: 4px 4px 0px var(--color-brand-dark);
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .trust-icon {
+      font-size: 1.8rem;
+      background: var(--color-fuzz-cream);
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      border: 2px solid var(--color-brand-dark);
+    }
+
+    .trust-text h4 {
+      font-family: var(--font-cartoon);
+      font-size: 1.05rem;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .trust-text p {
+      font-size: 0.82rem;
+      color: var(--color-text-muted);
+      line-height: 1.4;
+    }
+
+    /* Footer */
+    .fuzz-footer {
+      background: var(--color-brand-darker);
+      color: #9c9b98;
+      padding: 50px 20px 24px;
+      border-top: 3px solid var(--color-brand-dark);
+    }
+
+    .footer-inner {
+      max-width: 1240px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1.5fr;
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+
+    .footer-logo {
+      height: 34px;
+      margin-bottom: 14px;
+    }
+
+    .footer-desc {
+      font-size: 0.85rem;
+      line-height: 1.6;
+      max-width: 320px;
+    }
+
+    .footer-col h5 {
+      color: #ffffff;
+      font-family: var(--font-cartoon);
+      font-size: 0.95rem;
+      font-weight: 800;
+      margin-bottom: 16px;
+    }
+
+    .footer-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .footer-col a {
+      color: #a8a7a3;
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: color 0.2s;
+    }
+
+    .footer-col a:hover {
+      color: var(--color-fuzz-coral);
+    }
+
+    .footer-bottom {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding-top: 24px;
+      border-top: 1px solid #282a26;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(4px);
+      z-index: 999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-overlay.active { display: flex; }
+
+    .modal-box {
+      background: #ffffff;
+      border: 3px solid var(--color-brand-dark);
+      border-radius: var(--radius-lg);
+      max-width: 480px;
+      width: 100%;
+      padding: 28px;
+      position: relative;
+      box-shadow: 8px 8px 0px var(--color-brand-dark);
+      animation: modalPop 0.25s ease-out;
+    }
+
+    @keyframes modalPop {
+      from { transform: scale(0.95); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 16px; right: 16px;
+      background: transparent;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--color-text-muted);
+      font-weight: bold;
+    }
+
+    /* Responsividade */
+    @media (max-width: 960px) {
+      .hero-container {
+        grid-template-columns: 1fr;
+      }
+      .kits-grid {
+        grid-template-columns: 1fr;
+      }
+      .nico-advisor-section {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+      .advisor-mascot-img {
+        margin: 0 auto;
+      }
+      .quiz-option-btn {
+        text-align: center;
+      }
+      .footer-inner {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .hero-slogan-title {
+        font-size: 2.5rem;
+      }
+      .kit-card-box {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+      .kit-card-img {
+        height: 180px;
+        margin: 0 auto;
+      }
+      .footer-inner {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Barra de Notificação Superior -->
+  <div class="top-notice-bar">
+    <span>☕ <b>TORRA FRESCA SEMANAL:</b> Cafés torrados no Rio de Janeiro &bull; Frete Grátis acima de R$ 200</span>
+  </div>
+
+  <!-- Cabeçalho Oficial Fuzz Cafés -->
+  <header class="fuzz-header">
+    <div class="fuzz-header__inner">
+      <a href="https://www.fuzzcafes.com.br/" class="fuzz-header__logo-link">
+        <img src="assets/logo-fuzz.png" alt="Fuzz Cafés" class="fuzz-header__logo-img" />
+      </a>
+
+      <nav class="fuzz-nav" aria-label="Navegação principal">
+        <ul class="fuzz-nav__list">
+          <li><a href="#" class="fuzz-nav__link fuzz-nav__link--active">Cafés Especiais</a></li>
+          <li><a href="#kits" class="fuzz-nav__link">Kits & Presentes <span class="fuzz-nav__badge">Novo!</span></a></li>
+          <li><a href="https://www.fuzzcafes.com.br/edicoes-limitadas" class="fuzz-nav__link">Edições Limitadas</a></li>
+          <li><a href="https://www.fuzzcafes.com.br/metodos-e-acessorios" class="fuzz-nav__link">Métodos & Filtros</a></li>
+          <li><a href="index.html" class="fuzz-nav__link">Calculadora</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <a href="index.html" class="calc-pill-link" title="Abrir Calculadora de Preparo">
+          <span>⚖️ Calculadora de Preparo</span>
+        </a>
+        <a href="https://www.fuzzcafes.com.br/carrinho" class="header-btn" title="Sacola de Compras">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+          </svg>
+          <span class="cart-badge">2</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Sub-barra com Breadcrumb -->
+  <div class="fuzz-subnav">
+    <div class="fuzz-subnav__inner">
+      <div class="breadcrumbs">
+        <a href="https://www.fuzzcafes.com.br/">Início</a>
+        <span>&rsaquo;</span>
+        <b>Cafés Especiais</b>
+      </div>
+      <div>
+        <span>Microtorrefação Artesanal &bull; Cafés Acima de 84+ Pontos SCA</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       HERO BANNER - CORES OFICIAIS DOS KITS "CAFÉ É UM ESPETÁCULO!"
+       ======================================================================== -->
+  <section class="category-hero" id="heroBanner">
+    <div class="hero-container">
+      <div class="hero-text-wrap">
+        <div class="hero-tag-wrap">
+          <div class="hero-badge-tag">
+            <span>🎪 Microtorrefação Artesanal &bull; RJ</span>
+          </div>
+          <!-- Botão interativo para alternar entre as cores das 2 caixas da Fuzz! -->
+          <button class="vibe-toggle-pill" id="btnToggleVibe" onclick="toggleHeroVibe()">
+            <span>🎨 Alternar Cor do Kit (Teal / Pink)</span>
+          </button>
+        </div>
+
+        <!-- Slogan Principal idêntico ao das embalagens -->
+        <h1 class="hero-slogan-title">
+          CAFÉ É UM ESPETÁCULO!
+        </h1>
+        <div class="hero-subtitle">
+          Descubra o perfil sensorial que combina com o seu dia.
+        </div>
+
+        <p class="hero-desc">
+          Doçura intensa, aromas vivos e torra fresca semanal direto do Rio de Janeiro. Escolha os <b>Clássicos confortáveis</b> para o dia a dia ou encante-se com nossos <b>Microlotes raros</b> e <b>Kits de presente colecionáveis</b>.
+        </p>
+
+        <div class="hero-pills">
+          <span class="hero-pill">🌱 100% Rastreáveis</span>
+          <span class="hero-pill">🔥 Torra Fresca Semanal</span>
+          <span class="hero-pill">⚙️ Moagem Grátis sob Medida</span>
+          <span class="hero-pill">🎁 Caixas de Presente Exclusivas</span>
+        </div>
+      </div>
+
+      <!-- Lado Direito: Caixa Oficial da Fuzz em Destaque 3D -->
+      <div class="hero-showcase">
+        <div class="hero-box-card">
+          <img src="assets/kits/kit-espetaculo-teal.png" id="heroBoxImg" alt="Caixa Fuzz Cafés É Um Espetáculo" class="hero-box-img" />
+          <div class="hero-box-info">
+            <span id="heroBoxTag" style="font-size:0.7rem; font-weight:800; text-transform:uppercase; color:var(--color-fuzz-coral); display:block; margin-bottom:2px;">8 Cafés Especiais &bull; R$ 300</span>
+            <h3 id="heroBoxTitle">Seleção Fuzz | Kit Degustação</h3>
+            <p id="heroBoxDesc">Nossa principal linha: 4 arábicas e 4 canéforas para uma imersão completa em nuances e riqueza de sabores.</p>
+            <a href="https://www.fuzzcafes.com.br/kits/selecaofuzz" id="heroBoxCta" target="_blank" class="hero-box-cta">
+              <span>Comprar Kit (R$ 300) &rarr;</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Faixa Quadriculada Retrô (Checkerboard) da Caixa -->
+  <div class="checkerboard-strip"></div>
+
+  <!-- Barra de Filtros Sensoriais (Sticky) -->
+  <section class="discovery-section">
+    <div class="discovery-inner">
+      <div class="filter-tabs" id="filterTabs">
+        <button class="filter-tab active" data-filter="all">
+          <span>Todos os Cafés</span>
+          <span class="tab-count">8</span>
+        </button>
+        <button class="filter-tab" data-filter="classicos">
+          <span>🍫 Clássicos & Conforto</span>
+          <span class="tab-count">4</span>
+        </button>
+        <button class="filter-tab" data-filter="microlotes">
+          <span>✨ Microlotes Raros</span>
+          <span class="tab-count">4</span>
+        </button>
+        <button class="filter-tab" data-filter="doce">
+          <span>🍯 Alta Doçura</span>
+          <span class="tab-count">5</span>
+        </button>
+        <button class="filter-tab" data-filter="frutado">
+          <span>🍊 Frutados & Cítricos</span>
+          <span class="tab-count">3</span>
+        </button>
+      </div>
+
+      <div class="discovery-controls">
+        <label for="sortOrder" style="font-size: 0.8rem; color: var(--color-text-muted); font-weight: 700;">Ordenar por:</label>
+        <select id="sortOrder" class="select-sort">
+          <option value="featured">Destaques da Torrefação</option>
+          <option value="sweetness">Maior Doçura</option>
+          <option value="price-asc">Menor Preço</option>
+          <option value="price-desc">Maior Preço</option>
+        </select>
+      </div>
+    </div>
+  </section>
+
+  <!-- Vitrine de Produtos (Catálogo Sensorial) -->
+  <main class="catalog-wrapper">
+    <div class="coffee-grid" id="coffeeGrid">
+
+      <!-- 1. Café Caramelo -->
+      <article class="coffee-card" data-category="classicos" data-sweetness="5" data-acidity="2" data-body="4" data-price="50" style="--card-accent: #d97706;">
+        <div class="card-top">
+          <span class="card-badge">Mais Vendido</span>
+          <span class="card-category-tag">Clássico</span>
+          <div class="card-image-wrap">
+            <img src="assets/coffees/caramelo.jpg" alt="Café Caramelo Clássico" class="card-image" />
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-origin">📍 Mantiqueira de Minas &bull; 100% Arábica</div>
+          <h2 class="card-title">Café Caramelo</h2>
+          <p class="card-producer">Produtor: Jean Faleiros &bull; Torra Média</p>
+
+          <div class="flavor-notes">
+            <span class="flavor-tag">Caramelo</span>
+            <span class="flavor-tag">Chocolate ao leite</span>
+            <span class="flavor-tag">Baunilha</span>
+          </div>
+
+          <div class="sensory-bars">
+            <div class="sensory-row">
+              <span class="sensory-label">Doçura</span>
+              <div class="sensory-dots">
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+              </div>
+            </div>
+            <div class="sensory-row">
+              <span class="sensory-label">Acidez</span>
+              <div class="sensory-dots">
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot"></span>
+                <span class="sensory-dot"></span>
+                <span class="sensory-dot"></span>
+              </div>
+            </div>
+            <div class="sensory-row">
+              <span class="sensory-label">Corpo</span>
+              <div class="sensory-dots">
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-methods">
+            <span>Ideal para:</span>
+            <img src="assets/methods/v60.png" title="Hario V60" class="method-icon-mini" />
+            <img src="assets/methods/melitta.png" title="Melitta / Filtro" class="method-icon-mini" />
+            <img src="assets/methods/moka.png" title="Cafeteira Italiana" class="method-icon-mini" />
+            <img src="assets/methods/french-press.png" title="Prensa Francesa" class="method-icon-mini" />
+          </div>
+
+          <div class="card-footer">
+            <div class="format-pills">
+              <button type="button" class="format-btn active">Em Grãos (250g)</button>
+              <button type="button" class="format-btn">Moído na Hora</button>
+            </div>
+            <div class="price-box">
+              <div>
+                <span class="price-main">R$ 50,00</span>
+                <span class="price-old">R$ 60,00</span>
+              </div>
+              <span class="price-installment">2x de R$ 25,00 sem juros</span>
+            </div>
+            <button class="btn-buy" onclick="handleBuyClick('Café Caramelo')">
+              <span>Comprar Agora</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </button>
+            <a href="index.html?cafe=caramelo" class="btn-recipe-calc">
+              <span>⚖️ Ver Proporção na Calculadora</span>
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <!-- 2. Café Chocolate -->
+      <article class="coffee-card" data-category="classicos" data-sweetness="3" data-acidity="1" data-body="5" data-price="50" style="--card-accent: #78350f;">
+        <div class="card-top">
+          <span class="card-badge" style="background:#572406;">Mais Intenso</span>
+          <span class="card-category-tag">Clássico</span>
+          <div class="card-image-wrap">
+            <img src="assets/coffees/chocolate.jpg" alt="Café Chocolate Clássico" class="card-image" />
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-origin">📍 Cerrado Mineiro &bull; 100% Arábica</div>
+          <h2 class="card-title">Café Chocolate</h2>
+          <p class="card-producer">Produtor: Juan Travain &bull; Torra Média-Escura</p>
+
+          <div class="flavor-notes">
+            <span class="flavor-tag">Cacau 70%</span>
+            <span class="flavor-tag">Trufa cremosa</span>
+            <span class="flavor-tag">Açúcar mascavo</span>
+          </div>
+
+          <div class="sensory-bars">
+            <div class="sensory-row">
+              <span class="sensory-label">Doçura</span>
+              <div class="sensory-dots">
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot"></span>
+                <span class="sensory-dot"></span>
+              </div>
+            </div>
+            <div class="sensory-row">
+              <span class="sensory-label">Acidez</span>
+              <div class="sensory-dots">
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot"></span>
+                <span class="sensory-dot"></span>
+                <span class="sensory-dot"></span>
+                <span class="sensory-dot"></span>
+              </div>
+            </div>
+            <div class="sensory-row">
+              <span class="sensory-label">Corpo</span>
+              <div class="sensory-dots">
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-methods">
+            <span>Ideal para:</span>
+            <img src="assets/methods/espresso.png" title="Espresso" class="method-icon-mini" />
+            <img src="assets/methods/moka.png" title="Moka Italiana" class="method-icon-mini" />
+            <img src="assets/methods/french-press.png" title="Prensa Francesa" class="method-icon-mini" />
+          </div>
+
+          <div class="card-footer">
+            <div class="format-pills">
+              <button type="button" class="format-btn active">Em Grãos (250g)</button>
+              <button type="button" class="format-btn">Moído na Hora</button>
+            </div>
+            <div class="price-box">
+              <div>
+                <span class="price-main">R$ 50,00</span>
+                <span class="price-old">R$ 60,00</span>
+              </div>
+              <span class="price-installment">2x de R$ 25,00 sem juros</span>
+            </div>
+            <button class="btn-buy" onclick="handleBuyClick('Café Chocolate')">
+              <span>Comprar Agora</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </button>
+            <a href="index.html?cafe=chocolate" class="btn-recipe-calc">
+              <span>⚖️ Ver Proporção na Calculadora</span>
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <!-- 3. Café Frutado -->
+      <article class="coffee-card" data-category="classicos" data-sweetness="4" data-acidity="5" data-body="3" data-price="50" style="--card-accent: #ea580c;">
+        <div class="card-top">
+          <span class="card-badge" style="background:#ea580c;">Floral & Cítrico</span>
+          <span class="card-category-tag">Clássico</span>
+          <div class="card-image-wrap">
+            <img src="assets/coffees/frutado.jpg" alt="Café Frutado Clássico" class="card-image" />
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-origin">📍 Caparaó / Matas de Minas &bull; 100% Arábica</div>
+          <h2 class="card-title">Café Frutado</h2>
+          <p class="card-producer">Produtor: Jean Faleiros &bull; Torra Média-Clara</p>
+
+          <div class="flavor-notes">
+            <span class="flavor-tag">Frutas amarelas</span>
+            <span class="flavor-tag">Pêssego maduro</span>
+            <span class="flavor-tag">Flor de laranjeira</span>
+          </div>
+
+          <div class="sensory-bars">
+            <div class="sensory-row">
+              <span class="sensory-label">Doçura</span>
+              <div class="sensory-dots">
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot"></span>
+              </div>
+            </div>
+            <div class="sensory-row">
+              <span class="sensory-label">Acidez</span>
+              <div class="sensory-dots">
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+              </div>
+            </div>
+            <div class="sensory-row">
+              <span class="sensory-label">Corpo</span>
+              <div class="sensory-dots">
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot"></span>
+                <span class="sensory-dot"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-methods">
+            <span>Ideal para:</span>
+            <img src="assets/methods/v60.png" title="Hario V60" class="method-icon-mini" />
+            <img src="assets/methods/chemex.png" title="Chemex" class="method-icon-mini" />
+            <img src="assets/methods/aeropress.png" title="AeroPress" class="method-icon-mini" />
+          </div>
+
+          <div class="card-footer">
+            <div class="format-pills">
+              <button type="button" class="format-btn active">Em Grãos (250g)</button>
+              <button type="button" class="format-btn">Moído na Hora</button>
+            </div>
+            <div class="price-box">
+              <div>
+                <span class="price-main">R$ 50,00</span>
+                <span class="price-old">R$ 60,00</span>
+              </div>
+              <span class="price-installment">2x de R$ 25,00 sem juros</span>
+            </div>
+            <button class="btn-buy" onclick="handleBuyClick('Café Frutado')">
+              <span>Comprar Agora</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </button>
+            <a href="index.html?cafe=frutado" class="btn-recipe-calc">
+              <span>⚖️ Ver Proporção na Calculadora</span>
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <!-- 4. Café Amendoado -->
+      <article class="coffee-card" data-category="classicos" data-sweetness="4" data-acidity="2" data-body="4" data-price="50" style="--card-accent: #92400e;">
+        <div class="card-top">
+          <span class="card-badge" style="background:#80380e;">Equilíbrio Perfeito</span>
+          <span class="card-category-tag">Clássico</span>
+          <div class="card-image-wrap">
+            <img src="assets/coffees/amendoado.jpg" alt="Café Amendoado Clássico" class="card-image" />
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-origin">📍 Sul de Minas &bull; 100% Arábica</div>
+          <h2 class="card-title">Café Amendoado</h2>
+          <p class="card-producer">Produtor: Família Venturim &bull; Torra Média</p>
+
+          <div class="flavor-notes">
+            <span class="flavor-tag">Avelã tostada</span>
+            <span class="flavor-tag">Castanha de caju</span>
+            <span class="flavor-tag">Melaço</span>
+          </div>
+
+          <div class="sensory-bars">
+            <div class="sensory-row">
+              <span class="sensory-label">Doçura</span>
+              <div class="sensory-dots">
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot"></span>
+              </div>
+            </div>
+            <div class="sensory-row">
+              <span class="sensory-label">Acidez</span>
+              <div class="sensory-dots">
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot"></span>
+                <span class="sensory-dot"></span>
+                <span class="sensory-dot"></span>
+              </div>
+            </div>
+            <div class="sensory-row">
+              <span class="sensory-label">Corpo</span>
+              <div class="sensory-dots">
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-methods">
+            <span>Ideal para:</span>
+            <img src="assets/methods/melitta.png" title="Filtro Tradicional" class="method-icon-mini" />
+            <img src="assets/methods/v60.png" title="V60" class="method-icon-mini" />
+            <img src="assets/methods/french-press.png" title="Prensa" class="method-icon-mini" />
+          </div>
+
+          <div class="card-footer">
+            <div class="format-pills">
+              <button type="button" class="format-btn active">Em Grãos (250g)</button>
+              <button type="button" class="format-btn">Moído na Hora</button>
+            </div>
+            <div class="price-box">
+              <div>
+                <span class="price-main">R$ 50,00</span>
+                <span class="price-old">R$ 60,00</span>
+              </div>
+              <span class="price-installment">2x de R$ 25,00 sem juros</span>
+            </div>
+            <button class="btn-buy" onclick="handleBuyClick('Café Amendoado')">
+              <span>Comprar Agora</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </button>
+            <a href="index.html?cafe=amendoado" class="btn-recipe-calc">
+              <span>⚖️ Ver Proporção na Calculadora</span>
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <!-- 5. Microlote Cocada -->
+      <article class="coffee-card" data-category="microlotes" data-sweetness="5" data-acidity="1" data-body="5" data-price="45" style="--card-accent: #059669;">
+        <div class="card-top">
+          <span class="card-badge" style="background:#059669;">Robusta Amazônico</span>
+          <span class="card-category-tag">Microlote Raro</span>
+          <div class="card-image-wrap">
+            <img src="assets/coffees/cocada.jpg" alt="Café Cocada Microlote" class="card-image" />
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-origin">📍 Rondônia / Amazônia &bull; Canéfora Raro</div>
+          <h2 class="card-title">Café Cocada</h2>
+          <p class="card-producer">Produtora: Poliana Perrut &bull; Agroecológico</p>
+
+          <div class="flavor-notes">
+            <span class="flavor-tag">Coco tostado</span>
+            <span class="flavor-tag">Melaço de cana</span>
+            <span class="flavor-tag">Especiarias doces</span>
+          </div>
+
+          <div class="sensory-bars">
+            <div class="sensory-row">
+              <span class="sensory-label">Doçura</span>
+              <div class="sensory-dots">
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+              </div>
+            </div>
+            <div class="sensory-row">
+              <span class="sensory-label">Acidez</span>
+              <div class="sensory-dots">
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot"></span>
+                <span class="sensory-dot"></span>
+                <span class="sensory-dot"></span>
+                <span class="sensory-dot"></span>
+              </div>
+            </div>
+            <div class="sensory-row">
+              <span class="sensory-label">Corpo</span>
+              <div class="sensory-dots">
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-methods">
+            <span>Ideal para:</span>
+            <img src="assets/methods/aeropress.png" title="AeroPress" class="method-icon-mini" />
+            <img src="assets/methods/moka.png" title="Moka" class="method-icon-mini" />
+            <img src="assets/methods/espresso.png" title="Espresso" class="method-icon-mini" />
+          </div>
+
+          <div class="card-footer">
+            <div class="format-pills">
+              <button type="button" class="format-btn active">Em Grãos (250g)</button>
+              <button type="button" class="format-btn">Moído na Hora</button>
+            </div>
+            <div class="price-box">
+              <div>
+                <span class="price-main">R$ 45,00</span>
+              </div>
+              <span class="price-installment">Safra Limitada 2026</span>
+            </div>
+            <button class="btn-buy" onclick="handleBuyClick('Café Cocada')">
+              <span>Comprar Agora</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </button>
+            <a href="index.html?cafe=cocada" class="btn-recipe-calc">
+              <span>⚖️ Ver Proporção na Calculadora</span>
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <!-- 6. Microlote Melancia -->
+      <article class="coffee-card" data-category="microlotes" data-sweetness="4" data-acidity="4" data-body="3" data-price="45" style="--card-accent: #e11d48;">
+        <div class="card-top">
+          <span class="card-badge" style="background:#e11d48;">Fermentação Exclusiva</span>
+          <span class="card-category-tag">Microlote</span>
+          <div class="card-image-wrap">
+            <img src="assets/coffees/melancia.jpg" alt="Café Melancia Microlote" class="card-image" />
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-origin">📍 Jean Faleiros &bull; 100% Arábica</div>
+          <h2 class="card-title">Café Melancia</h2>
+          <p class="card-producer">Fermentação Induzida &bull; Torra Clara</p>
+
+          <div class="flavor-notes">
+            <span class="flavor-tag">Melancia fresca</span>
+            <span class="flavor-tag">Morango silvestre</span>
+            <span class="flavor-tag">Acidez brilhante</span>
+          </div>
+
+          <div class="sensory-bars">
+            <div class="sensory-row">
+              <span class="sensory-label">Doçura</span>
+              <div class="sensory-dots">
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot"></span>
+              </div>
+            </div>
+            <div class="sensory-row">
+              <span class="sensory-label">Acidez</span>
+              <div class="sensory-dots">
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot"></span>
+              </div>
+            </div>
+            <div class="sensory-row">
+              <span class="sensory-label">Corpo</span>
+              <div class="sensory-dots">
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot"></span>
+                <span class="sensory-dot"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-methods">
+            <span>Ideal para:</span>
+            <img src="assets/methods/v60.png" title="V60" class="method-icon-mini" />
+            <img src="assets/methods/chemex.png" title="Chemex" class="method-icon-mini" />
+            <img src="assets/methods/cold-brew.png" title="Cold Brew" class="method-icon-mini" />
+          </div>
+
+          <div class="card-footer">
+            <div class="format-pills">
+              <button type="button" class="format-btn active">Em Grãos (250g)</button>
+              <button type="button" class="format-btn">Moído na Hora</button>
+            </div>
+            <div class="price-box">
+              <div>
+                <span class="price-main">R$ 45,00</span>
+              </div>
+              <span class="price-installment">Sensorial Exótico</span>
+            </div>
+            <button class="btn-buy" onclick="handleBuyClick('Café Melancia')">
+              <span>Comprar Agora</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </button>
+            <a href="index.html?cafe=melancia" class="btn-recipe-calc">
+              <span>⚖️ Ver Proporção na Calculadora</span>
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <!-- 7. Microlote Abacaxi 2026 -->
+      <article class="coffee-card" data-category="microlotes" data-sweetness="4" data-acidity="4" data-body="3" data-price="45" style="--card-accent: #eab308;">
+        <div class="card-top">
+          <span class="card-badge" style="background:#ca8a04;">Lançamento Safra 2026</span>
+          <span class="card-category-tag">Microlote</span>
+          <div class="card-image-wrap">
+            <img src="assets/coffees/abacaxi.jpg" alt="Café Abacaxi Microlote" class="card-image" />
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-origin">📍 Jean Faleiros &bull; 100% Arábica</div>
+          <h2 class="card-title">Café Abacaxi 2026</h2>
+          <p class="card-producer">Processo Especial &bull; Torra Clara</p>
+
+          <div class="flavor-notes">
+            <span class="flavor-tag">Abacaxi em calda</span>
+            <span class="flavor-tag">Limonada suíça</span>
+            <span class="flavor-tag">Finalização doce</span>
+          </div>
+
+          <div class="sensory-bars">
+            <div class="sensory-row">
+              <span class="sensory-label">Doçura</span>
+              <div class="sensory-dots">
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot"></span>
+              </div>
+            </div>
+            <div class="sensory-row">
+              <span class="sensory-label">Acidez</span>
+              <div class="sensory-dots">
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot"></span>
+              </div>
+            </div>
+            <div class="sensory-row">
+              <span class="sensory-label">Corpo</span>
+              <div class="sensory-dots">
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot"></span>
+                <span class="sensory-dot"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-methods">
+            <span>Ideal para:</span>
+            <img src="assets/methods/v60.png" title="V60" class="method-icon-mini" />
+            <img src="assets/methods/aeropress.png" title="AeroPress" class="method-icon-mini" />
+          </div>
+
+          <div class="card-footer">
+            <div class="format-pills">
+              <button type="button" class="format-btn active">Em Grãos (250g)</button>
+              <button type="button" class="format-btn">Moído na Hora</button>
+            </div>
+            <div class="price-box">
+              <div>
+                <span class="price-main">R$ 45,00</span>
+              </div>
+              <span class="price-installment">Edição Especial</span>
+            </div>
+            <button class="btn-buy" onclick="handleBuyClick('Café Abacaxi')">
+              <span>Comprar Agora</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </button>
+            <a href="index.html?cafe=abacaxi" class="btn-recipe-calc">
+              <span>⚖️ Ver Proporção na Calculadora</span>
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <!-- 8. Microlote Doce de Leite -->
+      <article class="coffee-card" data-category="microlotes" data-sweetness="5" data-acidity="1" data-body="4" data-price="45" style="--card-accent: #c2410c;">
+        <div class="card-top">
+          <span class="card-badge" style="background:#c2410c;">Conilon Especial</span>
+          <span class="card-category-tag">Microlote</span>
+          <div class="card-image-wrap">
+            <img src="assets/coffees/docedeleite.jpg" alt="Café Doce de Leite Microlote" class="card-image" />
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-origin">📍 Família Venturim &bull; Conilon Especial</div>
+          <h2 class="card-title">Café Doce de Leite</h2>
+          <p class="card-producer">Origem Espírito Santo &bull; Torra Média</p>
+
+          <div class="flavor-notes">
+            <span class="flavor-tag">Doce de leite cozido</span>
+            <span class="flavor-tag">Caramelo toffee</span>
+            <span class="flavor-tag">Cremosidade alta</span>
+          </div>
+
+          <div class="sensory-bars">
+            <div class="sensory-row">
+              <span class="sensory-label">Doçura</span>
+              <div class="sensory-dots">
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+              </div>
+            </div>
+            <div class="sensory-row">
+              <span class="sensory-label">Acidez</span>
+              <div class="sensory-dots">
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot"></span>
+                <span class="sensory-dot"></span>
+                <span class="sensory-dot"></span>
+                <span class="sensory-dot"></span>
+              </div>
+            </div>
+            <div class="sensory-row">
+              <span class="sensory-label">Corpo</span>
+              <div class="sensory-dots">
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot filled"></span>
+                <span class="sensory-dot"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-methods">
+            <span>Ideal para:</span>
+            <img src="assets/methods/v60.png" title="V60" class="method-icon-mini" />
+            <img src="assets/methods/french-press.png" title="Prensa" class="method-icon-mini" />
+            <img src="assets/methods/moka.png" title="Moka" class="method-icon-mini" />
+          </div>
+
+          <div class="card-footer">
+            <div class="format-pills">
+              <button type="button" class="format-btn active">Em Grãos (250g)</button>
+              <button type="button" class="format-btn">Moído na Hora</button>
+            </div>
+            <div class="price-box">
+              <div>
+                <span class="price-main">R$ 45,00</span>
+              </div>
+              <span class="price-installment">Crema Aveludada</span>
+            </div>
+            <button class="btn-buy" onclick="handleBuyClick('Café Doce de Leite')">
+              <span>Comprar Agora</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </button>
+            <a href="index.html?cafe=docedeleite" class="btn-recipe-calc">
+              <span>⚖️ Ver Proporção na Calculadora</span>
+            </a>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </main>
+
+  <!-- ========================================================================
+       SEÇÃO EXCLUSIVA DE KITS: "CAFÉ É UM ESPETÁCULO!" (COM AS 2 CAIXAS REAIS)
+       ======================================================================== -->
+  <section class="kits-showcase-section" id="kits">
+    <div class="kits-inner">
+      <div class="kits-header">
+        <span class="kits-tag">🎁 Para Presentear ou Colecionar</span>
+        <h2 class="kits-title">KITS COLEÇÃO ESPETÁCULO</h2>
+        <p class="kits-desc">
+          Quer impressionar alguém ou fazer uma imersão sensorial completa? Nossos kits reúnem os cafés premiados da Fuzz em caixas exclusivas com arte pop e acabamento de luxo.
+        </p>
+      </div>
+
+      <div class="kits-grid">
+        <!-- Caixa Azul (Seleção Fuzz) -->
+        <div class="kit-card-box kit-teal">
+          <img src="assets/kits/kit-espetaculo-teal.png" alt="Kit Seleção Fuzz Café é um Espetáculo" class="kit-card-img" />
+          <div class="kit-card-content">
+            <span style="display:inline-block; background:#ffffff; color:#1e201d; font-size:0.72rem; font-weight:800; padding:2px 8px; border-radius:99px; border:1.5px solid #1e201d; margin-bottom:6px;">8 CAFÉS ESPECIAIS &bull; 4 ARÁBICAS + 4 CANÉFORAS</span>
+            <h4>Seleção Fuzz | KIT DEGUSTAÇÃO</h4>
+            <p>Apresentação à nossa principal linha de cafés! Neste kit você irá provar oito cafés especiais — quatro arábicas e quatro canéforas — alcançando a maior riqueza de sabores e nuances que o universo do café tem a oferecer. Disponível em grãos ou moído para o seu método.</p>
+            <div class="kit-price-btn-row">
+              <div>
+                <span class="kit-price-tag">R$ 300,00</span>
+                <span style="display:block; font-size:0.75rem; color:#ffffff; opacity:0.9;">6x de R$ 50,00 sem juros</span>
+              </div>
+              <a href="https://www.fuzzcafes.com.br/kits/selecaofuzz" target="_blank" class="btn-kit-action" onclick="handleBuyClick('Kit Seleção Fuzz')">
+                <span>Comprar Kit Azul</span> &rarr;
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Caixa Rosa (Sabores Complexos / Microlotes) -->
+        <div class="kit-card-box kit-pink">
+          <img src="assets/kits/kit-espetaculo-pink.png" alt="Kit Sabores Complexos Café é um Espetáculo" class="kit-card-img" />
+          <div class="kit-card-content">
+            <span style="display:inline-block; background:#ffffff; color:#1e201d; font-size:0.72rem; font-weight:800; padding:2px 8px; border-radius:99px; border:1.5px solid #1e201d; margin-bottom:6px;">4 MICROLOTES RAROS &bull; 2 ARÁBICAS + 2 CANÉFORAS</span>
+            <h4 style="color:var(--color-fuzz-lime);">Sabores Complexos | KIT DEGUSTAÇÃO</h4>
+            <p>Apresentação aos nossos microlotes de maior complexidade sensorial! Verdadeiras joias que surgem do refinamento das técnicas dos produtores em suas fazendas: dois arábicas e dois canéforas premiados trazendo o melhor da última safra brasileira. Em grãos ou moído.</p>
+            <div class="kit-price-btn-row">
+              <div>
+                <span class="kit-price-tag">R$ 190,00</span>
+                <span style="display:block; font-size:0.75rem; color:#ffffff; opacity:0.9;">6x de R$ 31,66 sem juros</span>
+              </div>
+              <a href="https://www.fuzzcafes.com.br/kits/microlote" target="_blank" class="btn-kit-action" onclick="handleBuyClick('Kit Sabores Complexos')">
+                <span>Comprar Kit Rosa</span> &rarr;
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Seção Interativa "Ajuda do Nico: Qual Café Combina Comigo?" -->
+  <section class="nico-advisor-section">
+    <div class="advisor-mascot-box">
+      <img src="assets/mascot/nico-barista-badge.png" alt="Nico Barista Conselheiro" class="advisor-mascot-img" />
+    </div>
+    <div class="advisor-content">
+      <div style="display:inline-block; background:#fff1e0; color:#c25900; font-size:0.75rem; font-weight:800; padding:3px 10px; border-radius:99px; margin-bottom:8px; border:1px solid #ffcc99;">
+        QUER UMA DICA RÁPIDA?
+      </div>
+      <h3>Não sabe por onde começar? O Nico ajuda!</h3>
+      <p>Clique no seu perfil sensorial favorito e descubra a nossa recomendação certeira em 1 segundo:</p>
+
+      <div class="advisor-quiz-grid">
+        <button class="quiz-option-btn" onclick="recommendCoffee('caramelo', 'Café Caramelo Clássico')">
+          <span class="quiz-option-title">☕ Doce & Confortável</span>
+          <span class="quiz-option-desc">Notas de caramelo, baunilha e chocolate ao leite. O queridinho para todos os dias.</span>
+        </button>
+        <button class="quiz-option-btn" onclick="recommendCoffee('chocolate', 'Café Chocolate Clássico')">
+          <span class="quiz-option-title">🍫 Intenso & Encorpado</span>
+          <span class="quiz-option-desc">Cacau 70% marcante, perfeito puro ou acompanhado com leite cremoso.</span>
+        </button>
+        <button class="quiz-option-btn" onclick="recommendCoffee('frutado', 'Café Frutado')">
+          <span class="quiz-option-title">🍊 Cítrico & Refrescante</span>
+          <span class="quiz-option-desc">Acidez vibrante de frutas amarelas e perfume floral do Caparaó.</span>
+        </button>
+        <button class="quiz-option-btn" onclick="recommendCoffee('cocada', 'Microlote Cocada')">
+          <span class="quiz-option-title">🏝️ Exótico & Inédito</span>
+          <span class="quiz-option-desc">Robusta Amazônico agroecológico com doçura impressionante de coco tostado.</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Faixa de Garantia & Confiança da Fuzz -->
+  <section class="trust-section">
+    <div class="trust-grid">
+      <div class="trust-card">
+        <div class="trust-icon">🔥</div>
+        <div class="trust-text">
+          <h4>Torra Fresca Semanal</h4>
+          <p>Seus grãos nunca ficam parados em estoque. Torramos em pequenos lotes artesanais no Rio de Janeiro.</p>
+        </div>
+      </div>
+
+      <div class="trust-card">
+        <div class="trust-icon">🌱</div>
+        <div class="trust-text">
+          <h4>Rastreabilidade 100%</h4>
+          <p>Conheça a fazenda, a altitude e o produtor por trás de cada xícara. Comércio justo e transparente.</p>
+        </div>
+      </div>
+
+      <div class="trust-card">
+        <div class="trust-icon">⚙️</div>
+        <div class="trust-text">
+          <h4>Moagem Grátis sob Medida</h4>
+          <p>Não tem moedor? Moemos na hora na granulometria perfeita para V60, Prensa, Cafeteira Italiana ou Filtro.</p>
+        </div>
+      </div>
+
+      <div class="trust-card">
+        <div class="trust-icon">💬</div>
+        <div class="trust-text">
+          <h4>Barista no WhatsApp</h4>
+          <p>Ficou com dúvida no preparo? Nossa equipe tira suas dúvidas de extração e receitas diretamente no zap.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Rodapé Oficial Fuzz Cafés -->
+  <footer class="fuzz-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img src="assets/logo-fuzz.png" alt="Fuzz Cafés" class="footer-logo" />
+        <p class="footer-desc">
+          Microtorrefação de cafés especiais artesanais, kits colecionáveis e experiências no Rio de Janeiro. Acreditamos que café é um espetáculo que transforma o seu dia.
+        </p>
+      </div>
+
+      <div class="footer-col">
+        <h5>Catálogo</h5>
+        <ul>
+          <li><a href="#">Cafés Clássicos</a></li>
+          <li><a href="#">Microlotes Especiais</a></li>
+          <li><a href="#kits">Kits & Caixas de Presente</a></li>
+          <li><a href="https://www.fuzzcafes.com.br/metodos-e-acessorios">Métodos e Filtros</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h5>Experiência</h5>
+        <ul>
+          <li><a href="index.html">Calculadora de Preparo</a></li>
+          <li><a href="#">Guia de Moagem</a></li>
+          <li><a href="#">Ilha dos Sabores</a></li>
+          <li><a href="https://api.whatsapp.com/send?phone=5524988487793" target="_blank">Falar com Barista</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h5>Atendimento</h5>
+        <p style="font-size:0.85rem; color:#a8a7a3; margin-bottom:8px;">Segunda a Sexta, 9h às 18h</p>
+        <p style="font-size:0.85rem; color:#ffffff; font-weight:bold; margin-bottom:12px;">WhatsApp: (24) 98848-7793</p>
+        <p style="font-size:0.8rem; color:#787774;">Torrefação no Rio de Janeiro / Envio com Torra Fresca para todo o Brasil.</p>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© 2026 Fuzz Cafés Especiais. Todos os direitos reservados.</span>
+      <span>Identidade Visual: Café é um Espetáculo!</span>
+    </div>
+  </footer>
+
+  <!-- Modal Interativo do Nico Recomendando -->
+  <div class="modal-overlay" id="recommendationModal" onclick="closeModal(event)">
+    <div class="modal-box" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+      <div style="text-align:center; margin-bottom:16px;">
+        <img src="assets/mascot/nico-celebrate.png" style="width:90px; height:90px; object-fit:contain; margin-bottom:8px;" />
+        <h4 id="modalCoffeeTitle" style="font-family:var(--font-display); font-size:1.6rem; color:var(--color-text-main);">Café Caramelo</h4>
+        <p id="modalCoffeeDesc" style="color:var(--color-text-muted); font-size:0.88rem; line-height:1.4; margin-top:4px;">
+          Combina perfeitamente com o seu perfil! É doce, reconfortante e fica incrível em qualquer método.
+        </p>
+      </div>
+      <div style="display:flex; gap:10px; margin-top:20px;">
+        <button class="btn-buy" style="flex:1;" onclick="goToShop()">
+          Adicionar ao Carrinho (R$ 50,00)
+        </button>
+        <button class="btn-recipe-calc" style="flex:1;" onclick="goToCalc()">
+          Calcular Receita
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Alternar Vibe de Cor do Hero (Teal <-> Pink)
+    let currentVibe = 'teal';
+    function toggleHeroVibe() {
+      const hero = document.getElementById('heroBanner');
+      const boxImg = document.getElementById('heroBoxImg');
+      const boxTag = document.getElementById('heroBoxTag');
+      const boxTitle = document.getElementById('heroBoxTitle');
+      const boxDesc = document.getElementById('heroBoxDesc');
+      const boxCta = document.getElementById('heroBoxCta');
+      
+      if (currentVibe === 'teal') {
+        hero.classList.add('vibe-pink');
+        boxImg.src = 'assets/kits/kit-espetaculo-pink.png';
+        if (boxTag) boxTag.innerHTML = '4 Microlotes Raros &bull; R$ 190';
+        if (boxTitle) boxTitle.textContent = 'Sabores Complexos | Kit Degustação';
+        if (boxDesc) boxDesc.textContent = 'Nossos cafés de maior complexidade sensorial: 2 arábicas e 2 canéforas raros da última safra brasileira.';
+        if (boxCta) {
+          boxCta.href = 'https://www.fuzzcafes.com.br/kits/microlote';
+          boxCta.innerHTML = '<span>Comprar Kit Rosa (R$ 190) &rarr;</span>';
+        }
+        currentVibe = 'pink';
+      } else {
+        hero.classList.remove('vibe-pink');
+        boxImg.src = 'assets/kits/kit-espetaculo-teal.png';
+        if (boxTag) boxTag.innerHTML = '8 Cafés Especiais &bull; R$ 300';
+        if (boxTitle) boxTitle.textContent = 'Seleção Fuzz | Kit Degustação';
+        if (boxDesc) boxDesc.textContent = 'Nossa principal linha: 4 arábicas e 4 canéforas para uma imersão completa em nuances e riqueza de sabores.';
+        if (boxCta) {
+          boxCta.href = 'https://www.fuzzcafes.com.br/kits/selecaofuzz';
+          boxCta.innerHTML = '<span>Comprar Kit Azul (R$ 300) &rarr;</span>';
+        }
+        currentVibe = 'teal';
+      }
+    }
+
+    // Interatividade dos Filtros Sensoriais
+    const filterTabs = document.querySelectorAll('.filter-tab');
+    const coffeeCards = document.querySelectorAll('.coffee-card');
+    const sortSelect = document.getElementById('sortOrder');
+    const coffeeGrid = document.getElementById('coffeeGrid');
+
+    filterTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        filterTabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+
+        const filter = tab.getAttribute('data-filter');
+        coffeeCards.forEach(card => {
+          const category = card.getAttribute('data-category');
+          const sweetness = parseInt(card.getAttribute('data-sweetness') || 0);
+          const acidity = parseInt(card.getAttribute('data-acidity') || 0);
+
+          let visible = false;
+          if (filter === 'all') visible = true;
+          else if (filter === 'classicos' && category === 'classicos') visible = true;
+          else if (filter === 'microlotes' && category === 'microlotes') visible = true;
+          else if (filter === 'doce' && sweetness >= 4) visible = true;
+          else if (filter === 'frutado' && acidity >= 4) visible = true;
+
+          card.style.display = visible ? 'flex' : 'none';
+        });
+      });
+    });
+
+    // Ordenação
+    sortSelect.addEventListener('change', () => {
+      const order = sortSelect.value;
+      const cardsArray = Array.from(coffeeCards);
+
+      cardsArray.sort((a, b) => {
+        if (order === 'sweetness') {
+          return parseInt(b.getAttribute('data-sweetness')) - parseInt(a.getAttribute('data-sweetness'));
+        }
+        if (order === 'price-asc') {
+          return parseFloat(a.getAttribute('data-price')) - parseFloat(b.getAttribute('data-price'));
+        }
+        if (order === 'price-desc') {
+          return parseFloat(b.getAttribute('data-price')) - parseFloat(a.getAttribute('data-price'));
+        }
+        return 0; // default
+      });
+
+      cardsArray.forEach(card => coffeeGrid.appendChild(card));
+    });
+
+    // Alternar Botões de Formato (Grãos vs Moído)
+    document.querySelectorAll('.coffee-card').forEach(card => {
+      const formatBtns = card.querySelectorAll('.format-btn');
+      formatBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          formatBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+        });
+      });
+    });
+
+    // Modal de Recomendação do Nico
+    let currentRecommendedId = 'caramelo';
+    function recommendCoffee(coffeeId, coffeeName) {
+      currentRecommendedId = coffeeId;
+      const modal = document.getElementById('recommendationModal');
+      const title = document.getElementById('modalCoffeeTitle');
+      const desc = document.getElementById('modalCoffeeDesc');
+
+      title.textContent = coffeeName;
+      if (coffeeId === 'caramelo') {
+        desc.textContent = "O campeão de pedidos da Fuzz! Doçura acentuada de caramelo e baunilha com corpo aveludado. A escolha perfeita para o dia a dia.";
+      } else if (coffeeId === 'chocolate') {
+        desc.textContent = "Perfil encorpado e potente com notas de cacau 70% e trufa. Excelente puro e imbatível em bebidas com leite.";
+      } else if (coffeeId === 'frutado') {
+        desc.textContent = "Acidez brilhante e notas de pêssego e flores do Caparaó. Refrescante, perfumado e surpreendente no método filtrado.";
+      } else if (coffeeId === 'cocada') {
+        desc.textContent = "Microlote raríssimo de Robusta Amazônico premiado. Crema densa e sabor marcante de cocada e melaço de cana.";
+      }
+      modal.classList.add('active');
+    }
+
+    function closeModal(event) {
+      document.getElementById('recommendationModal').classList.remove('active');
+    }
+
+    function goToShop() {
+      alert("Redirecionando para compra com o formato selecionado!");
+      closeModal();
+    }
+
+    function goToCalc() {
+      window.location.href = `index.html?cafe=${currentRecommendedId}`;
+    }
+
+    function handleBuyClick(name) {
+      alert(`☕ ${name} adicionado à sacola de compras!`);
+    }
+  </script>
+</body>
+</html>

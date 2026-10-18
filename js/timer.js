@@ -47,6 +47,8 @@ class BrewTimer {
     const state = {
       isRunning: this.isRunning,
       isMuted: this.isMuted,
+      isVoiceEnabled: this.isVoiceEnabled,
+      hasWakeLock: !!this.wakeLock,
       seconds: this.seconds,
       formattedTime: this.formatTime(this.seconds),
       currentStepIndex: this.currentStepIndex,
@@ -82,10 +84,34 @@ class BrewTimer {
     return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
   }
 
+  async requestWakeLock() {
+    if (typeof navigator !== 'undefined' && 'wakeLock' in navigator) {
+      try {
+        this.wakeLock = await navigator.wakeLock.request('screen');
+        this.wakeLock.addEventListener('release', () => {
+          this.wakeLock = null;
+        });
+      } catch (err) {
+        this.wakeLock = null;
+      }
+    }
+  }
+
+  releaseWakeLock() {
+    if (this.wakeLock) {
+      try {
+        this.wakeLock.release().catch(() => {});
+      } catch (e) {}
+      this.wakeLock = null;
+    }
+  }
+
   start() {
     if (this.isRunning) return;
     this.initAudio();
+    this.requestWakeLock();
     this.isRunning = true;
+
     this.timerInterval = setInterval(() => {
       this.seconds++;
       this.checkCountdownBeep();
@@ -99,6 +125,7 @@ class BrewTimer {
     if (!this.isRunning) return;
     clearInterval(this.timerInterval);
     this.isRunning = false;
+    this.releaseWakeLock();
     this.notify();
   }
 
@@ -108,6 +135,7 @@ class BrewTimer {
     this.seconds = 0;
     this.currentStepIndex = 0;
     this.hasPlayedFinishedFanfare = false;
+    this.releaseWakeLock();
     this.notify();
   }
 
@@ -129,6 +157,7 @@ class BrewTimer {
         this.hasPlayedFinishedFanfare = true;
         this.playFinishedFanfare();
         this.triggerVibration([100, 50, 100, 50, 250]);
+        this.releaseWakeLock();
       }
       this.notify();
     }
@@ -179,6 +208,7 @@ class BrewTimer {
       this.hasPlayedFinishedFanfare = true;
       this.playFinishedFanfare();
       this.triggerVibration([100, 50, 100, 50, 250]);
+      this.releaseWakeLock();
     }
   }
 
@@ -188,10 +218,11 @@ class BrewTimer {
     const currentStep = this.steps[this.currentStepIndex];
     const duration = currentStep ? (currentStep.duration || 0) : 0;
     
-    // Toca bip suave preventivo aos 3s, 2s e 1s (apenas se a etapa tiver mais de 4s de duração)
-    if (duration > 4 && (remaining === 3 || remaining === 2 || remaining === 1)) {
+    // Toca bip preventivo sonoro aos 5s, 4s, 3s, 2s e 1s (para dar tempo de pegar o bule)
+    if (duration > 6 && remaining >= 1 && remaining <= 5) {
       this.playCountdownBeep(remaining);
-      this.triggerVibration(35);
+      const vibeDuration = remaining <= 2 ? 45 : 30;
+      this.triggerVibration(vibeDuration);
     }
   }
 
@@ -221,15 +252,25 @@ class BrewTimer {
       const osc = this.audioCtx.createOscillator();
       const gain = this.audioCtx.createGain();
       osc.type = 'sine';
-      // Tom suave ascendente (520Hz, 580Hz, 640Hz)
-      const freq = remaining === 1 ? 640 : (remaining === 2 ? 580 : 520);
+      
+      // Tom suave ascendente progressivo (5s -> 440Hz, 4s -> 494Hz, 3s -> 554Hz, 2s -> 622Hz, 1s -> 740Hz)
+      const frequencies = {
+        5: 440,
+        4: 494,
+        3: 554,
+        2: 622,
+        1: 740
+      };
+      const freq = frequencies[remaining] || 520;
+      const volume = remaining === 1 ? 0.12 : (remaining === 2 ? 0.10 : 0.08);
+
       osc.frequency.setValueAtTime(freq, this.audioCtx.currentTime);
-      gain.gain.setValueAtTime(0.08, this.audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, this.audioCtx.currentTime + 0.12);
+      gain.gain.setValueAtTime(volume, this.audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, this.audioCtx.currentTime + 0.14);
       osc.connect(gain);
       gain.connect(this.audioCtx.destination);
       osc.start();
-      osc.stop(this.audioCtx.currentTime + 0.12);
+      osc.stop(this.audioCtx.currentTime + 0.14);
     } catch (e) {}
   }
 

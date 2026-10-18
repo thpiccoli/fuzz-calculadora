@@ -35,8 +35,19 @@ A aplicação calcula a proporção perfeita (*brew ratio*) entre água e café 
 - **Guia Passo a Passo & Cronômetro Interativo (Brew Timer)**:
   - Instruções dinâmicas calculadas para a dose escolhida (com cálculo automático da água de pré-infusão / Bloom).
   - Cronômetro modal com contagem regressiva e alertas sonoros suaves em cada troca de etapa (Web Audio API nativo, sem dependências).
-- **Compartilhamento**:
-  - Botão de cópia da receita formatada com 1 clique para WhatsApp ou bloco de notas.
+- **Modo Japanese Iced Coffee**:
+  - Extração coada diretamente sobre o gelo com divisão automática de 40% gelo na jarra e 60% água quente no filtro para selar aromas e resfriamento imediato.
+- **Diário de Extração (Brew Log) com Diagnóstico do Nico**:
+  - Pós-preparo com avaliação de sabor (Ácido/Ralo 🍋, Equilibrado ✨, Amargo/Seco 😖), diagnóstico técnico imediato do Mascote Nico, estrelas e notas do moedor.
+  - Histórico salvo no dispositivo com botão de **1 toque "⚡ Repetir esta Receita"**.
+- **Calculadora de Rendimento e Economia por Xícara**:
+  - Mostra o rendimento real do pacote de 250g da Fuzz (~12 a 16 xícaras) e o custo estimado por dose (~R$ 3,40 a R$ 3,80).
+- **Gerador de Card para Instagram Stories (9:16)**:
+  - Cria cards verticais em Canvas 1080x1920 para download em PNG ou compartilhamento nativo.
+- **Modo Bancada Tela Cheia & Gestos Touch**:
+  - Expansão do timer em tela cheia com números gigantes legíveis a mais de 1 metro na bancada e suporte a gestos de swipe (deslizar) para trocar etapas no smartphone.
+- **PWA & Funcionamento Offline (Service Worker v2)**:
+  - Banner para adicionar à tela inicial do celular e navegação rápida 100% offline.
 
 ---
 
@@ -45,9 +56,13 @@ A aplicação calcula a proporção perfeita (*brew ratio*) entre água e café 
 ```
 fuzz/
 ├── index.html                     # Interface principal da calculadora
+├── manifest.json                  # Manifesto PWA para instalação no celular
+├── sw.js                          # Service Worker para funcionamento offline
 ├── package.json                   # Scripts de teste e metadados
 ├── test_data.js                   # Validador automático do catálogo e imagens
 ├── test_calc.js                   # Testes unitários dos cálculos e proporções
+├── test_diary.js                  # Testes unitários do diário de extração
+├── test_yield_economy.js          # Testes unitários de rendimento e custo por xícara
 ├── INTEGRACAO_MENU.md            # Guia de integração na loja Tray
 ├── README.md                      # Esta documentação
 │
@@ -57,12 +72,13 @@ fuzz/
 │
 ├── js/
 │   ├── data/                      # Dados desacoplados para fácil manutenção
-│   │   ├── coffees.js            # Cafés, notas sensoriais, links e fotos
+│   │   ├── coffees.js            # Cafés, notas sensoriais, preços e fotos
 │   │   ├── methods.js            # Métodos, moagens e passos do timer
 │   │   └── presets.js            # Doses rápidas pré-configuradas
 │   ├── data.js                   # Centralizador global dos dados
 │   ├── calculator.js             # Lógica matemática e reatividade (Ratio)
-│   ├── timer.js                  # Cronômetro com Web Audio API
+│   ├── timer.js                  # Cronômetro com Web Audio API e vibração
+│   ├── diary.js                  # Diário de cafés e diagnósticos do Nico
 │   ├── method-icons.js           # Ícones ilustrados dos métodos
 │   └── app.js                    # Controlador visual da interface
 │
@@ -81,24 +97,17 @@ fuzz/
 ## 💻 Como Rodar e Testar
 
 ### 1. Abrir no Navegador
-Por ser construído em Vanilla JS sem dependências compiladas, basta **dar dois cliques no arquivo `index.html`**, ou usar um servidor local:
+Por ser construído em Vanilla JS sem dependências compiladas, basta usar um servidor local:
 
 ```bash
 # Com Python:
 python -m http.server 3000
 
 # Ou com Node.js:
-npx serve
+npm start
 ```
 
-### 2. Validação Automática de Dados
-Para checar se todos os cafés, fotos e métodos estão corretos após uma edição:
-
+### 2. Suíte Completa de Testes
 ```bash
-node test_data.js
-```
-
-### 3. Testes Unitários de Cálculo
-```bash
-node test_calc.js
+npm test
 ```

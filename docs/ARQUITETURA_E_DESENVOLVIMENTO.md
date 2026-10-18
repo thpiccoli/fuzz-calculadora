@@ -125,6 +125,47 @@ node test_data.js
 # Validar cálculos matemáticos da calculadora
 node test_calc.js
 
+# Validar diário de extração e diagnósticos sensoriais
+node test_diary.js
+
 # Executar todos os testes de uma vez
 npm.cmd test
 ```
+
+---
+
+## 🚀 Funcionalidades Recentes Implementadas
+
+### 📖 Diário de Extração (Brew Log) com Diagnóstico de Sabor do Mascote Nico
+- **Módulo**: `js/diary.js` + persistência em `localStorage` (`fuzz_brew_diary`).
+- **Pós-Preparo no Cronômetro**: Avaliação sensorial em 1 toque com 3 perfis:
+  - 🍋 **Ácido / Ralo (Subextraído)**: Nico diagnostica fluxo muito rápido e indica afinar 1-2 cliques no moedor ou subir a temperatura da água.
+  - ✨ **Equilibrado & Delicioso (No Ponto)**: Nico celebra a harmonia doce e convida a salvar a receita.
+  - 😖 **Amargo / Seco (Superextraído)**: Nico diagnostica excesso de contato ou moagem fina e indica engrossar 1-2 cliques.
+- **Histórico Completo**: Modal acessível pelo Header, gaveta mobile e resumo da receita com botão **"⚡ Repetir esta Receita"** (aplica café, método, proporção e estilo gelo com 1 toque).
+
+### 🧊 Modo Japanese Iced Coffee
+- **Cálculo Especial**: Divide a água total automaticamente em 40% gelo na jarra + 60% água quente no despejo sobre o filtro de papel.
+- **Visual Acessível**: Cores com alto contraste no tema claro e escuro, sem texto claro sobre fundo claro.
+
+### ⏱️ Contagem Regressiva Sonora Preventiva de 5 Segundos
+- Toca bips suaves ascendentes (440Hz a 740Hz) com vibração háptica nos 5, 4, 3, 2 e 1 segundos finais de cada etapa, permitindo ao usuário pegar a chaleira/bule com calma na bancada.
+
+### 📸 Gerador de Card para Instagram Stories (9:16)
+- Renderização em Canvas 1080x1920 com estética oficial Fuzz Cafés para download ou compartilhamento nativo direto no smartphone.
+
+### ❄️ Suporte Adaptativo para Cold Brew
+- Doses de infusão longa inteligentes: Garrafa (500ml), Jarra 1L (1000ml), Jarra Grande (1.5L) e Pacote Fechado (250g de café).
+- Card de drinks exclusivos: Cold Brew Tônica e Iced Latte Cremoso.
+
+---
+
+## 🔮 Roadmap & Próximas Funcionalidades Planejadas
+
+### 🎙️ Guia de Áudio com a Voz Oficial do Pedro (Fuzz Cafés)
+- **Conceito**: Oferecer narração autêntica das etapas de extração com a voz e o carisma característico do Pedro (mestre de torra da Fuzz).
+- **Implementação técnica planejada**:
+  1. Coleta e extração de áudio limpo de amostras de vídeos do Pedro.
+  2. Treinamento/clonagem de modelo de voz neural (via ElevenLabs / Coqui TTS) ou gravação direta das vinhetas de áudio (`.mp3` leve pré-renderizado por etapa).
+  3. Reprodução offline integrada no cronômetro do PWA, anunciando o início do preparo, a água de pré-infusão (*bloom*), os despejos circulares e a finalização da xícara.
+

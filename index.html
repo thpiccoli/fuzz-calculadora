@@ -38,6 +38,21 @@
     <span>☕ FRETE GRÁTIS EM COMPRAS ACIMA DE R$ 200 &bull; TORRA FRESCA SEMANAL DIRETO DO RIO DE JANEIRO</span>
   </div>
 
+  <!-- Banner de Instalação PWA no Celular -->
+  <div class="pwa-install-banner" id="pwaInstallBanner" style="display: none;">
+    <div class="pwa-install-banner__content">
+      <img src="assets/logo-fuzz.png" alt="Fuzz Cafés" class="pwa-install-banner__logo" />
+      <div class="pwa-install-banner__text">
+        <strong>Instalar Calculadora Fuzz</strong>
+        <p>Acesse rápido na bancada, mesmo sem internet!</p>
+      </div>
+    </div>
+    <div class="pwa-install-banner__actions">
+      <button type="button" class="btn-pwa-dismiss" id="btnPwaDismiss" aria-label="Dispensar banner">&times;</button>
+      <button type="button" class="btn-pwa-install" id="btnPwaInstall">📲 Instalar App</button>
+    </div>
+  </div>
+
   <!-- Cabeçalho Oficial Fuzz Cafés -->
   <header class="fuzz-header">
     <div class="fuzz-header__inner">
@@ -67,8 +82,15 @@
         </ul>
       </nav>
 
-      <!-- Ações do Header (Busca e Carrinho) -->
+      <!-- Ações do Header (Diário, Busca e Carrinho) -->
       <div class="fuzz-header__actions">
+        <button type="button" class="header-action-btn diary-header-btn" id="btnOpenDiaryHeader" title="Meu Diário de Cafés" aria-label="Abrir Diário de Cafés">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+          </svg>
+          <span class="diary-badge-count" id="headerDiaryBadge" style="display:none;">0</span>
+        </button>
         <a href="https://www.fuzzcafes.com.br/" class="header-action-btn" title="Buscar no site">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="11" cy="11" r="8"></circle>
@@ -110,6 +132,7 @@
         <a href="https://www.fuzzcafes.com.br/kits" class="mobile-drawer-link">Kits e Presentes</a>
         <a href="https://www.fuzzcafes.com.br/metodos-e-acessorios" class="mobile-drawer-link">Métodos e Acessórios</a>
         <a href="#" class="mobile-drawer-link mobile-drawer-link--active">Calculadora de Preparo</a>
+        <a href="#" class="mobile-drawer-link" id="btnOpenDiaryDrawer">📖 Meu Diário de Cafés <span class="drawer-diary-badge" id="drawerDiaryBadge" style="display:none;">0</span></a>
       </nav>
       <div class="mobile-drawer-footer">
         <p>Rio de Janeiro - RJ</p>
@@ -220,6 +243,25 @@
             <span class="step-number">3</span>
             Ajuste as Quantidades
           </h2>
+        </div>
+
+        <!-- Seletor de Estilo: Quente vs No Gelo (Japanese Iced) -->
+        <div class="brew-style-section">
+          <span class="brew-style-label">Estilo de Extração:</span>
+          <div class="brew-style-toggle" role="radiogroup" aria-label="Estilo de Extração">
+            <button type="button" class="brew-style-btn active" id="btnStyleHot" data-style="hot">
+              <span class="brew-style-btn__icon">♨️</span>
+              <span class="brew-style-btn__text">Quente (Tradicional)</span>
+            </button>
+            <button type="button" class="brew-style-btn" id="btnStyleIced" data-style="iced">
+              <span class="brew-style-btn__icon">🧊</span>
+              <span class="brew-style-btn__text">No Gelo (Japanese Iced)</span>
+            </button>
+          </div>
+          <div class="iced-info-banner" id="icedInfoBanner" style="display: none;">
+            <span class="iced-info-badge">❄️ Japanese Iced Ativo</span>
+            <span class="iced-info-desc">Água total dividida em <strong>40% gelo na jarra</strong> + <strong>60% água quente no filtro</strong> para resfriamento imediato e retenção dos aromas voláteis.</span>
+          </div>
         </div>
 
         <!-- Doses Rápidas -->
@@ -343,6 +385,10 @@
                 <span>Proporção:</span>
                 <span id="summaryRatioDisplay">1 : 15 (Equilibrado)</span>
               </div>
+              <div class="spec-row iced-spec-row" id="summaryIcedRow" style="display: none;">
+                <span>🧊 Divisão no Gelo:</span>
+                <span id="summaryIcedDivision"><strong>120g gelo</strong> + <strong>180ml água quente</strong></span>
+              </div>
               <div class="spec-row">
                 <span>Bloom (Pré-infusão):</span>
                 <span id="summaryBloomWater">50 ml</span>
@@ -360,14 +406,24 @@
                 <span>Temperatura da Água:</span>
                 <span class="temp-spec-wrapper">
                   <span id="summaryTemp">91°C a 93°C</span>
-                  <!-- Badge de torra desabilitada conforme filosofia Fuzz:
-                  <span id="summaryTempTip" class="temp-roast-badge" title="Temperatura adaptada para este perfil de torra">Torra Média</span>
-                  -->
                 </span>
               </div>
               <div class="spec-row">
                 <span>Tempo de Extração:</span>
                 <span id="summaryTime">2m45s a 3m15s</span>
+              </div>
+            </div>
+
+            <!-- Rendimento do Pacote & Economia por Xícara -->
+            <div class="summary-yield-economy" id="summaryYieldEconomy">
+              <div class="yield-economy__item">
+                <span class="yield-economy__label">📦 Rendimento Pacote 250g</span>
+                <strong class="yield-economy__val" id="summaryPackCups">~12 xícaras</strong>
+              </div>
+              <div class="yield-economy__divider"></div>
+              <div class="yield-economy__item">
+                <span class="yield-economy__label">☕ Custo por Xícara</span>
+                <strong class="yield-economy__val" id="summaryCupCost">R$ 3,68</strong>
               </div>
             </div>
 
@@ -379,6 +435,16 @@
                   <polyline points="12 6 12 12 16 14"></polyline>
                 </svg>
                 Iniciar Cronômetro de Preparo
+              </button>
+
+              <!-- Botão Card de Stories Instagram -->
+              <button type="button" class="btn-story-card" id="btnOpenStoryCard" title="Gerar card visual em alta resolução para Instagram Stories">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                </svg>
+                📸 Gerar Card Stories (9:16)
               </button>
 
               <!-- Ações de Compartilhamento e Cópia -->
@@ -419,6 +485,14 @@
                   <rect x="6" y="14" width="12" height="8"></rect>
                 </svg>
                 Imprimir Ficha de Bancada
+              </button>
+
+              <button type="button" class="btn-open-diary" id="btnOpenDiarySummary">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                  <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                </svg>
+                <span>Meu Diário de Cafés (<strong id="summaryDiaryCount">0</strong>)</span>
               </button>
 
               <button type="button" class="btn-restart-recipe" id="btnRestartRecipe">
@@ -476,6 +550,7 @@
   <div class="timer-modal-overlay" id="timerModalOverlay" role="dialog" aria-modal="true" aria-labelledby="timerStepTitle">
     <div class="timer-modal-card">
       <div class="timer-modal__header-actions">
+        <button type="button" class="timer-modal__fullscreen" id="btnToggleFullscreen" aria-label="Modo bancada tela cheia" title="Modo Bancada Tela Cheia (F)">⛶</button>
         <button type="button" class="timer-modal__mute" id="btnToggleMute" aria-label="Alternar som do cronômetro" title="Ligar/Desligar som (M)">🔊</button>
         <button type="button" class="timer-modal__close" id="btnCloseTimer" aria-label="Fechar cronômetro (Esc)" title="Fechar">&times;</button>
       </div>
@@ -512,6 +587,74 @@
         <button type="button" class="btn-timer-primary" id="btnTimerStart">Iniciar</button>
         <button type="button" class="btn-timer-secondary" id="btnTimerNextStepBtn" title="Próxima etapa (Seta Direita)">⏭</button>
         <button type="button" class="btn-timer-secondary" id="btnTimerReset" title="Reiniciar cronômetro (R)">↺</button>
+      </div>
+
+      <!-- Card Pós-Preparo: Avaliação do Sabor & Diagnóstico do Nico Barista -->
+      <div class="timer-tasting-card" id="timerTastingCard">
+        <div class="tasting-header">
+          <div class="tasting-header__title-wrap">
+            <span class="tasting-badge">☕ Pós-Preparo</span>
+            <h4 class="tasting-title">Como ficou o café na xícara?</h4>
+          </div>
+          <button type="button" class="btn-toggle-tasting-card" id="btnToggleTastingCard" aria-label="Expandir avaliação">
+            <span class="toggle-icon">▼</span>
+          </button>
+        </div>
+
+        <div class="tasting-body" id="tastingBody">
+          <p class="tasting-sub">Toque em como sentiu o sabor para receber o diagnóstico do Nico:</p>
+          
+          <div class="tasting-buttons-grid">
+            <button type="button" class="btn-taste-option" data-taste="acid">
+              <span class="taste-emoji">🍋</span>
+              <span class="taste-name">Ácido / Ralo</span>
+              <small class="taste-hint">Subextraído</small>
+            </button>
+            <button type="button" class="btn-taste-option active" data-taste="balanced">
+              <span class="taste-emoji">✨</span>
+              <span class="taste-name">Equilibrado</span>
+              <small class="taste-hint">No Ponto!</small>
+            </button>
+            <button type="button" class="btn-taste-option" data-taste="bitter">
+              <span class="taste-emoji">😖</span>
+              <span class="taste-name">Amargo / Seco</span>
+              <small class="taste-hint">Superextraído</small>
+            </button>
+          </div>
+
+          <!-- Balão com Diagnóstico e Dica do Mascote Nico -->
+          <div class="nico-diagnosis-bubble" id="nicoDiagnosisBubble">
+            <div class="nico-diagnosis-avatar">
+              <img src="assets/mascot/nico-drinking-badge.png" id="nicoDiagnosisImg" alt="Nico Barista" />
+            </div>
+            <div class="nico-diagnosis-text">
+              <strong id="nicoDiagnosisTitle">Diagnóstico: Extração Perfeita na Mosca! 🎉</strong>
+              <p id="nicoDiagnosisTip">Harmonia espetacular entre doçura natural, acidez prazerosa e finalização sedosa. Dica do Nico: salve esta receita e guarde a regulagem do seu moedor!</p>
+            </div>
+          </div>
+
+          <!-- Avaliação por Estrelas -->
+          <div class="tasting-extra-fields">
+            <div class="tasting-stars-row">
+              <span class="stars-label">Sua nota:</span>
+              <div class="star-rating-group" id="tastingStarsGroup" role="radiogroup" aria-label="Nota de 1 a 5">
+                <button type="button" class="star-btn" data-value="1" aria-label="1 estrela">★</button>
+                <button type="button" class="star-btn" data-value="2" aria-label="2 estrelas">★</button>
+                <button type="button" class="star-btn" data-value="3" aria-label="3 estrelas">★</button>
+                <button type="button" class="star-btn" data-value="4" aria-label="4 estrelas">★</button>
+                <button type="button" class="star-btn active" data-value="5" aria-label="5 estrelas">★</button>
+              </div>
+            </div>
+
+            <div class="tasting-notes-row">
+              <input type="text" id="tastingNotesInput" class="tasting-notes-input" placeholder="Cliques no moedor ou observações (ex: 14 cliques Timemore C3)..." maxlength="100" />
+            </div>
+
+            <button type="button" class="btn-save-tasting" id="btnSaveTasting">
+              💾 Salvar no Meu Diário de Cafés
+            </button>
+          </div>
+        </div>
       </div>
 
       <!-- Dica de atalhos de teclado (Desktop) -->
@@ -608,6 +751,77 @@
     </div>
   </div>
 
+  <!-- Modal do Card Stories (Instagram / WhatsApp) -->
+  <div class="story-modal-overlay" id="storyModalOverlay" role="dialog" aria-modal="true" aria-labelledby="storyModalTitle">
+    <div class="story-modal-card">
+      <div class="story-modal__header">
+        <div class="story-modal__title-group">
+          <span class="story-modal__icon">📸</span>
+          <div>
+            <h3 class="story-modal__title" id="storyModalTitle">Card para Instagram Stories</h3>
+            <p class="story-modal__sub">Formato vertical 9:16 oficial da Fuzz Cafés para postar ou enviar.</p>
+          </div>
+        </div>
+        <button type="button" class="story-modal__close" id="btnCloseStoryModal" aria-label="Fechar preview do card">&times;</button>
+      </div>
+      
+      <div class="story-canvas-preview-wrap">
+        <canvas id="storyCanvas" width="1080" height="1920" class="story-canvas-element"></canvas>
+      </div>
+
+      <div class="story-modal__actions">
+        <button type="button" class="btn-story-download" id="btnDownloadStoryImage">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          Baixar Imagem (.PNG)
+        </button>
+        <button type="button" class="btn-story-share" id="btnNativeShareStory">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="18" cy="5" r="3"></circle>
+            <circle cx="6" cy="12" r="3"></circle>
+            <circle cx="18" cy="19" r="3"></circle>
+            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+          </svg>
+          Compartilhar nos Stories
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal do Diário de Cafés (Brew Log) -->
+  <div class="diary-modal-overlay" id="diaryModalOverlay" role="dialog" aria-modal="true" aria-labelledby="diaryModalTitle">
+    <div class="diary-modal-card">
+      <div class="diary-modal__header">
+        <div class="diary-modal__title-group">
+          <span class="diary-modal__icon">📖</span>
+          <div>
+            <h3 class="diary-modal__title" id="diaryModalTitle">Meu Diário de Cafés</h3>
+            <p class="diary-modal__sub"><span id="diaryModalCountText">0 preparos salvos</span> no seu dispositivo.</p>
+          </div>
+        </div>
+        <button type="button" class="diary-modal__close" id="btnCloseDiaryModal" aria-label="Fechar diário">&times;</button>
+      </div>
+
+      <!-- Lista de Registros do Diário -->
+      <div class="diary-modal__body" id="diaryListContainer">
+        <!-- Preenchido dinamicamente via JS -->
+      </div>
+
+      <div class="diary-modal__footer">
+        <button type="button" class="btn-clear-diary" id="btnClearAllDiary">
+          🗑️ Limpar Diário
+        </button>
+        <button type="button" class="btn-close-diary-footer" id="btnCloseDiaryModalFooter">
+          Fechar
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Toast de Notificação -->
   <div class="fuzz-toast" id="fuzzToast">
     <span>✓</span>
@@ -674,6 +888,7 @@
   <script src="js/method-icons.js"></script>
   <script src="js/calculator.js"></script>
   <script src="js/timer.js"></script>
+  <script src="js/diary.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

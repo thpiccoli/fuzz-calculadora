@@ -40,6 +40,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const ratioValueDisplayEl = document.getElementById("ratioValueDisplay");
   const intensityButtonsEl = document.querySelectorAll(".intensity-btn");
 
+  // Estilo de Preparo: Quente vs No Gelo (Japanese Iced)
+  const btnStyleHotEl = document.getElementById("btnStyleHot");
+  const btnStyleIcedEl = document.getElementById("btnStyleIced");
+  const icedInfoBannerEl = document.getElementById("icedInfoBanner");
+
   // Botões de Incremento (+ / -)
   const waterStepMinusEl = document.getElementById("waterStepMinus");
   const waterStepPlusEl = document.getElementById("waterStepPlus");
@@ -55,6 +60,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const summaryMethodIconEl = document.getElementById("summaryMethodIcon");
   const summaryWaterMlEl = document.getElementById("summaryWaterMl");
   const summaryCoffeeGramsEl = document.getElementById("summaryCoffeeGrams");
+  const summaryIcedRowEl = document.getElementById("summaryIcedRow");
+  const summaryIcedDivisionEl = document.getElementById("summaryIcedDivision");
   const summaryYieldMlEl = document.getElementById("summaryYieldMl");
   const summaryBloomWaterEl = document.getElementById("summaryBloomWater");
   const summaryRatioDisplayEl = document.getElementById("summaryRatioDisplay");
@@ -92,6 +99,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnTimerPrevStepEl = document.getElementById("btnTimerPrevStep");
   const btnTimerNextStepBtnEl = document.getElementById("btnTimerNextStepBtn");
   const btnToggleMuteEl = document.getElementById("btnToggleMute");
+
+  // Modal do Card Stories (Instagram / WhatsApp)
+  const btnOpenStoryCardEl = document.getElementById("btnOpenStoryCard");
+  const storyModalOverlayEl = document.getElementById("storyModalOverlay");
+  const btnCloseStoryModalEl = document.getElementById("btnCloseStoryModal");
+  const storyCanvasEl = document.getElementById("storyCanvas");
+  const btnDownloadStoryImageEl = document.getElementById("btnDownloadStoryImage");
+  const btnNativeShareStoryEl = document.getElementById("btnNativeShareStory");
 
   // Toast, Cópia, Compartilhamento, Impressão e Favoritos
   const btnCopyRecipeEl = document.getElementById("btnCopyRecipe");
@@ -279,6 +294,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const id = btn.dataset.methodId;
         calc.selectMethod(id);
         renderMethods();
+        renderPresets();
         updateNicoMethodTip(id);
         setTimeout(() => scrollToStep("sectionInputs"), 950);
       });
@@ -291,6 +307,40 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function renderPresets() {
     if (!presetsContainerEl) return;
+
+    // Se o método atual for Cold Brew, exibe doses de infusão a frio adequadas (500ml, 1L, 1.5L ou Pacote 250g)
+    if (calc.selectedMethod.id === "cold-brew") {
+      const coldPresets = [
+        { label: "Garrafa (500ml)", val: 500, type: "water" },
+        { label: "Jarra 1 Litro", val: 1000, type: "water" },
+        { label: "Jarra Grande (1.5L)", val: 1500, type: "water" },
+        { label: "📦 Pacote 250g Fechado", val: 250, type: "coffee" }
+      ];
+
+      presetsContainerEl.innerHTML = coldPresets.map(p => {
+        const isActive = p.type === "coffee"
+          ? Math.round(calc.coffeeGrams) === p.val
+          : Math.round(calc.waterMl) === p.val;
+        return `
+          <button type="button" class="preset-chip ${isActive ? 'active' : ''}" data-type="${p.type}" data-val="${p.val}">
+            ${p.label}
+          </button>
+        `;
+      }).join("");
+
+      presetsContainerEl.querySelectorAll(".preset-chip").forEach(chip => {
+        chip.addEventListener("click", () => {
+          if (chip.dataset.type === "coffee") {
+            calc.setCoffeeGrams(Number(chip.dataset.val));
+          } else {
+            calc.applyPreset(Number(chip.dataset.val));
+          }
+          renderPresets();
+          setTimeout(() => scrollToStep("sectionSummary"), 400);
+        });
+      });
+      return;
+    }
 
     presetsContainerEl.innerHTML = FUZZ_DATA.presets.map(p => {
       const isActive = Math.round(calc.waterMl) === p.waterMl;
@@ -347,7 +397,30 @@ document.addEventListener("DOMContentLoaded", () => {
       `;
     }).join("");
 
-    methodStepsContainerEl.innerHTML = tipBanner + stepsHtml;
+    // Se for Cold Brew, inclui o card oficial de drinks da Fuzz Cafés
+    let coldBrewDrinksHtml = "";
+    if (state.method.id === "cold-brew") {
+      coldBrewDrinksHtml = `
+        <div class="cold-brew-drinks-card">
+          <div class="cold-brew-drinks-header">
+            <span>🍹</span>
+            <h4>Receitas de Drinks Fuzz com seu Cold Brew</h4>
+          </div>
+          <div class="cold-brew-drinks-grid">
+            <div class="cold-brew-drink-item">
+              <strong>🍸 Cold Brew Tônica</strong>
+              <p>100ml de Cold Brew filtrado + 150ml de água tônica gelada + pedras de gelo e rodela de laranja ou limão siciliano.</p>
+            </div>
+            <div class="cold-brew-drink-item">
+              <strong>🥛 Iced Latte Cremoso</strong>
+              <p>100ml de Cold Brew concentrado + 100ml de leite integral ou de aveia bem gelado + cubos de gelo na jarra.</p>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    methodStepsContainerEl.innerHTML = tipBanner + stepsHtml + coldBrewDrinksHtml;
   }
 
   // ==========================================================================
@@ -427,7 +500,33 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
-    if (summaryWaterMlEl) summaryWaterMlEl.textContent = `${state.waterMl} ml`;
+    // Atualização de Estilo Quente vs No Gelo
+    if (btnStyleHotEl && btnStyleIcedEl) {
+      btnStyleHotEl.classList.toggle("active", !state.isIcedActive);
+      btnStyleIcedEl.classList.toggle("active", state.isIcedActive);
+      if (!state.isIcedCompatible) {
+        btnStyleIcedEl.classList.add("disabled");
+        btnStyleIcedEl.title = "Modo Japanese Iced não é indicado para este método";
+      } else {
+        btnStyleIcedEl.classList.remove("disabled");
+        btnStyleIcedEl.title = "Extração coada direto sobre cubos de gelo";
+      }
+    }
+    if (icedInfoBannerEl) {
+      icedInfoBannerEl.style.display = state.isIcedActive ? "flex" : "none";
+    }
+    if (summaryIcedRowEl) {
+      summaryIcedRowEl.style.display = state.isIcedActive ? "flex" : "none";
+      if (summaryIcedDivisionEl && state.isIcedActive) {
+        summaryIcedDivisionEl.innerHTML = `<strong>${state.iceGrams}g gelo</strong> + <strong>${state.hotWaterMl}ml água quente</strong>`;
+      }
+    }
+
+    if (summaryWaterMlEl) {
+      summaryWaterMlEl.textContent = state.isIcedActive 
+        ? `${state.waterMl} ml (${state.hotWaterMl}ml quente + ${state.iceGrams}g gelo)`
+        : `${state.waterMl} ml`;
+    }
     if (summaryCoffeeGramsEl) summaryCoffeeGramsEl.textContent = `${state.coffeeGrams} g`;
     if (summaryYieldMlEl) summaryYieldMlEl.textContent = `~${state.yieldMl} ml`;
     if (summaryBloomWaterEl) summaryBloomWaterEl.textContent = `${state.bloomWater} ml`;
@@ -443,10 +542,24 @@ document.addEventListener("DOMContentLoaded", () => {
       summaryShopLinkEl.textContent = `Comprar ${state.coffee.name} na Fuzz Cafés ↗`;
     }
 
+    // Cálculo do Rendimento do Pacote & Custo por Xícara
+    const summaryPackCupsEl = document.getElementById("summaryPackCups");
+    const summaryCupCostEl = document.getElementById("summaryCupCost");
+    if (summaryPackCupsEl && summaryCupCostEl) {
+      const pkgWeight = state.coffee.packageWeight || 250;
+      const price = state.coffee.price || 46.00;
+      const cups = Math.max(1, Math.floor(pkgWeight / (state.coffeeGrams || 15)));
+      const cupCost = ((price / pkgWeight) * (state.coffeeGrams || 15)).toFixed(2).replace('.', ',');
+      summaryPackCupsEl.textContent = `~${cups} xícaras`;
+      summaryCupCostEl.textContent = `R$ ${cupCost}`;
+    }
+
     // Barra Flutuante Mobile
     if (mobileStickyWaterEl) mobileStickyWaterEl.textContent = `${state.waterMl}ml`;
     if (mobileStickyCoffeeEl) mobileStickyCoffeeEl.textContent = `${state.coffeeGrams}g`;
-    if (mobileStickyMethodEl) mobileStickyMethodEl.textContent = state.method.name;
+    if (mobileStickyMethodEl) {
+      mobileStickyMethodEl.textContent = state.isIcedActive ? `🧊 ${state.method.name}` : state.method.name;
+    }
     if (mobileStickyRatioEl) mobileStickyRatioEl.textContent = `1:${state.ratio}`;
 
     // Atualiza passos adaptados e presets ativos
@@ -511,6 +624,24 @@ document.addEventListener("DOMContentLoaded", () => {
       calc.setIntensityLevel(btn.dataset.intensity);
     });
   });
+
+  // Alternador de Estilo Quente vs No Gelo (Japanese Iced)
+  if (btnStyleHotEl) {
+    btnStyleHotEl.addEventListener("click", () => {
+      calc.setIcedMode(false);
+    });
+  }
+
+  if (btnStyleIcedEl) {
+    btnStyleIcedEl.addEventListener("click", () => {
+      if (calc.isIcedCompatible()) {
+        calc.setIcedMode(true);
+        showToast("🧊 Modo Japanese Iced: 40% gelo na jarra + 60% água quente!");
+      } else {
+        showToast("Modo Japanese Iced é ideal para V60, Chemex, Melitta ou AeroPress!");
+      }
+    });
+  }
 
   if (categoryFiltersEl) {
     categoryFiltersEl.querySelectorAll(".filter-btn").forEach(btn => {
@@ -589,7 +720,8 @@ document.addEventListener("DOMContentLoaded", () => {
       timer.setSteps(steps);
     }
     if (timerMethodTagEl) {
-      timerMethodTagEl.textContent = `${state.method.name} • ${state.coffee.name}`;
+      const modeText = state.isIcedActive ? " (Japanese Iced)" : "";
+      timerMethodTagEl.textContent = `${state.method.name}${modeText} • ${state.coffee.name}`;
     }
     updateMuteButtonUI(timer.isMuted);
     timerModalOverlayEl.classList.add("open");
@@ -642,8 +774,79 @@ document.addEventListener("DOMContentLoaded", () => {
     } else if (e.key === "m" || e.key === "M") {
       e.preventDefault();
       toggleTimerMute();
+    } else if (e.key === "f" || e.key === "F") {
+      e.preventDefault();
+      toggleTimerFullscreen();
     }
   });
+
+  // Modo Bancada Tela Cheia (Fullscreen API)
+  const btnToggleFullscreenEl = document.getElementById("btnToggleFullscreen");
+
+  function toggleTimerFullscreen() {
+    if (!timerModalOverlayEl) return;
+    const isFs = timerModalOverlayEl.classList.toggle("is-fullscreen-active");
+    if (btnToggleFullscreenEl) {
+      btnToggleFullscreenEl.textContent = isFs ? "⤦" : "⛶";
+      btnToggleFullscreenEl.title = isFs ? "Sair da tela cheia (F)" : "Modo Bancada Tela Cheia (F)";
+    }
+
+    try {
+      if (isFs && document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else if (!isFs && document.exitFullscreen && document.fullscreenElement) {
+        document.exitFullscreen().catch(() => {});
+      }
+    } catch (e) {}
+  }
+
+  if (btnToggleFullscreenEl) {
+    btnToggleFullscreenEl.addEventListener("click", toggleTimerFullscreen);
+  }
+
+  // Gestos Touch no Celular (Swipe para trocar etapas e Tap no timer para pausar/retomar)
+  const timerCardEl = timerModalOverlayEl ? timerModalOverlayEl.querySelector(".timer-modal-card") : null;
+  let touchStartX = 0;
+  let touchStartY = 0;
+
+  if (timerCardEl) {
+    timerCardEl.addEventListener("touchstart", (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+      touchStartY = e.changedTouches[0].screenY;
+    }, { passive: true });
+
+    timerCardEl.addEventListener("touchend", (e) => {
+      const touchEndX = e.changedTouches[0].screenX;
+      const touchEndY = e.changedTouches[0].screenY;
+      const diffX = touchEndX - touchStartX;
+      const diffY = touchEndY - touchStartY;
+
+      // Se o movimento for horizontal e maior que 45px
+      if (Math.abs(diffX) > 45 && Math.abs(diffX) > Math.abs(diffY) * 1.5) {
+        if (diffX < 0) {
+          // Swipe para esquerda: Avançar etapa
+          timer.skipNext();
+          if (navigator.vibrate) navigator.vibrate(30);
+        } else {
+          // Swipe para direita: Voltar etapa
+          timer.skipPrev();
+          if (navigator.vibrate) navigator.vibrate(30);
+        }
+      }
+    }, { passive: true });
+  }
+
+  // Toque no display gigante do timer para Iniciar / Pausar
+  if (timerDisplayEl) {
+    timerDisplayEl.addEventListener("click", () => {
+      if (timer.isRunning) {
+        timer.pause();
+      } else {
+        timer.start();
+      }
+      if (navigator.vibrate) navigator.vibrate(25);
+    });
+  }
 
   if (btnTimerStartEl) {
     btnTimerStartEl.addEventListener("click", () => {
@@ -736,10 +939,18 @@ document.addEventListener("DOMContentLoaded", () => {
         timerNextStepEl.textContent = "Última etapa em andamento";
       }
     }
+
+    // Ao finalizar a extração, expande o card de degustação para o usuário avaliar
+    if (tState.isFinished) {
+      const cardEl = document.getElementById("timerTastingCard");
+      if (cardEl && cardEl.classList.contains("collapsed")) {
+        cardEl.classList.remove("collapsed");
+      }
+    }
   });
 
   // ==========================================================================
-  // 9. UTILITÁRIOS DA INTERFACE (CÓPIA, TOAST, MENU MOBILE, BARRA FIXA)
+  // 9. UTILITÁRIOS DA INTERFACE (CÓPIA, TOAST, STORIES CARD, MENU MOBILE)
   // ==========================================================================
 
   function showToast(msg) {
@@ -751,13 +962,278 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 3200);
   }
 
+  // ==========================================================================
+  // MÓDULO DO CARD STORIES (INSTAGRAM / WHATSAPP - CANVAS 1080x1920)
+  // ==========================================================================
+  function openStoryCardModal() {
+    if (!storyModalOverlayEl || !storyCanvasEl) return;
+    const state = calc.getState();
+    renderStoryCardToCanvas(state);
+    storyModalOverlayEl.classList.add("open");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeStoryCardModal() {
+    if (!storyModalOverlayEl) return;
+    storyModalOverlayEl.classList.remove("open");
+    document.body.style.overflow = "";
+  }
+
+  if (btnOpenStoryCardEl) btnOpenStoryCardEl.addEventListener("click", openStoryCardModal);
+  if (btnCloseStoryModalEl) btnCloseStoryModalEl.addEventListener("click", closeStoryCardModal);
+  if (storyModalOverlayEl) {
+    storyModalOverlayEl.addEventListener("click", (e) => {
+      if (e.target === storyModalOverlayEl) closeStoryCardModal();
+    });
+  }
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && storyModalOverlayEl && storyModalOverlayEl.classList.contains("open")) {
+      closeStoryCardModal();
+    }
+  });
+
+  // Renderizador no Canvas (1080x1920)
+  function renderStoryCardToCanvas(state) {
+    const canvas = storyCanvasEl;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    const W = 1080;
+    const H = 1920;
+
+    // Fundo Degradê Escuro Premium Fuzz
+    const bgGrad = ctx.createLinearGradient(0, 0, W, H);
+    bgGrad.addColorStop(0, "#191a18");
+    bgGrad.addColorStop(0.5, "#222521");
+    bgGrad.addColorStop(1, "#121312");
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, W, H);
+
+    // Efeito radial sutil de calor/brilho no topo direito
+    const radG = ctx.createRadialGradient(W * 0.8, H * 0.18, 50, W * 0.8, H * 0.18, 650);
+    radG.addColorStop(0, state.isIcedActive ? "rgba(102, 217, 232, 0.18)" : "rgba(255, 126, 0, 0.18)");
+    radG.addColorStop(1, "transparent");
+    ctx.fillStyle = radG;
+    ctx.fillRect(0, 0, W, H);
+
+    // Moldura elegante
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.08)";
+    ctx.lineWidth = 4;
+    roundRect(ctx, 40, 40, W - 80, H - 80, 48);
+    ctx.stroke();
+
+    // Topo: Badge Oficial Fuzz
+    ctx.fillStyle = state.isIcedActive ? "#66d9e8" : "#ff7e00";
+    ctx.font = "800 28px 'Plus Jakarta Sans', sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText("☕ FUZZ CAFÉS ESPECIAIS • RECEITA OFICIAL", W / 2, 140);
+
+    // Linha divisória
+    ctx.strokeStyle = state.isIcedActive ? "rgba(102, 217, 232, 0.3)" : "rgba(255, 126, 0, 0.3)";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(W / 2 - 180, 170);
+    ctx.lineTo(W / 2 + 180, 170);
+    ctx.stroke();
+
+    // Nome do Café
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "900 68px 'Fredoka', 'Lilita One', sans-serif";
+    ctx.fillText(state.coffee.name.toUpperCase(), W / 2, 270);
+
+    // Subtítulo do café
+    ctx.fillStyle = "#ffb066";
+    ctx.font = "600 32px 'Plus Jakarta Sans', sans-serif";
+    ctx.fillText(state.coffee.subtitle, W / 2, 330);
+
+    // Pílulas de Notas Sensoriais
+    if (state.coffee.notes && state.coffee.notes.length) {
+      const notesText = state.coffee.notes.join("  •  ");
+      ctx.fillStyle = "#dedcd7";
+      ctx.font = "500 28px 'Plus Jakarta Sans', sans-serif";
+      ctx.fillText(`Notas: ${notesText}`, W / 2, 390);
+    }
+
+    // Card Central Principal de Preparo
+    const cardX = 90;
+    const cardY = 460;
+    const cardW = W - 180;
+    const cardH = 960;
+
+    ctx.fillStyle = "#262925";
+    ctx.strokeStyle = "#383c36";
+    ctx.lineWidth = 3;
+    roundRect(ctx, cardX, cardY, cardW, cardH, 36);
+    ctx.fill();
+    ctx.stroke();
+
+    // Método de Preparo no topo do card
+    ctx.fillStyle = state.isIcedActive ? "#66d9e8" : "#ff922b";
+    ctx.font = "800 34px 'Plus Jakarta Sans', sans-serif";
+    const methodStyleTag = state.isIcedActive ? `🧊 JAPANESE ICED • ${state.method.name.toUpperCase()}` : `♨️ ${state.method.name.toUpperCase()}`;
+    ctx.fillText(methodStyleTag, W / 2, cardY + 75);
+
+    // Linha divisória interna
+    ctx.strokeStyle = "#343832";
+    ctx.beginPath();
+    ctx.moveTo(cardX + 40, cardY + 115);
+    ctx.lineTo(cardX + cardW - 40, cardY + 115);
+    ctx.stroke();
+
+    // Grade com 4 caixas de parâmetros essenciais
+    const boxW = (cardW - 120) / 2;
+    const boxH = 220;
+
+    // Caixa 1: Volume de Líquido / Água
+    drawMetricBox(ctx, cardX + 40, cardY + 160, boxW, boxH, 
+      state.isIcedActive ? "BEBIDA TOTAL" : "ÁGUA TOTAL", 
+      `${state.waterMl} ml`, 
+      state.isIcedActive ? `♨️ ${state.hotWaterMl}ml quente + 🧊 ${state.iceGrams}g gelo` : "Filtrada / Mineral");
+
+    // Caixa 2: Pó de Café
+    drawMetricBox(ctx, cardX + 80 + boxW, cardY + 160, boxW, boxH, 
+      "PÓ DE CAFÉ", 
+      `${state.coffeeGrams} g`, 
+      `Proporção 1 : ${state.ratio}`);
+
+    // Caixa 3: Moagem Indicada
+    drawMetricBox(ctx, cardX + 40, cardY + 420, boxW, boxH, 
+      "MOAGEM INDICADA", 
+      state.grind.name, 
+      state.grind.description.length > 32 ? state.grind.description.substring(0, 30) + '...' : state.grind.description);
+
+    // Caixa 4: Tempo e Temperatura
+    drawMetricBox(ctx, cardX + 80 + boxW, cardY + 420, boxW, boxH, 
+      "TEMPO & TEMPERATURA", 
+      state.totalTime, 
+      state.temp);
+
+    // Resumo de Bloom & Rendimento
+    ctx.fillStyle = "#1c1e1b";
+    roundRect(ctx, cardX + 40, cardY + 680, cardW - 80, 220, 24);
+    ctx.fill();
+
+    ctx.fillStyle = "#ffb066";
+    ctx.font = "700 26px 'Plus Jakarta Sans', sans-serif";
+    ctx.textAlign = "left";
+    ctx.fillText("🌿 PRÉ-INFUSÃO (BLOOM):", cardX + 70, cardY + 740);
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "800 28px 'Plus Jakarta Sans', sans-serif";
+    ctx.fillText(`${state.bloomWater} ml por 40 segundos`, cardX + 440, cardY + 740);
+
+    ctx.fillStyle = "#ffb066";
+    ctx.font = "700 26px 'Plus Jakarta Sans', sans-serif";
+    ctx.fillText("☕ RENDIMENTO ESTIMADO:", cardX + 70, cardY + 820);
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "800 28px 'Plus Jakarta Sans', sans-serif";
+    ctx.fillText(`~${state.yieldMl} ml de café especial`, cardX + 440, cardY + 820);
+
+    // Rodapé do Stories: Mascote Nico e Branding
+    ctx.textAlign = "center";
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "800 36px 'Plus Jakarta Sans', sans-serif";
+    ctx.fillText("Extraia o seu melhor café com a Fuzz!", W / 2, 1540);
+
+    ctx.fillStyle = "#a8a59d";
+    ctx.font = "500 28px 'Plus Jakarta Sans', sans-serif";
+    ctx.fillText("Calculadora online: fuzzcafes.com.br", W / 2, 1600);
+
+    // Botão / Pílula Instagram
+    ctx.fillStyle = state.isIcedActive ? "#66d9e8" : "#ff7e00";
+    roundRect(ctx, W / 2 - 190, 1670, 380, 76, 38);
+    ctx.fill();
+
+    ctx.fillStyle = "#1e201d";
+    ctx.font = "800 30px 'Plus Jakarta Sans', sans-serif";
+    ctx.fillText("@fuzzcafes", W / 2, 1718);
+  }
+
+  function roundRect(ctx, x, y, width, height, radius) {
+    ctx.beginPath();
+    ctx.moveTo(x + radius, y);
+    ctx.lineTo(x + width - radius, y);
+    ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+    ctx.lineTo(x + width, y + height - radius);
+    ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+    ctx.lineTo(x + radius, y + height);
+    ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+    ctx.lineTo(x, y + radius);
+    ctx.quadraticCurveTo(x, y, x + radius, y);
+    ctx.closePath();
+  }
+
+  function drawMetricBox(ctx, x, y, w, h, label, mainVal, subVal) {
+    ctx.fillStyle = "#1e201d";
+    ctx.strokeStyle = "#383c36";
+    ctx.lineWidth = 2;
+    roundRect(ctx, x, y, w, h, 20);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.textAlign = "center";
+    ctx.fillStyle = "#a8a59d";
+    ctx.font = "700 22px 'Plus Jakarta Sans', sans-serif";
+    ctx.fillText(label, x + w / 2, y + 48);
+
+    ctx.fillStyle = "#ff7e00";
+    ctx.font = "900 44px 'Fredoka', 'Plus Jakarta Sans', sans-serif";
+    ctx.fillText(mainVal, x + w / 2, y + 115);
+
+    ctx.fillStyle = "#dedcd7";
+    ctx.font = "500 20px 'Plus Jakarta Sans', sans-serif";
+    ctx.fillText(subVal, x + w / 2, y + 172);
+  }
+
+  if (btnDownloadStoryImageEl) {
+    btnDownloadStoryImageEl.addEventListener("click", () => {
+      if (!storyCanvasEl) return;
+      const link = document.createElement("a");
+      link.download = `receita-fuzz-${calc.selectedCoffee.id}-${calc.selectedMethod.id}.png`;
+      link.href = storyCanvasEl.toDataURL("image/png");
+      link.click();
+      showToast("📸 Card para Stories baixado com sucesso!");
+    });
+  }
+
+  if (btnNativeShareStoryEl) {
+    btnNativeShareStoryEl.addEventListener("click", async () => {
+      if (!storyCanvasEl) return;
+      try {
+        storyCanvasEl.toBlob(async (blob) => {
+          if (!blob) return;
+          const file = new File([blob], `receita-fuzz-${calc.selectedCoffee.id}.png`, { type: "image/png" });
+          if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            await navigator.share({
+              files: [file],
+              title: `Receita Fuzz Cafés - ${calc.selectedCoffee.name}`,
+              text: `Confira minha receita de café especial na Calculadora da Fuzz Cafés!`
+            });
+            showToast("Compartilhado com sucesso!");
+          } else {
+            // Fallback para download
+            const link = document.createElement("a");
+            link.download = `receita-fuzz-${calc.selectedCoffee.id}.png`;
+            link.href = storyCanvasEl.toDataURL("image/png");
+            link.click();
+            showToast("Imagem salva! Agora publique nos seus Stories.");
+          }
+        }, "image/png");
+      } catch (err) {
+        showToast("Imagem pronta para baixar!");
+      }
+    });
+  }
+
   // Cópia da Receita Formatada
   if (btnCopyRecipeEl) {
     btnCopyRecipeEl.addEventListener("click", () => {
       const state = calc.getState();
+      const styleText = state.isIcedActive 
+        ? `\nEstilo: 🧊 No Gelo (Japanese Iced: ${state.hotWaterMl}ml quente + ${state.iceGrams}g gelo)`
+        : `\nEstilo: ♨️ Quente Tradicional`;
       const recipeText = `☕ RECEITA DE PREPARO - FUZZ CAFÉS
 Grão: ${state.coffee.name} (${state.coffee.subtitle})
-Método: ${state.method.name}
+Método: ${state.method.name}${styleText}
 Volume de Água: ${state.waterMl} ml
 Pó de Café: ${state.coffeeGrams} g (Proporção 1:${state.ratio})
 Bebida Estimada na Xícara: ~${state.yieldMl} ml
@@ -1104,6 +1580,326 @@ ${shareUrl}`;
 
   // Carrega estado inicial personalizado se existir
   loadInitialStateFromUrlOrFavorite();
+
+  // ==========================================================================
+  // 10. MÓDULO DO DIÁRIO DE EXTRAÇÃO (BREW LOG) & DIAGNÓSTICO SENSORIAL DO NICO
+  // ==========================================================================
+  const brewDiary = typeof BrewDiary !== "undefined" ? new BrewDiary() : null;
+
+  // Elementos do Diário
+  const btnOpenDiaryHeaderEl = document.getElementById("btnOpenDiaryHeader");
+  const headerDiaryBadgeEl = document.getElementById("headerDiaryBadge");
+  const btnOpenDiaryDrawerEl = document.getElementById("btnOpenDiaryDrawer");
+  const drawerDiaryBadgeEl = document.getElementById("drawerDiaryBadge");
+  const btnOpenDiarySummaryEl = document.getElementById("btnOpenDiarySummary");
+  const summaryDiaryCountEl = document.getElementById("summaryDiaryCount");
+  
+  const diaryModalOverlayEl = document.getElementById("diaryModalOverlay");
+  const btnCloseDiaryModalEl = document.getElementById("btnCloseDiaryModal");
+  const btnCloseDiaryModalFooterEl = document.getElementById("btnCloseDiaryModalFooter");
+  const btnClearAllDiaryEl = document.getElementById("btnClearAllDiary");
+  const diaryListContainerEl = document.getElementById("diaryListContainer");
+  const diaryModalCountTextEl = document.getElementById("diaryModalCountText");
+
+  // Elementos do Tasting Card no Timer Modal
+  const timerTastingCardEl = document.getElementById("timerTastingCard");
+  const btnToggleTastingCardEl = document.getElementById("btnToggleTastingCard");
+  const tasteOptionButtonsEl = document.querySelectorAll(".btn-taste-option");
+  const nicoDiagnosisImgEl = document.getElementById("nicoDiagnosisImg");
+  const nicoDiagnosisTitleEl = document.getElementById("nicoDiagnosisTitle");
+  const nicoDiagnosisTipEl = document.getElementById("nicoDiagnosisTip");
+  const tastingStarsGroupEl = document.getElementById("tastingStarsGroup");
+  const tastingNotesInputEl = document.getElementById("tastingNotesInput");
+  const btnSaveTastingEl = document.getElementById("btnSaveTasting");
+
+  let currentSelectedTaste = "balanced";
+  let currentRating = 5;
+
+  function updateDiaryBadges(count) {
+    if (headerDiaryBadgeEl) {
+      headerDiaryBadgeEl.textContent = count;
+      headerDiaryBadgeEl.style.display = count > 0 ? "flex" : "none";
+    }
+    if (drawerDiaryBadgeEl) {
+      drawerDiaryBadgeEl.textContent = count;
+      drawerDiaryBadgeEl.style.display = count > 0 ? "inline-block" : "none";
+    }
+    if (summaryDiaryCountEl) {
+      summaryDiaryCountEl.textContent = count;
+    }
+    if (diaryModalCountTextEl) {
+      diaryModalCountTextEl.textContent = count === 1 ? "1 preparo salvo" : `${count} preparos salvos`;
+    }
+  }
+
+  function setTastingDiagnosis(tasteKey) {
+    currentSelectedTaste = tasteKey;
+    const diagMap = typeof NICO_TASTE_DIAGNOSTICS !== "undefined" ? NICO_TASTE_DIAGNOSTICS : {
+      acid: { label: "Ácido / Ralo", emoji: "🍋", mascotImg: "assets/mascot/nico-binoculars-badge.png", title: "Diagnóstico: Café Subextraído!", tip: "Dica do Nico: afine 1 ou 2 cliques no moedor ou use água mais quente (94°C a 96°C)!" },
+      balanced: { label: "Equilibrado", emoji: "✨", mascotImg: "assets/mascot/nico-drinking-badge.png", title: "Diagnóstico: Extração Perfeita na Mosca! 🎉", tip: "Harmonia perfeita entre doçura, acidez e corpo sedoso. Salve essa receita!" },
+      bitter: { label: "Amargo / Seco", emoji: "😖", mascotImg: "assets/mascot/nico-compass-badge.png", title: "Diagnóstico: Café Superextraído!", tip: "Dica do Nico: engrosse 1 ou 2 cliques no moedor ou suavize o despejo da água!" }
+    };
+
+    const diag = diagMap[tasteKey] || diagMap.balanced;
+
+    tasteOptionButtonsEl.forEach(btn => {
+      btn.classList.toggle("active", btn.dataset.taste === tasteKey);
+    });
+
+    if (nicoDiagnosisImgEl) nicoDiagnosisImgEl.src = diag.mascotImg;
+    if (nicoDiagnosisTitleEl) nicoDiagnosisTitleEl.textContent = diag.title;
+    if (nicoDiagnosisTipEl) nicoDiagnosisTipEl.innerHTML = diag.tip;
+  }
+
+  function openDiaryModal() {
+    if (!diaryModalOverlayEl) return;
+    renderDiaryList();
+    diaryModalOverlayEl.classList.add("open");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeDiaryModal() {
+    if (!diaryModalOverlayEl) return;
+    diaryModalOverlayEl.classList.remove("open");
+    document.body.style.overflow = "";
+  }
+
+  function renderDiaryList() {
+    if (!diaryListContainerEl || !brewDiary) return;
+    const entries = brewDiary.getEntries();
+    updateDiaryBadges(entries.length);
+
+    if (entries.length === 0) {
+      diaryListContainerEl.innerHTML = `
+        <div class="diary-empty-state">
+          <img src="assets/mascot/nico-barista-badge.png" alt="Nico Barista" class="diary-empty-img" />
+          <h4>Seu diário está em branco!</h4>
+          <p>Prepare uma xícara com o cronômetro, avalie o sabor e salve a sua receita favorita para consultá-la ou repeti-la sempre que quiser.</p>
+        </div>
+      `;
+      return;
+    }
+
+    diaryListContainerEl.innerHTML = entries.map(entry => {
+      const icedTag = entry.isIced ? `<span class="diary-iced-tag">🧊 No Gelo</span>` : "";
+      const starsHtml = "★".repeat(entry.rating) + "☆".repeat(5 - entry.rating);
+      const tasteClass = entry.taste === "acid" ? "taste-pill--acid" : (entry.taste === "bitter" ? "taste-pill--bitter" : "taste-pill--balanced");
+      const notesHtml = entry.notes ? `<div class="diary-entry__notes">"${entry.notes}"</div>` : "";
+
+      return `
+        <div class="diary-entry-card" data-entry-id="${entry.id}">
+          <div class="diary-entry__top-row">
+            <div>
+              <span class="diary-entry__meta">${entry.dateStr}</span>
+              <h4 class="diary-entry__title">${entry.methodName} • ${entry.coffeeName} ${icedTag}</h4>
+            </div>
+            <span class="diary-entry__stars">${starsHtml}</span>
+          </div>
+
+          <div class="diary-entry__recipe-specs">
+            <span>💧 <strong>${entry.waterMl}ml</strong> água</span>
+            <span>☕ <strong>${entry.coffeeGrams}g</strong> pó</span>
+            <span>⚖️ <strong>1:${entry.ratio}</strong></span>
+            ${entry.isIced && entry.hotWaterMl ? `<span>(🔥 ${entry.hotWaterMl}ml + 🧊 ${entry.iceGrams}g)</span>` : ''}
+          </div>
+
+          <div class="diary-entry__taste-row">
+            <span class="taste-pill ${tasteClass}">
+              <span>${entry.tasteEmoji}</span>
+              <span>${entry.tasteLabel}</span>
+            </span>
+          </div>
+
+          ${notesHtml}
+
+          <div class="diary-entry__actions">
+            <button type="button" class="btn-diary-repeat" data-entry-id="${entry.id}">
+              ⚡ Repetir esta Receita
+            </button>
+            <button type="button" class="btn-diary-delete" data-entry-id="${entry.id}" title="Excluir este preparo">
+              🗑️
+            </button>
+          </div>
+        </div>
+      `;
+    }).join("");
+
+    // Eventos de Repetir e Excluir
+    diaryListContainerEl.querySelectorAll(".btn-diary-repeat").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const id = btn.dataset.entryId;
+        const entry = entries.find(e => e.id === id);
+        if (entry) {
+          if (entry.coffeeId) calc.selectCoffee(entry.coffeeId);
+          if (entry.methodId) calc.selectMethod(entry.methodId);
+          if (entry.ratio) calc.setRatio(entry.ratio);
+          if (entry.coffeeGrams) calc.setCoffeeGrams(entry.coffeeGrams);
+          if (typeof entry.isIced === "boolean") calc.setIcedMode(entry.isIced);
+
+          closeDiaryModal();
+          renderCoffees();
+          renderMethods();
+          renderPresets();
+          scrollToStep("sectionSummary");
+          showToast(`⚡ Receita carregada: ${entry.coffeeName} no ${entry.methodName}!`);
+        }
+      });
+    });
+
+    diaryListContainerEl.querySelectorAll(".btn-diary-delete").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const id = btn.dataset.entryId;
+        brewDiary.deleteEntry(id);
+        renderDiaryList();
+        showToast("Registro removido do diário.");
+      });
+    });
+  }
+
+  if (brewDiary) {
+    brewDiary.subscribe(entries => {
+      updateDiaryBadges(entries.length);
+    });
+  }
+
+  if (btnOpenDiaryHeaderEl) btnOpenDiaryHeaderEl.addEventListener("click", openDiaryModal);
+  if (btnOpenDiaryDrawerEl) {
+    btnOpenDiaryDrawerEl.addEventListener("click", (e) => {
+      e.preventDefault();
+      if (typeof closeMobileDrawer === "function") closeMobileDrawer();
+      openDiaryModal();
+    });
+  }
+  if (btnOpenDiarySummaryEl) btnOpenDiarySummaryEl.addEventListener("click", openDiaryModal);
+  if (btnCloseDiaryModalEl) btnCloseDiaryModalEl.addEventListener("click", closeDiaryModal);
+  if (btnCloseDiaryModalFooterEl) btnCloseDiaryModalFooterEl.addEventListener("click", closeDiaryModal);
+
+  if (diaryModalOverlayEl) {
+    diaryModalOverlayEl.addEventListener("click", (e) => {
+      if (e.target === diaryModalOverlayEl) closeDiaryModal();
+    });
+  }
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && diaryModalOverlayEl && diaryModalOverlayEl.classList.contains("open")) {
+      closeDiaryModal();
+    }
+  });
+
+  if (btnClearAllDiaryEl) {
+    btnClearAllDiaryEl.addEventListener("click", () => {
+      if (confirm("Deseja realmente limpar todo o histórico do seu diário?")) {
+        if (brewDiary) {
+          brewDiary.clearAll();
+          renderDiaryList();
+          showToast("Diário limpo com sucesso.");
+        }
+      }
+    });
+  }
+
+  if (btnToggleTastingCardEl && timerTastingCardEl) {
+    btnToggleTastingCardEl.addEventListener("click", () => {
+      timerTastingCardEl.classList.toggle("collapsed");
+    });
+  }
+
+  tasteOptionButtonsEl.forEach(btn => {
+    btn.addEventListener("click", () => {
+      setTastingDiagnosis(btn.dataset.taste);
+    });
+  });
+
+  if (tastingStarsGroupEl) {
+    const starButtons = tastingStarsGroupEl.querySelectorAll(".star-btn");
+    starButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        currentRating = Number(btn.dataset.value) || 5;
+        starButtons.forEach(b => {
+          const val = Number(b.dataset.value);
+          b.classList.toggle("active", val <= currentRating);
+        });
+      });
+    });
+  }
+
+  if (btnSaveTastingEl) {
+    btnSaveTastingEl.addEventListener("click", () => {
+      if (!brewDiary) return;
+      const state = calc.getState();
+      const notes = tastingNotesInputEl ? tastingNotesInputEl.value : "";
+      
+      brewDiary.addEntry({
+        coffeeId: state.coffee.id,
+        coffeeName: state.coffee.name,
+        coffeeImage: state.coffee.image,
+        methodId: state.method.id,
+        methodName: state.method.name,
+        isIced: state.isIcedActive,
+        coffeeGrams: state.coffeeGrams,
+        waterMl: state.waterMl,
+        hotWaterMl: state.hotWaterMl,
+        iceGrams: state.iceGrams,
+        ratio: state.ratio,
+        intensity: state.intensity,
+        taste: currentSelectedTaste,
+        rating: currentRating,
+        grindName: state.grind.name,
+        notes: notes
+      });
+
+      showToast("💾 Extração salva no seu Diário de Cafés!");
+      btnSaveTastingEl.textContent = "✓ Salvo no Diário!";
+      btnSaveTastingEl.disabled = true;
+      setTimeout(() => {
+        if (btnSaveTastingEl) {
+          btnSaveTastingEl.textContent = "💾 Salvar no Meu Diário de Cafés";
+          btnSaveTastingEl.disabled = false;
+        }
+      }, 3000);
+    });
+  }
+
+  // ==========================================================================
+  // 11. BANNER DE INSTALAÇÃO DO APP (PWA ADD TO HOME SCREEN)
+  // ==========================================================================
+  const pwaInstallBannerEl = document.getElementById("pwaInstallBanner");
+  const btnPwaInstallEl = document.getElementById("btnPwaInstall");
+  const btnPwaDismissEl = document.getElementById("btnPwaDismiss");
+  let deferredPrompt = null;
+
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    const dismissed = localStorage.getItem("fuzz_pwa_dismissed") === "true";
+    if (!dismissed && pwaInstallBannerEl) {
+      pwaInstallBannerEl.style.display = "flex";
+    }
+  });
+
+  if (btnPwaInstallEl) {
+    btnPwaInstallEl.addEventListener("click", async () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const choice = await deferredPrompt.userChoice;
+        if (choice && choice.outcome === "accepted") {
+          showToast("🎉 Calculadora Fuzz instalada com sucesso!");
+        }
+        deferredPrompt = null;
+        if (pwaInstallBannerEl) pwaInstallBannerEl.style.display = "none";
+      } else {
+        // Instrução para iOS Safari
+        showToast("📱 No iPhone: toque em Compartilhar ➔ 'Adicionar à Tela de Início'!");
+      }
+    });
+  }
+
+  if (btnPwaDismissEl) {
+    btnPwaDismissEl.addEventListener("click", () => {
+      if (pwaInstallBannerEl) pwaInstallBannerEl.style.display = "none";
+      localStorage.setItem("fuzz_pwa_dismissed", "true");
+    });
+  }
 
   // Inicialização dos Blocos Visuais
   renderCoffees();

@@ -4,9 +4,11 @@
   "description": "Calculadora de proporções, receitas de preparo e catálogo oficial da Fuzz Cafés",
   "main": "index.html",
   "scripts": {
-    "test": "node test_data.js && node test_calc.js",
+    "test": "node test_data.js && node test_calc.js && node test_diary.js && node test_yield_economy.js",
     "test:data": "node test_data.js",
     "test:calc": "node test_calc.js",
+    "test:diary": "node test_diary.js",
+    "test:economy": "node test_yield_economy.js",
     "start": "npx serve ."
   },
   "keywords": [

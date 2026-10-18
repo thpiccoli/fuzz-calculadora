@@ -26,6 +26,8 @@ const FUZZ_COFFEES = [
     badge: "Mais Vendido",
     islandRegion: "Caverna de Caramelo",
     image: "assets/coffees/caramelo.jpg",
+    price: 46.00,
+    packageWeight: 250,
     shopUrl: "https://www.fuzzcafes.com.br/cafesespeciais/caramelo-classico"
   },
   {
@@ -45,6 +47,8 @@ const FUZZ_COFFEES = [
     badge: "Intenso",
     islandRegion: "Cascata de Chocolate",
     image: "assets/coffees/chocolate.jpg",
+    price: 46.00,
+    packageWeight: 250,
     shopUrl: "https://www.fuzzcafes.com.br/cafesespeciais/chocolate-classico"
   },
   {
@@ -64,6 +68,8 @@ const FUZZ_COFFEES = [
     badge: "Floral & Cítrico",
     islandRegion: "Pomar Gigante",
     image: "assets/coffees/frutado.jpg",
+    price: 48.00,
+    packageWeight: 250,
     shopUrl: "https://www.fuzzcafes.com.br/cafesespeciais/frutado-classico"
   },
   {
@@ -83,6 +89,8 @@ const FUZZ_COFFEES = [
     badge: "Equilibrado",
     islandRegion: "Alpes de Amêndoas",
     image: "assets/coffees/amendoado.jpg",
+    price: 46.00,
+    packageWeight: 250,
     shopUrl: "https://www.fuzzcafes.com.br/cafesespeciais/amendoado-classico"
   },
   {
@@ -102,6 +110,8 @@ const FUZZ_COFFEES = [
     badge: "Raro & Exótico",
     islandRegion: "Pico Amazônico",
     image: "assets/coffees/cocada.jpg",
+    price: 54.00,
+    packageWeight: 250,
     shopUrl: "https://www.fuzzcafes.com.br/cafesespeciais/cocada-microlote"
   },
   {
@@ -121,6 +131,8 @@ const FUZZ_COFFEES = [
     badge: "Edição Especial",
     islandRegion: "Bosque dos Conilons",
     image: "assets/coffees/docedeleite.jpg",
+    price: 52.00,
+    packageWeight: 250,
     shopUrl: "https://www.fuzzcafes.com.br/cafesespeciais/docedeleite-microlote"
   },
   {
@@ -140,6 +152,8 @@ const FUZZ_COFFEES = [
     badge: "Safra 2026",
     islandRegion: "Pomar Tropical",
     image: "assets/coffees/abacaxi.jpg",
+    price: 56.00,
+    packageWeight: 250,
     shopUrl: "https://www.fuzzcafes.com.br/cafesespeciais/abacaxi2026-microlote"
   },
   {
@@ -159,6 +173,8 @@ const FUZZ_COFFEES = [
     badge: "Microtorra Rara",
     islandRegion: "Oásis Refrescante",
     image: "assets/coffees/melancia.jpg",
+    price: 58.00,
+    packageWeight: 250,
     shopUrl: "https://www.fuzzcafes.com.br/cafesespeciais/melancia2026-microlote"
   }
 ];
